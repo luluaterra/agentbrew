@@ -11,10 +11,8 @@ configs:
 
 settings:
   base:
-    # TODO(AB-003): fill in your Apple Developer Team ID before the first
-    # xcodebuild. The runtime gate in BackgroundServiceEligibility must be
-    # updated to the same value.
-    DEVELOPMENT_TEAM: ""
+    # The user's Personal Team (read from the signing certificate's OU).
+    DEVELOPMENT_TEAM: A7HHMGNNZ2
     CODE_SIGN_STYLE: Automatic
     ENABLE_HARDENED_RUNTIME: true
     MACOSX_DEPLOYMENT_TARGET: "14.0"

@@ -9,11 +9,11 @@ import Foundation
 public enum BackgroundServiceEligibility {
     public static let productionAppIdentifier = "com.agentbrew"
     public static let developmentAppIdentifier = "com.agentbrew.dev"
-    // TODO(AB-003): set this to the Team ID the app is actually signed with.
-    // An empty value intentionally fails the stronger gate below, so no
-    // background-service registration can happen until the signing identity
-    // is decided.
-    public static let expectedTeamIdentifier = ""
+    /// The Team ID of the certificate AgentBrew is actually signed with
+    /// (the user's Personal Team). RuntimeSigningIdentity reads the same
+    /// value from the live signature, so dev and prod cannot impersonate
+    /// one another.
+    public static let expectedTeamIdentifier = "A7HHMGNNZ2"
 
     public static func mayManageBackgroundServices(
         bundleURL: URL,
