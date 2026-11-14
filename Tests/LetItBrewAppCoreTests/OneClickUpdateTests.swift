@@ -11,14 +11,14 @@ private func releaseJSON(
     let defaultAssets = """
     [
       {
-        "name": "LetItBrew-0.4.0.dmg",
-        "browser_download_url": "https://github.com/ruban-24/letitbrew/releases/download/v0.4.0/LetItBrew-0.4.0.dmg",
+        "name": "AgentBrew-0.4.0.dmg",
+        "browser_download_url": "https://github.com/luluaterra/agentbrew/releases/download/v0.4.0/AgentBrew-0.4.0.dmg",
         "size": 4587712,
         "digest": "sha256:2cd5bc9e91a9130fda426e19e4598227fb3f0af13ddc7c9bee2966dd594108f3"
       },
       {
-        "name": "LetItBrew-0.4.0-SHA256SUMS",
-        "browser_download_url": "https://github.com/ruban-24/letitbrew/releases/download/v0.4.0/LetItBrew-0.4.0-SHA256SUMS",
+        "name": "AgentBrew-0.4.0-SHA256SUMS",
+        "browser_download_url": "https://github.com/luluaterra/agentbrew/releases/download/v0.4.0/AgentBrew-0.4.0-SHA256SUMS",
         "size": 181,
         "digest": null
       }
@@ -49,9 +49,9 @@ private func releaseJSON(
 @Test func aValidStableReleaseParsesExactAssetsAndDigest() throws {
     let release = try StableUpdateReleaseParser.parse(releaseJSON())
     #expect(release.version == StableUpdateVersion("0.4.0"))
-    #expect(release.dmg.name == "LetItBrew-0.4.0.dmg")
+    #expect(release.dmg.name == "AgentBrew-0.4.0.dmg")
     #expect(release.dmg.githubSHA256 == "2cd5bc9e91a9130fda426e19e4598227fb3f0af13ddc7c9bee2966dd594108f3")
-    #expect(release.checksums.name == "LetItBrew-0.4.0-SHA256SUMS")
+    #expect(release.checksums.name == "AgentBrew-0.4.0-SHA256SUMS")
 }
 
 @Test func draftsPrereleasesAndMalformedTagsFailClosed() {
@@ -67,37 +67,37 @@ private func releaseJSON(
 }
 
 @Test func missingDuplicateAndUntrustedAssetsFailClosed() {
-    #expect(throws: UpdateReleaseValidationFailure.missingAsset("LetItBrew-0.4.0-SHA256SUMS")) {
+    #expect(throws: UpdateReleaseValidationFailure.missingAsset("AgentBrew-0.4.0-SHA256SUMS")) {
         try StableUpdateReleaseParser.parse(releaseJSON(assets: """
-        [{"name":"LetItBrew-0.4.0.dmg","browser_download_url":"https://github.com/ruban-24/letitbrew/releases/download/v0.4.0/LetItBrew-0.4.0.dmg","size":10,"digest":null}]
+        [{"name":"AgentBrew-0.4.0.dmg","browser_download_url":"https://github.com/luluaterra/agentbrew/releases/download/v0.4.0/AgentBrew-0.4.0.dmg","size":10,"digest":null}]
         """))
     }
     let duplicate = """
     [
-      {"name":"LetItBrew-0.4.0.dmg","browser_download_url":"https://github.com/ruban-24/letitbrew/releases/download/v0.4.0/a","size":10,"digest":null},
-      {"name":"LetItBrew-0.4.0.dmg","browser_download_url":"https://github.com/ruban-24/letitbrew/releases/download/v0.4.0/b","size":10,"digest":null},
-      {"name":"LetItBrew-0.4.0-SHA256SUMS","browser_download_url":"https://github.com/ruban-24/letitbrew/releases/download/v0.4.0/sums","size":10,"digest":null}
+      {"name":"AgentBrew-0.4.0.dmg","browser_download_url":"https://github.com/luluaterra/agentbrew/releases/download/v0.4.0/a","size":10,"digest":null},
+      {"name":"AgentBrew-0.4.0.dmg","browser_download_url":"https://github.com/luluaterra/agentbrew/releases/download/v0.4.0/b","size":10,"digest":null},
+      {"name":"AgentBrew-0.4.0-SHA256SUMS","browser_download_url":"https://github.com/luluaterra/agentbrew/releases/download/v0.4.0/sums","size":10,"digest":null}
     ]
     """
-    #expect(throws: UpdateReleaseValidationFailure.duplicateAsset("LetItBrew-0.4.0.dmg")) {
+    #expect(throws: UpdateReleaseValidationFailure.duplicateAsset("AgentBrew-0.4.0.dmg")) {
         try StableUpdateReleaseParser.parse(releaseJSON(assets: duplicate))
     }
     let untrusted = """
     [
-      {"name":"LetItBrew-0.4.0.dmg","browser_download_url":"https://example.com/LetItBrew-0.4.0.dmg","size":10,"digest":null},
-      {"name":"LetItBrew-0.4.0-SHA256SUMS","browser_download_url":"https://github.com/ruban-24/letitbrew/releases/download/v0.4.0/sums","size":10,"digest":null}
+      {"name":"AgentBrew-0.4.0.dmg","browser_download_url":"https://example.com/AgentBrew-0.4.0.dmg","size":10,"digest":null},
+      {"name":"AgentBrew-0.4.0-SHA256SUMS","browser_download_url":"https://github.com/luluaterra/agentbrew/releases/download/v0.4.0/sums","size":10,"digest":null}
     ]
     """
-    #expect(throws: UpdateReleaseValidationFailure.invalidAssetURL("LetItBrew-0.4.0.dmg")) {
+    #expect(throws: UpdateReleaseValidationFailure.invalidAssetURL("AgentBrew-0.4.0.dmg")) {
         try StableUpdateReleaseParser.parse(releaseJSON(assets: untrusted))
     }
     let deceptivePath = """
     [
-      {"name":"LetItBrew-0.4.0.dmg","browser_download_url":"https://github.com/ruban-24/letitbrew/releases/download/v0.4.0/LetItBrew-0.4.0.dmg/extra","size":10,"digest":null},
-      {"name":"LetItBrew-0.4.0-SHA256SUMS","browser_download_url":"https://github.com/ruban-24/letitbrew/releases/download/v0.4.0/LetItBrew-0.4.0-SHA256SUMS","size":10,"digest":null}
+      {"name":"AgentBrew-0.4.0.dmg","browser_download_url":"https://github.com/luluaterra/agentbrew/releases/download/v0.4.0/AgentBrew-0.4.0.dmg/extra","size":10,"digest":null},
+      {"name":"AgentBrew-0.4.0-SHA256SUMS","browser_download_url":"https://github.com/luluaterra/agentbrew/releases/download/v0.4.0/AgentBrew-0.4.0-SHA256SUMS","size":10,"digest":null}
     ]
     """
-    #expect(throws: UpdateReleaseValidationFailure.invalidAssetURL("LetItBrew-0.4.0.dmg")) {
+    #expect(throws: UpdateReleaseValidationFailure.invalidAssetURL("AgentBrew-0.4.0.dmg")) {
         try StableUpdateReleaseParser.parse(releaseJSON(assets: deceptivePath))
     }
 }
@@ -105,54 +105,54 @@ private func releaseJSON(
 @Test func invalidSizesAndDigestsFailClosed() {
     let invalidSize = """
     [
-      {"name":"LetItBrew-0.4.0.dmg","browser_download_url":"https://github.com/ruban-24/letitbrew/releases/download/v0.4.0/LetItBrew-0.4.0.dmg","size":0,"digest":null},
-      {"name":"LetItBrew-0.4.0-SHA256SUMS","browser_download_url":"https://github.com/ruban-24/letitbrew/releases/download/v0.4.0/LetItBrew-0.4.0-SHA256SUMS","size":10,"digest":null}
+      {"name":"AgentBrew-0.4.0.dmg","browser_download_url":"https://github.com/luluaterra/agentbrew/releases/download/v0.4.0/AgentBrew-0.4.0.dmg","size":0,"digest":null},
+      {"name":"AgentBrew-0.4.0-SHA256SUMS","browser_download_url":"https://github.com/luluaterra/agentbrew/releases/download/v0.4.0/AgentBrew-0.4.0-SHA256SUMS","size":10,"digest":null}
     ]
     """
-    #expect(throws: UpdateReleaseValidationFailure.invalidAssetSize("LetItBrew-0.4.0.dmg")) {
+    #expect(throws: UpdateReleaseValidationFailure.invalidAssetSize("AgentBrew-0.4.0.dmg")) {
         try StableUpdateReleaseParser.parse(releaseJSON(assets: invalidSize))
     }
     let invalidDigest = """
     [
-      {"name":"LetItBrew-0.4.0.dmg","browser_download_url":"https://github.com/ruban-24/letitbrew/releases/download/v0.4.0/LetItBrew-0.4.0.dmg","size":10,"digest":"sha256:nope"},
-      {"name":"LetItBrew-0.4.0-SHA256SUMS","browser_download_url":"https://github.com/ruban-24/letitbrew/releases/download/v0.4.0/LetItBrew-0.4.0-SHA256SUMS","size":10,"digest":null}
+      {"name":"AgentBrew-0.4.0.dmg","browser_download_url":"https://github.com/luluaterra/agentbrew/releases/download/v0.4.0/AgentBrew-0.4.0.dmg","size":10,"digest":"sha256:nope"},
+      {"name":"AgentBrew-0.4.0-SHA256SUMS","browser_download_url":"https://github.com/luluaterra/agentbrew/releases/download/v0.4.0/AgentBrew-0.4.0-SHA256SUMS","size":10,"digest":null}
     ]
     """
-    #expect(throws: UpdateReleaseValidationFailure.invalidAssetDigest("LetItBrew-0.4.0.dmg")) {
+    #expect(throws: UpdateReleaseValidationFailure.invalidAssetDigest("AgentBrew-0.4.0.dmg")) {
         try StableUpdateReleaseParser.parse(releaseJSON(assets: invalidDigest))
     }
 }
 
 @Test func checksumParserFindsTheExactPublishedDMGLine() throws {
     let data = Data("""
-    2cd5bc9e91a9130fda426e19e4598227fb3f0af13ddc7c9bee2966dd594108f3  LetItBrew-0.4.0.dmg
-    498e4e6c8053ee2d26d229325d66956ecec39bec61228bbd04c6c49bc720f958  LetItBrew-0.4.0-13.manifest
+    2cd5bc9e91a9130fda426e19e4598227fb3f0af13ddc7c9bee2966dd594108f3  AgentBrew-0.4.0.dmg
+    498e4e6c8053ee2d26d229325d66956ecec39bec61228bbd04c6c49bc720f958  AgentBrew-0.4.0-13.manifest
     """.utf8)
-    #expect(try UpdateChecksumParser.sha256(for: "LetItBrew-0.4.0.dmg", in: data) ==
+    #expect(try UpdateChecksumParser.sha256(for: "AgentBrew-0.4.0.dmg", in: data) ==
         "2cd5bc9e91a9130fda426e19e4598227fb3f0af13ddc7c9bee2966dd594108f3")
 }
 
 @Test func checksumParserRejectsMalformedMissingDuplicateAndUnsafeEntries() {
     #expect(throws: UpdateChecksumFailure.malformedLine(1)) {
         try UpdateChecksumParser.sha256(
-            for: "LetItBrew-0.4.0.dmg",
+            for: "AgentBrew-0.4.0.dmg",
             in: Data("not-a-checksum\n".utf8)
         )
     }
     let digest = String(repeating: "a", count: 64)
-    #expect(throws: UpdateChecksumFailure.missingFilename("LetItBrew-0.4.0.dmg")) {
-        try UpdateChecksumParser.sha256(for: "LetItBrew-0.4.0.dmg", in: Data("\(digest)  other\n".utf8))
+    #expect(throws: UpdateChecksumFailure.missingFilename("AgentBrew-0.4.0.dmg")) {
+        try UpdateChecksumParser.sha256(for: "AgentBrew-0.4.0.dmg", in: Data("\(digest)  other\n".utf8))
     }
-    #expect(throws: UpdateChecksumFailure.duplicateFilename("LetItBrew-0.4.0.dmg")) {
+    #expect(throws: UpdateChecksumFailure.duplicateFilename("AgentBrew-0.4.0.dmg")) {
         try UpdateChecksumParser.sha256(
-            for: "LetItBrew-0.4.0.dmg",
-            in: Data("\(digest)  LetItBrew-0.4.0.dmg\n\(digest)  LetItBrew-0.4.0.dmg\n".utf8)
+            for: "AgentBrew-0.4.0.dmg",
+            in: Data("\(digest)  AgentBrew-0.4.0.dmg\n\(digest)  AgentBrew-0.4.0.dmg\n".utf8)
         )
     }
     #expect(throws: UpdateChecksumFailure.unsafeFilename(1)) {
         try UpdateChecksumParser.sha256(
-            for: "LetItBrew-0.4.0.dmg",
-            in: Data("\(digest)  ../LetItBrew-0.4.0.dmg\n".utf8)
+            for: "AgentBrew-0.4.0.dmg",
+            in: Data("\(digest)  ../AgentBrew-0.4.0.dmg\n".utf8)
         )
     }
 }

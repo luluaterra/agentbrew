@@ -465,16 +465,128 @@ private final class FakeSleepControl: DaemonSleepSettingControlling {
 
 @Test func signingIdentityDerivesTheMatchingAppAndRequirement() throws {
     let daemon = RuntimeSigningIdentity(
-        identifier: "com.ruban24.letitbrew.dev.daemon",
+        identifier: "com.agentbrew.dev.daemon",
         teamIdentifier: "MV2UL94MDC"
     )
     let app = try #require(daemon.appClientIdentity())
 
-    #expect(app.identifier == "com.ruban24.letitbrew.dev")
+    #expect(app.identifier == "com.agentbrew.dev")
     #expect(app.teamIdentifier == "MV2UL94MDC")
     #expect(
         app.codeSigningRequirement
             == "anchor apple generic and certificate leaf[subject.OU] = \"MV2UL94MDC\""
-                + " and identifier \"com.ruban24.letitbrew.dev\""
+                + " and identifier \"com.agentbrew.dev\""
     )
+}
+
+private final class StubForeignDetector: ForeignSleepHoldDetecting, @unchecked Sendable {
+    private let lock = NSLock()
+    private var holdsValue: Bool
+    init(holds: Bool) { self.holdsValue = holds }
+    /// Mutable under a lock so tests can flip it mid-hold, as the real world
+    /// does when the upstream Let It Brew acquires beside us.
+    var holds: Bool {
+        get { lock.lock(); defer { lock.unlock() }; return holdsValue }
+        set { lock.lock(); defer { lock.unlock() }; holdsValue = newValue }
+    }
+    func holdsSystemSleep() -> Bool { holds }
+}
+
+@Test func acquireRefusedWhileUpstreamLetItBrewHoldsTheSleepSetting() {
+    let store = FakeDebtStore()
+    let sleep = FakeSleepControl(live: true)
+    let coordinator = DaemonHoldCoordinator(
+        debtStore: store,
+        sleepControl: sleep,
+        foreignSleepHoldDetector: StubForeignDetector(holds: true)
+    )
+
+    guard case .failed(let message) = coordinator.setHold(true, for: UUID()) else {
+        Issue.record("Expected the foreign-hold refusal")
+        return
+    }
+    #expect(message == ForeignSleepHoldDetector.acquireRefusalMessage)
+    #expect(sleep.events.isEmpty)
+    #expect(store.state == .none)
+}
+
+@Test func acquireProceedsWhenNoForeignHoldExists() {
+    let store = FakeDebtStore()
+    let sleep = FakeSleepControl(live: false)
+    let coordinator = DaemonHoldCoordinator(
+        debtStore: store,
+        sleepControl: sleep,
+        foreignSleepHoldDetector: StubForeignDetector(holds: false)
+    )
+
+    #expect(coordinator.setHold(true, for: UUID()).reply.succeeded)
+    #expect(sleep.live == true)
+    #expect(store.state != .none)
+}
+
+@Test func releaseDefersRestoreWhileForeignHoldExists() {
+    let store = FakeDebtStore()
+    let sleep = FakeSleepControl(live: false)
+    let detector = StubForeignDetector(holds: false)
+    let coordinator = DaemonHoldCoordinator(
+        debtStore: store,
+        sleepControl: sleep,
+        foreignSleepHoldDetector: detector
+    )
+    let connection = UUID()
+    #expect(coordinator.setHold(true, for: connection).reply.succeeded)
+    #expect(sleep.live == true)
+
+    // The upstream Let It Brew acquires beside us mid-hold.
+    detector.holds = true
+    guard case .failed(let message) = coordinator.setHold(false, for: connection) else {
+        Issue.record("Expected the foreign-hold deferral failure")
+        return
+    }
+    #expect(message == ForeignSleepHoldDetector.restoreDeferralMessage)
+    // Nothing was restored and our own debt record survives for the retry.
+    #expect(sleep.live == true)
+    guard case .valid = store.state else {
+        Issue.record("Expected the deferred debt record to remain")
+        return
+    }
+
+    // Once the foreign hold is gone, the retry timer restores our baseline.
+    detector.holds = false
+    coordinator.retryPendingRestoration()
+    #expect(sleep.live == false)
+    #expect(store.state == .none)
+}
+
+@Test func launchReconciliationDefersWhileForeignHoldExists() {
+    let debt = DaemonSleepDebt(priorValue: false, setAt: Date(timeIntervalSince1970: 10))
+    let store = FakeDebtStore(state: .valid(debt))
+    let sleep = FakeSleepControl(live: true)
+    let detector = StubForeignDetector(holds: true)
+    let coordinator = DaemonHoldCoordinator(
+        debtStore: store,
+        sleepControl: sleep,
+        foreignSleepHoldDetector: detector
+    )
+
+    #expect(coordinator.reconcileAtLaunch() == .blocked(ForeignSleepHoldDetector.restoreDeferralMessage))
+    #expect(sleep.live == true)
+    #expect(store.state != .none)
+
+    detector.holds = false
+    coordinator.retryPendingRestoration()
+    #expect(sleep.live == false)
+    #expect(store.state == .none)
+}
+
+@Test func handshakeReadinessStaysReadyWhenOnlyTheForeignHoldExists() {
+    // With no debt of our own there is nothing to restore, so readiness is
+    // not the layer that refuses: the acquire gate handles the refusal.
+    let coordinator = DaemonHoldCoordinator(
+        debtStore: FakeDebtStore(),
+        sleepControl: FakeSleepControl(live: true),
+        foreignSleepHoldDetector: StubForeignDetector(holds: true)
+    )
+
+    #expect(coordinator.reconciliationReadiness() == .ready)
 }

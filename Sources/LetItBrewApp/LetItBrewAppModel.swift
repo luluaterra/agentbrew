@@ -214,7 +214,7 @@ enum UpdateConfirmationSurface {
 @MainActor
 final class LetItBrewAppModel: ObservableObject {
     private static let logger = Logger(
-        subsystem: "com.ruban24.letitbrew",
+        subsystem: "com.agentbrew",
         category: "lid-close-display"
     )
     @Published private(set) var sessions: [MenuSessionPresentation] = []
@@ -481,7 +481,7 @@ final class LetItBrewAppModel: ObservableObject {
             && !defaults.bool(forKey: Keys.launchAtLoginOnboardingDismissed)
         let initialLaunch = Self.initialLaunchDecision(
             defaults: defaults,
-            helperPath: Bundle.main.bundleURL.appendingPathComponent("Contents/Helpers/letitbrew").path,
+            helperPath: Bundle.main.bundleURL.appendingPathComponent("Contents/Helpers/agentbrew").path,
             home: FileManager.default.homeDirectoryForCurrentUser,
             environment: ProcessInfo.processInfo.environment
         )
@@ -516,13 +516,13 @@ final class LetItBrewAppModel: ObservableObject {
         automaticUpdateTask?.cancel()
         frontmostAppTask?.cancel()
         daemonRecoveryTask?.cancel()
-        powerAssertion.setSystemHold(false, reason: "Let It Brew quit")
-        powerAssertion.setDisplayHold(false, reason: "Let It Brew quit")
+        powerAssertion.setSystemHold(false, reason: "AgentBrew quit")
+        powerAssertion.setDisplayHold(false, reason: "AgentBrew quit")
         daemonConnection?.invalidate()
     }
 
     var menuBarAccessibilityLabel: String {
-        "Let It Brew, \(presentationState.rawValue.lowercased()), \(reason)"
+        "AgentBrew, \(presentationState.rawValue.lowercased()), \(reason)"
     }
 
     var isHolding: Bool {
@@ -748,7 +748,7 @@ final class LetItBrewAppModel: ObservableObject {
             updateState = .failed(
                 OneClickUpdateFailure(
                     kind: .discovery,
-                    message: "Let It Brew couldn't identify its installed version. Nothing was changed.",
+                    message: "AgentBrew couldn't identify its installed version. Nothing was changed.",
                     diagnostic: "CFBundleShortVersionString is missing or is not canonical major.minor.patch"
                 ),
                 retry: .check
@@ -1291,7 +1291,7 @@ final class LetItBrewAppModel: ObservableObject {
     }
 
     var helperURL: URL {
-        Bundle.main.bundleURL.appendingPathComponent("Contents/Helpers/letitbrew")
+        Bundle.main.bundleURL.appendingPathComponent("Contents/Helpers/agentbrew")
     }
 
     private func persistConnectedAgentIDs(_ ids: Set<String>) {
@@ -1309,7 +1309,7 @@ final class LetItBrewAppModel: ObservableObject {
                 id: health.id,
                 name: health.name,
                 state: .actionNeeded,
-                details: ["Disconnected. Choose Connect to use this agent with Let It Brew."],
+                details: ["Disconnected. Choose Connect to use this agent with AgentBrew."],
                 disposition: .intentionallyDisconnected
             )
         }
@@ -1393,7 +1393,7 @@ final class LetItBrewAppModel: ObservableObject {
                         id: health.id,
                         name: health.name,
                         state: .actionNeeded,
-                        details: ["Disconnected. Choose Connect to use this agent with Let It Brew."],
+                        details: ["Disconnected. Choose Connect to use this agent with AgentBrew."],
                         disposition: .intentionallyDisconnected
                     )
                 case .showFailure(let result):
@@ -1436,7 +1436,7 @@ final class LetItBrewAppModel: ObservableObject {
         guard FileManager.default.isExecutableFile(atPath: path) else {
             return HelperRunResult(
                 status: -1,
-                output: "The embedded Let It Brew helper is missing.",
+                output: "The embedded AgentBrew helper is missing.",
                 timedOut: false
             )
         }
@@ -1447,7 +1447,7 @@ final class LetItBrewAppModel: ObservableObject {
             timeout: 5
         )
         let output = result.timedOut
-            ? "Let It Brew’s agent helper timed out. Choose Check Again."
+            ? "AgentBrew’s agent helper timed out. Choose Check Again."
             : result.launchError ?? String(decoding: result.output, as: UTF8.self)
         return HelperRunResult(
             status: result.status,
@@ -1740,7 +1740,7 @@ final class LetItBrewAppModel: ObservableObject {
                 id: id,
                 name: name,
                 state: .actionNeeded,
-                details: ["Disconnected. Choose Connect to use this agent with Let It Brew."],
+                details: ["Disconnected. Choose Connect to use this agent with AgentBrew."],
                 disposition: .intentionallyDisconnected
             )
         case .healthy, .needsConnection:
@@ -1749,8 +1749,8 @@ final class LetItBrewAppModel: ObservableObject {
                 name: name,
                 state: .couldNotConnect,
                 details: [
-                    "Let It Brew’s hooks are still present, so disconnect did not finish.",
-                    "Let It Brew will not repair or reinstall them. Choose Disconnect again to retry, or Connect to keep using this agent.",
+                    "AgentBrew’s hooks are still present, so disconnect did not finish.",
+                    "AgentBrew will not repair or reinstall them. Choose Disconnect again to retry, or Connect to keep using this agent.",
                 ] + (mutationGuidance ?? []),
                 disposition: .disconnectFailed
             )
@@ -1760,7 +1760,7 @@ final class LetItBrewAppModel: ObservableObject {
                 name: name,
                 state: .actionNeeded,
                 details: details + [
-                    "Let It Brew will not repair or reinstall this connection. Fix the file, then choose Disconnect again, or choose Connect to keep using this agent."
+                    "AgentBrew will not repair or reinstall this connection. Fix the file, then choose Disconnect again, or choose Connect to keep using this agent."
                 ] + (mutationGuidance ?? []),
                 disposition: .disconnectFailed
             )
@@ -1822,14 +1822,14 @@ final class LetItBrewAppModel: ObservableObject {
                         id: "claude", name: "Claude Code", state: .couldNotConnect,
                         details: connectionFailureDetails(
                             mutation,
-                            fallback: ["Let It Brew could not add its Claude Code hooks."]
+                            fallback: ["AgentBrew could not add its Claude Code hooks."]
                         )
                     ))
                 case .healthy:
                     if !presentation.isConnected {
                         health.append(AgentHookHealth(
                             id: "claude", name: "Claude Code", state: .couldNotConnect,
-                            details: connectionFailureDetails(mutation, fallback: ["Let It Brew could not prepare its Claude Code connection."])
+                            details: connectionFailureDetails(mutation, fallback: ["AgentBrew could not prepare its Claude Code connection."])
                         ))
                     } else {
                         if presentation.changedVendorBytes { changedAgents.append("Claude Code") }
@@ -1887,14 +1887,14 @@ final class LetItBrewAppModel: ObservableObject {
                         id: "codex", name: "Codex", state: .couldNotConnect,
                         details: connectionFailureDetails(
                             mutation,
-                            fallback: ["Let It Brew could not add its Codex hooks."]
+                            fallback: ["AgentBrew could not add its Codex hooks."]
                         )
                     ))
                 case .healthy:
                     if !presentation.isConnected {
                         health.append(AgentHookHealth(
                             id: "codex", name: "Codex", state: .couldNotConnect,
-                            details: connectionFailureDetails(mutation, fallback: ["Let It Brew could not prepare its Codex connection."])
+                            details: connectionFailureDetails(mutation, fallback: ["AgentBrew could not prepare its Codex connection."])
                         ))
                     } else {
                     if presentation.changedVendorBytes { changedAgents.append("Codex") }
@@ -1923,7 +1923,7 @@ final class LetItBrewAppModel: ObservableObject {
                         health.append(AgentHookHealth(
                             id: "codex", name: "Codex", state: .actionNeeded,
                             details: [
-                                "In Codex, type /hooks and approve Let It Brew.",
+                                "In Codex, type /hooks and approve AgentBrew.",
                                 "Then restart Codex sessions that were already open.",
                             ]
                         ))
@@ -1931,7 +1931,7 @@ final class LetItBrewAppModel: ObservableObject {
                         health.append(AgentHookHealth(
                             id: "codex", name: "Codex", state: .couldNotConnect,
                             details: [
-                                "Let It Brew added its hooks but couldn’t verify Codex approval.",
+                                "AgentBrew added its hooks but couldn’t verify Codex approval.",
                                 "Open Codex, then try again.",
                             ]
                         ))
@@ -1961,7 +1961,7 @@ final class LetItBrewAppModel: ObservableObject {
         // hook configuration is local and independent of that discovery.
         for agent in [AgentID.opencode, .copilot, .pi, .cursor, .gemini, .qwen, .kimi] where agentIDs.contains(agent.rawValue) {
             if disconnected.contains(agent.rawValue) {
-                health.append(AgentHookHealth(id: agent.rawValue, name: agent.displayName, state: .actionNeeded, details: ["Disconnected. Choose Connect to use this agent with Let It Brew."], disposition: .intentionallyDisconnected))
+                health.append(AgentHookHealth(id: agent.rawValue, name: agent.displayName, state: .actionNeeded, details: ["Disconnected. Choose Connect to use this agent with AgentBrew."], disposition: .intentionallyDisconnected))
                 continue
             }
             if mutationGuidance != nil {
@@ -1975,7 +1975,7 @@ final class LetItBrewAppModel: ObservableObject {
                 if presentation.changedVendorBytes { changedAgents.append(agent.displayName) }
                 health.append(AgentHookHealth(id: agent.rawValue, name: agent.displayName, state: .connected, details: []))
             } else {
-                health.append(AgentHookHealth(id: agent.rawValue, name: agent.displayName, state: .couldNotConnect, details: connectionFailureDetails(mutation, fallback: ["Let It Brew could not prepare its \(agent.displayName) connection."])))
+                health.append(AgentHookHealth(id: agent.rawValue, name: agent.displayName, state: .couldNotConnect, details: connectionFailureDetails(mutation, fallback: ["AgentBrew could not prepare its \(agent.displayName) connection."])))
             }
         }
 
@@ -2259,11 +2259,11 @@ final class LetItBrewAppModel: ObservableObject {
 
         let systemSettled = powerAssertion.setSystemHold(
             intent.system,
-            reason: "Let It Brew: \(decision.reason)"
+            reason: "AgentBrew: \(decision.reason)"
         )
         let displaySettled = powerAssertion.setDisplayHold(
             intent.display,
-            reason: "Let It Brew: \(decision.reason)"
+            reason: "AgentBrew: \(decision.reason)"
         )
         if daemonHoldRequestState.expireRequestIfTimedOut(
             at: snapshot.now,
@@ -2450,7 +2450,7 @@ final class LetItBrewAppModel: ObservableObject {
         }
     }
 
-    /// True while Low Power Mode on the current source may be Let It Brew's
+    /// True while Low Power Mode on the current source may be AgentBrew's
     /// switch rather than the person's choice, so "Respect Low Power Mode"
     /// must not release on it.
     private func ownsLowPowerMode(at now: Date, onBattery: Bool) -> Bool {
@@ -2574,7 +2574,7 @@ final class LetItBrewAppModel: ObservableObject {
             && daemonHoldRequestState.releaseConfirmationRequired
             && !daemonHoldRequestState.isReleaseConfirmed
         if !systemReleased || !displayReleased || daemonReleaseUnconfirmed {
-            holdReleaseFailure = "Let It Brew could not confirm that every sleep hold was released. Try again or quit Let It Brew."
+            holdReleaseFailure = "AgentBrew could not confirm that every sleep hold was released. Try again or quit AgentBrew."
         } else {
             holdReleaseFailure = nil
         }
@@ -2590,8 +2590,8 @@ final class LetItBrewAppModel: ObservableObject {
     func cleanQuit() {
         requestedSystemHold = false
         requestedLidHold = false
-        powerAssertion.setSystemHold(false, reason: "Let It Brew quit")
-        powerAssertion.setDisplayHold(false, reason: "Let It Brew quit")
+        powerAssertion.setSystemHold(false, reason: "AgentBrew quit")
+        powerAssertion.setDisplayHold(false, reason: "AgentBrew quit")
         synchronizeDaemonHold()
         updateHoldOwnership()
         Task { [weak self] in

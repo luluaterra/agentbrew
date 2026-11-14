@@ -12,7 +12,7 @@ import Foundation
 /// kept exactly, and a malformed shape refuses the whole file.
 public enum CursorHooks {
     /// Frozen ownership marker: the trailing comment of every command we write.
-    public static let marker = "__letitbrew_cursor_hook"
+    public static let marker = "__agentbrew_cursor_hook"
 
     /// Each event to install, and the name `HookReducer` knows it by.
     public static let events = [

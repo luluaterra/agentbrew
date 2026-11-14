@@ -67,42 +67,42 @@ public enum AgentLaunchOutcomeCoordinator {
                         agentID: id,
                         state: .couldNotConnect,
                         details: [
-                            "Let It Brew’s hooks are still present, so disconnect did not finish.",
+                            "AgentBrew’s hooks are still present, so disconnect did not finish.",
                             "Choose Retry Disconnect to remove them, or Connect to keep using this agent.",
                         ],
                         disposition: .disconnectFailed
                     )
                 }
                 return .init(agentID: id, state: .actionNeeded,
-                             details: ["Disconnected. Choose Connect to use this agent with Let It Brew."],
+                             details: ["Disconnected. Choose Connect to use this agent with AgentBrew."],
                              disposition: .intentionallyDisconnected)
             }
             guard let inspection = byID[id] else {
                 return .init(agentID: id, state: .actionNeeded,
-                             details: ["Let It Brew could not inspect this selected connection."], disposition: .managed)
+                             details: ["AgentBrew could not inspect this selected connection."], disposition: .managed)
             }
             switch inspection.state {
             case .invalid:
                 return .init(agentID: id, state: .actionNeeded,
-                             details: ["Let It Brew will not change this invalid connection. Fix it, then choose Check Again."], disposition: .managed)
+                             details: ["AgentBrew will not change this invalid connection. Fix it, then choose Check Again."], disposition: .managed)
             case .healthyOwned where outcomes[id] == nil:
                 let state: AgentConnectionState
                 if agent == .codex {
                     guard let codexTrust else {
                         return .init(agentID: id, state: .couldNotConnect,
-                                     details: ["Let It Brew could not verify Codex hook approval."], disposition: .managed)
+                                     details: ["AgentBrew could not verify Codex hook approval."], disposition: .managed)
                     }
                     state = AgentConnectionPolicy.state(configuration: .healthy, codexTrust: codexTrust)
                 } else { state = .connected }
                 return .init(agentID: id, state: state, details: details(for: state), disposition: .managed)
             default:
-                switch outcomes[id] ?? .failed("Let It Brew did not receive a preparation result.") {
+                switch outcomes[id] ?? .failed("AgentBrew did not receive a preparation result.") {
                 case .succeeded:
                     let state: AgentConnectionState
                     if agent == .codex {
                         guard let codexTrust else {
                             return .init(agentID: id, state: .couldNotConnect,
-                                         details: ["Let It Brew could not verify Codex hook approval."], disposition: .managed)
+                                         details: ["AgentBrew could not verify Codex hook approval."], disposition: .managed)
                         }
                         state = AgentConnectionPolicy.state(configuration: .healthy, codexTrust: codexTrust)
                     } else { state = .connected }
@@ -113,7 +113,7 @@ public enum AgentLaunchOutcomeCoordinator {
                                  details: [message], disposition: .managed)
                 case .notRun:
                     return .init(agentID: id, state: .actionNeeded,
-                                 details: ["Let It Brew did not prepare this selected connection."], disposition: .managed)
+                                 details: ["AgentBrew did not prepare this selected connection."], disposition: .managed)
                 }
             }
         }
@@ -122,8 +122,8 @@ public enum AgentLaunchOutcomeCoordinator {
     private static func details(for state: AgentConnectionState) -> [String] {
         switch state {
         case .connected, .connecting: []
-        case .actionNeeded: ["Approve Let It Brew in Codex, then try again."]
-        case .couldNotConnect: ["Let It Brew could not verify Codex hook approval."]
+        case .actionNeeded: ["Approve AgentBrew in Codex, then try again."]
+        case .couldNotConnect: ["AgentBrew could not verify Codex hook approval."]
         }
     }
 }

@@ -275,7 +275,7 @@ public struct OneClickUpdatePreparationWorkflow: Sendable {
             }
             return .failure(OneClickUpdateFailure(
                 kind: stage.failureKind,
-                message: "Let It Brew couldn't prepare this update. Nothing was changed.",
+                message: "AgentBrew couldn't prepare this update. Nothing was changed.",
                 diagnostic: "\(stage.rawValue): \(error.localizedDescription)"
             ))
         }
@@ -297,7 +297,7 @@ public struct OneClickUpdatePreparationWorkflow: Sendable {
         }
         _ = try normalizedSHA256(
             candidate.executableSHA256,
-            context: "Let It Brew executable"
+            context: "AgentBrew executable"
         )
     }
 

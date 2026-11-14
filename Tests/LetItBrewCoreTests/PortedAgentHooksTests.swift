@@ -63,7 +63,7 @@ private func makeHelper() throws -> (url: URL, log: URL, directory: URL) {
     #expect(groups[0]["matcher"] == nil)
     let entry = try #require((groups[0]["hooks"] as? [[String: Any]])?.first)
     #expect(entry["timeout"] as? Int == 5_000)
-    #expect(entry["name"] as? String == "Let It Brew")
+    #expect(entry["name"] as? String == "AgentBrew")
     let command = try #require(entry["command"] as? String)
     #expect(command.contains("hook gemini Stop >/dev/null 2>&1"))
     #expect(command.hasSuffix(HookFile.ownershipComment(marker: GeminiHooks.marker)))

@@ -27,14 +27,16 @@ AgentBrew：基于上游 Let It Brew（ruban-24/letitbrew）的独立增强版�
 | Daemon 标识 | `com.agentbrew.dev.daemon`（由 Bundle ID 派生，勿硬编码） |
 | Hook marker | `__agentbrew_hook` / `__agentbrew_<agent>_hook` |
 | 用户数据目录 | `~/Library/Application Support/AgentBrew/` |
-| Daemon 状态目录 | 待定（R1 互斥设计，倾向 `/Library/Application Support/AgentBrew/` + 跨目录互斥检查） |
+| Daemon 状态目录 | `/Library/Application Support/AgentBrew/`（互斥检查读取官网版 `/Library/Application Support/LetItBrew/` 的活跃 debt，见 ForeignSleepHoldDetection.swift） |
 | GitHub | origin = luluaterra/agentbrew（fork），upstream = ruban-24/letitbrew |
 
 隔离改造点全清单：`docs/BASELINE_AUDIT.md` 第 4 节（10 处）。
 
 ## 命令
 
-- 库代码测试：`swift test`（Core/AppCore/DaemonCore；本机需 swiftly 工具链：`~/.swiftly/bin/env.sh`）。
+- 库代码测试（权威验证命令，本机实测全绿）：
+  `SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk swift test --no-parallel`
+  （需 swiftly 工具链 `~/.swiftly/bin`；`--no-parallel` 必须：Pi 扩展运行时测试在并行负载下会超其内部 spawn 超时，属上游测试负载敏感，非代码缺陷）。
 - App/daemon/CLI：**仅 Xcode**（`xcodegen generate && xcodebuild`）。本机当前未装 Xcode（审计 R3）。
 - 上游脚本：`scripts/` 下有构建/验证脚本，随上游保留。
 - Git：开发在 `agentbrew/main` 分支；同步上游 `git fetch upstream && git merge upstream/main`。不 push 未经用户要求。

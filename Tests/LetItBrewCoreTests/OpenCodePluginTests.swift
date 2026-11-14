@@ -20,7 +20,7 @@ import Testing
 
 @Test func generatedPluginUsesOnlyLifecycleEventsAndContainsFailOpenBoundary() throws {
     let source = String(decoding: try OpenCodePlugin.install(
-        into: nil, cliPath: "/Applications/Let It Brew.app/Contents/Helpers/letitbrew"
+        into: nil, cliPath: "/Applications/AgentBrew.app/Contents/Helpers/agentbrew"
     ), as: UTF8.self)
     #expect(source.contains(OpenCodePlugin.marker))
     #expect(source.contains("session.created"))

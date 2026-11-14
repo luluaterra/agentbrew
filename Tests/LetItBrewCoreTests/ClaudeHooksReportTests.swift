@@ -32,8 +32,8 @@ import Foundation
 @Test func reportsADoubledEntryAsDuplicated() throws {
     let data = Data("""
     {"hooks":{"Stop":[
-      {"hooks":[{"type":"command","command":"a; : # __letitbrew_hook"}]},
-      {"hooks":[{"type":"command","command":"b; : # __letitbrew_hook"}]}]}}
+      {"hooks":[{"type":"command","command":"a; : # __agentbrew_hook"}]},
+      {"hooks":[{"type":"command","command":"b; : # __agentbrew_hook"}]}]}}
     """.utf8)
     let report = ClaudeHooks.report(for: data, cliPath: "/opt/letitbrew")
     #expect(report.duplicated == ["Stop"])
@@ -47,7 +47,7 @@ import Foundation
 
 @Test func reportsAnEntryUnderARetiredEventAsOrphaned() {
     let data = Data("""
-    {"hooks":{"LegacyEvent":[{"hooks":[{"type":"command","command":"x; : # __letitbrew_hook"}]}]}}
+    {"hooks":{"LegacyEvent":[{"hooks":[{"type":"command","command":"x; : # __agentbrew_hook"}]}]}}
     """.utf8)
     let report = ClaudeHooks.report(for: data, cliPath: "/opt/letitbrew")
     #expect(report.orphaned == ["LegacyEvent"])

@@ -246,7 +246,7 @@ func runRepair() -> Int32 {
 /// Removes the lease WITHOUT privilege, if that's even possible. This is an
 /// ACTION, never a decision: a plain `rm -rf` can in fact remove even a
 /// root-owned lease directory, because deleting a directory entry needs
-/// write permission on its PARENT (`Let It Brew/`, created and owned by this
+/// write permission on its PARENT (`AgentBrew/`, created and owned by this
 /// user), not ownership of the entry itself — so this must only ever run
 /// once `SleepWatchdogRepair.run` has already decided nothing is owed.
 /// Running it unconditionally, before that decision, is exactly what used

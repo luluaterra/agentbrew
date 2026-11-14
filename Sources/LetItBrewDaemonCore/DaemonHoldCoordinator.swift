@@ -28,7 +28,7 @@ public enum DaemonHoldResult: Equatable, Sendable {
 }
 
 /// A Low Power Mode request's outcome. `personalSources` are the sources that
-/// were already in Low Power Mode before Let It Brew switched any: that mode is
+/// were already in Low Power Mode before AgentBrew switched any: that mode is
 /// the person's own choice, so "Respect Low Power Mode" still applies to it.
 public enum DaemonLowPowerHoldResult: Equatable, Sendable {
     case applied(personalSources: Set<PowerModeSource>)
@@ -86,6 +86,7 @@ public final class DaemonHoldCoordinator: @unchecked Sendable {
     private let sleepControl: DaemonSleepSettingControlling
     private let powerModeDebtStore: DaemonPowerModeDebtStoring?
     private let powerModeControl: DaemonPowerModeControlling?
+    private let foreignSleepHoldDetector: ForeignSleepHoldDetecting?
     private let now: () -> Date
     private let pauseBeforeRetry: (TimeInterval) -> Void
     private var holders: Set<UUID> = []
@@ -104,6 +105,7 @@ public final class DaemonHoldCoordinator: @unchecked Sendable {
         sleepControl: DaemonSleepSettingControlling,
         powerModeDebtStore: DaemonPowerModeDebtStoring? = nil,
         powerModeControl: DaemonPowerModeControlling? = nil,
+        foreignSleepHoldDetector: ForeignSleepHoldDetecting? = nil,
         now: @escaping () -> Date = Date.init,
         pauseBeforeRetry: @escaping (TimeInterval) -> Void = { Thread.sleep(forTimeInterval: $0) }
     ) {
@@ -111,6 +113,7 @@ public final class DaemonHoldCoordinator: @unchecked Sendable {
         self.sleepControl = sleepControl
         self.powerModeDebtStore = powerModeDebtStore
         self.powerModeControl = powerModeControl
+        self.foreignSleepHoldDetector = foreignSleepHoldDetector
         self.now = now
         self.pauseBeforeRetry = pauseBeforeRetry
     }
@@ -145,7 +148,7 @@ public final class DaemonHoldCoordinator: @unchecked Sendable {
         interval: DispatchTimeInterval = .seconds(5)
     ) -> DispatchSourceTimer {
         let timer = DispatchSource.makeTimerSource(
-            queue: DispatchQueue(label: "com.ruban24.letitbrew.restore", qos: .utility)
+            queue: DispatchQueue(label: "com.agentbrew.restore", qos: .utility)
         )
         timer.schedule(deadline: .now() + interval, repeating: interval, leeway: .seconds(1))
         timer.setEventHandler { [self] in retryPendingRestoration() }
@@ -265,6 +268,13 @@ public final class DaemonHoldCoordinator: @unchecked Sendable {
                 "The daemon is quiescing for an upgrade and cannot acquire a new hold."
             )
         }
+        // The upstream Let It Brew's restore record proves its daemon owns the
+        // one global SleepDisabled flag right now. Taking a hold beside it
+        // would let either release strand the other's baseline, so refuse and
+        // let the app surface the message.
+        if let foreignSleepHoldDetector, foreignSleepHoldDetector.holdsSystemSleep() {
+            return .failed(ForeignSleepHoldDetector.acquireRefusalMessage)
+        }
         if holders.contains(connectionID) { return .applied }
         if !holders.isEmpty {
             holders.insert(connectionID)
@@ -346,7 +356,7 @@ public final class DaemonHoldCoordinator: @unchecked Sendable {
             return .failed("Could not read the current energy mode.")
         }
         guard !prior.sources.isEmpty else {
-            return .failed("This Mac does not report an energy mode Let It Brew can switch.")
+            return .failed("This Mac does not report an energy mode AgentBrew can switch.")
         }
 
         let debt = DaemonPowerModeDebt(prior: prior, setAt: now())
@@ -489,6 +499,15 @@ public final class DaemonHoldCoordinator: @unchecked Sendable {
             }
 
             if live != debt.priorValue {
+                // Restoring now would fight the upstream Let It Brew's live
+                // hold: its daemon recorded the value it found as ITS baseline,
+                // so our write breaks its intent and its release then strands
+                // SleepDisabled at the wrong value. Keep our debt record; the
+                // five-second retry timer restores once the foreign hold is
+                // gone, so the baseline is never lost — only delayed.
+                if let foreignSleepHoldDetector, foreignSleepHoldDetector.holdsSystemSleep() {
+                    return .blocked(ForeignSleepHoldDetector.restoreDeferralMessage)
+                }
                 guard sleepControl.writeDisabled(debt.priorValue),
                       sleepControl.readDisabled() == debt.priorValue
                 else {

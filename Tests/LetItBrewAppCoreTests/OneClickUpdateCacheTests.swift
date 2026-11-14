@@ -6,7 +6,7 @@ import Testing
     private func makeAppCache() throws -> URL {
         let root = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
             .appendingPathComponent("LetItBrewCache-\(UUID().uuidString)", isDirectory: true)
-            .appendingPathComponent("com.ruban24.letitbrew", isDirectory: true)
+            .appendingPathComponent("com.agentbrew", isDirectory: true)
         try FileManager.default.createDirectory(
             at: root,
             withIntermediateDirectories: true,

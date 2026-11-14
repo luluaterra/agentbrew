@@ -85,7 +85,7 @@ public enum AgentLiveDiskReader {
                 if !recorded, !agent.ownsWholeConfigurationFile,
                    (try? FileManager.default.destinationOfSymbolicLink(atPath: requested.path)) != nil,
                    !FileManager.default.fileExists(atPath: requested.resolvingSymlinksInPath().path) {
-                    return .invalid(resolvedURL: requested, reason: "Let It Brew will not follow a dangling configuration symlink.")
+                    return .invalid(resolvedURL: requested, reason: "AgentBrew will not follow a dangling configuration symlink.")
                 }
                 let target = recorded
                     ? requested
@@ -99,7 +99,7 @@ public enum AgentLiveDiskReader {
                         .absent(capture.snapshot)
                     }
                 } catch {
-                    return .invalid(resolvedURL: target, reason: "Let It Brew could not safely read this target.")
+                    return .invalid(resolvedURL: target, reason: "AgentBrew could not safely read this target.")
                 }
             }
         )

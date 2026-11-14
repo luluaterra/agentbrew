@@ -26,7 +26,7 @@ public enum LidCloseDisplaySleepAction: Equatable, Sendable {
 }
 
 /// Detects observed transitions into closed-lid operation without an external
-/// display and decides whether Let It Brew should immediately sleep displays. The
+/// display and decides whether AgentBrew should immediately sleep displays. The
 /// command fires once when the lid closes in that topology or when the last
 /// external display disconnects while the lid remains closed. Startup and
 /// unreadable samples never synthesize a transition.

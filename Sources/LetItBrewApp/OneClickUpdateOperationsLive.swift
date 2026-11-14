@@ -15,7 +15,7 @@ private enum LiveUpdateOperationError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .unsafeInstalledApp:
-            "Run the signed Let It Brew app installed directly at /Applications/Let It Brew.app."
+            "Run the signed AgentBrew app installed directly at /Applications/AgentBrew.app."
         case .unsafePath(let detail):
             "An update path was unsafe: \(detail)"
         case .filesystem(let detail):
@@ -27,7 +27,7 @@ private enum LiveUpdateOperationError: LocalizedError {
         case .invalidCandidate(let detail):
             "The update app was invalid: \(detail)"
         case .runnerExited:
-            "The detached updater stopped before Let It Brew could safely quit."
+            "The detached updater stopped before AgentBrew could safely quit."
         }
     }
 }
@@ -36,7 +36,7 @@ final class LiveOneClickUpdateOperations:
     OneClickUpdatePreparationOperations,
     @unchecked Sendable
 {
-    private static let installedApp = URL(fileURLWithPath: "/Applications/Let It Brew.app")
+    private static let installedApp = URL(fileURLWithPath: "/Applications/AgentBrew.app")
     private static let supportFiles: [String: Int] = [
         "run-update.sh": 0o755,
         "upgrade-installed-app.sh": 0o755,
@@ -66,7 +66,7 @@ final class LiveOneClickUpdateOperations:
             throw LiveUpdateOperationError.filesystem("no user Caches directory")
         }
         let appCache = caches.appendingPathComponent(
-            "com.ruban24.letitbrew",
+            "com.agentbrew",
             isDirectory: true
         )
         try fileManager.createDirectory(
@@ -113,7 +113,7 @@ final class LiveOneClickUpdateOperations:
             checksumFile: downloads.appendingPathComponent(release.checksums.name),
             diskImage: downloads.appendingPathComponent(release.dmg.name),
             mountPoint: mount,
-            stagedApp: candidate.appendingPathComponent("Let It Brew.app", isDirectory: true),
+            stagedApp: candidate.appendingPathComponent("AgentBrew.app", isDirectory: true),
             updateSupportDirectory: root.appendingPathComponent("UpdateSupport", isDirectory: true),
             resultFile: root.appendingPathComponent("result.json"),
             logFile: root.appendingPathComponent("update.log")
@@ -126,7 +126,7 @@ final class LiveOneClickUpdateOperations:
         request.httpMethod = "GET"
         request.setValue("application/octet-stream", forHTTPHeaderField: "Accept")
         request.setValue("identity", forHTTPHeaderField: "Accept-Encoding")
-        request.setValue("Let It Brew updater", forHTTPHeaderField: "User-Agent")
+        request.setValue("AgentBrew updater", forHTTPHeaderField: "User-Agent")
         let maximum = asset.name.hasSuffix(".dmg")
             ? StableUpdateReleaseParser.maximumDMGSize
             : StableUpdateReleaseParser.maximumChecksumSize
@@ -195,7 +195,7 @@ final class LiveOneClickUpdateOperations:
         )
         let mounted = MountedUpdateImage(
             mountPoint: mountPoint,
-            appBundle: mountPoint.appendingPathComponent("Let It Brew.app", isDirectory: true)
+            appBundle: mountPoint.appendingPathComponent("AgentBrew.app", isDirectory: true)
         )
         do {
             try validateAttachPlist(result, expectedMountPoint: mountPoint)
@@ -212,7 +212,7 @@ final class LiveOneClickUpdateOperations:
         location: UpdateCandidateLocation
     ) throws -> VerifiedUpdateCandidate {
         guard try directoryIsOrdinary(appBundle) else {
-            throw LiveUpdateOperationError.invalidCandidate("Let It Brew.app is missing or symlinked")
+            throw LiveUpdateOperationError.invalidCandidate("AgentBrew.app is missing or symlinked")
         }
         let verifier = installedBundle.bundleURL.appendingPathComponent(
             "Contents/Resources/UpdateSupport/verify-artifact.sh"
@@ -409,7 +409,7 @@ final class LiveOneClickUpdateOperations:
             in: .userDomainMask
         ).first else { return nil }
         return caches
-            .appendingPathComponent("com.ruban24.letitbrew", isDirectory: true)
+            .appendingPathComponent("com.agentbrew", isDirectory: true)
             .appendingPathComponent("Updates", isDirectory: true)
             .standardizedFileURL
     }
@@ -417,7 +417,7 @@ final class LiveOneClickUpdateOperations:
     private func requireSafeInstalledApp() throws {
         let actual = installedBundle.bundleURL.resolvingSymlinksInPath().standardizedFileURL
         guard actual == Self.installedApp,
-              installedBundle.bundleIdentifier == "com.ruban24.letitbrew",
+              installedBundle.bundleIdentifier == "com.agentbrew",
               try directoryIsOrdinary(installedBundle.bundleURL)
         else {
             throw LiveUpdateOperationError.unsafeInstalledApp
@@ -461,11 +461,11 @@ final class LiveOneClickUpdateOperations:
             )
         case .invalidInventory:
             throw LiveUpdateOperationError.invalidDiskImage(
-                "payload inventory is not an accepted Let It Brew installer layout"
+                "payload inventory is not an accepted AgentBrew installer layout"
             )
         case .invalidAppBundle:
             throw LiveUpdateOperationError.invalidDiskImage(
-                "Let It Brew.app is missing or is not an ordinary directory"
+                "AgentBrew.app is missing or is not an ordinary directory"
             )
         }
     }

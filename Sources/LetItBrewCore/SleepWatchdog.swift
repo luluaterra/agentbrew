@@ -175,7 +175,7 @@ public enum SleepWatchdogRepair {
     /// owed — never before, and never for a refusal. A plain `rm -rf` can
     /// in fact remove even a root-owned lease directory (removing a
     /// directory entry needs write permission on its PARENT, not ownership
-    /// of the entry — and the parent, `Let It Brew/`, is created and owned by
+    /// of the entry — and the parent, `AgentBrew/`, is created and owned by
     /// this user), which is exactly why it must never run unconditionally:
     /// running it before this decision is made is what stranded
     /// `disablesleep=1` with no debt record in the first place.
@@ -259,7 +259,7 @@ public final class OsascriptSleepWatchdog: @unchecked Sendable {
     /// path, so neither can observe or touch the other's flag.
     public static var defaultFlagURL: URL {
         applicationSupportBase.appendingPathComponent(
-            "Let It Brew/sleep-watchdog-\(launchNonce).flag", isDirectory: false)
+            "AgentBrew/sleep-watchdog-\(launchNonce).flag", isDirectory: false)
     }
 
     /// Fixed, NOT per-launch: unlike the flag, the lease must be
@@ -269,7 +269,7 @@ public final class OsascriptSleepWatchdog: @unchecked Sendable {
     /// keeps two engagements from ever clobbering each other's debt record.
     public static var defaultLeaseURL: URL {
         applicationSupportBase.appendingPathComponent(
-            "Let It Brew/sleep-watchdog.lease", isDirectory: true)
+            "AgentBrew/sleep-watchdog.lease", isDirectory: true)
     }
 
     public func isFlagPresent() -> Bool {
@@ -506,7 +506,7 @@ public final class OsascriptSleepWatchdog: @unchecked Sendable {
 
         // Best-effort: creates the PARENT of the lease directory only, so
         // the very first engagement in a fresh install doesn't fail just
-        // because "Let It Brew/" doesn't exist yet. Never pre-creates the lease
+        // because "AgentBrew/" doesn't exist yet. Never pre-creates the lease
         // directory itself — only the shell loop's own atomic `mkdir` may
         // do that, or the exclusivity guarantee is void.
         try? FileManager.default.createDirectory(

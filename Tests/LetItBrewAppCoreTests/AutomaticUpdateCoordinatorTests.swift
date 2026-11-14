@@ -60,18 +60,18 @@ private actor SuspendedUpdateEnvironment: OneClickUpdateEnvironment {
 
 private func release(version: String) -> StableUpdateRelease? {
     guard let version = StableUpdateVersion(version) else { return nil }
-    let root = "https://github.com/ruban-24/letitbrew/releases/download/v\(version)"
+    let root = "https://github.com/luluaterra/agentbrew/releases/download/v\(version)"
     return StableUpdateRelease(
         version: version,
         dmg: UpdateAsset(
-            name: "LetItBrew-\(version).dmg",
-            downloadURL: URL(string: "\(root)/LetItBrew-\(version).dmg")!,
+            name: "AgentBrew-\(version).dmg",
+            downloadURL: URL(string: "\(root)/AgentBrew-\(version).dmg")!,
             size: 10,
             githubSHA256: nil
         ),
         checksums: UpdateAsset(
-            name: "LetItBrew-\(version)-SHA256SUMS",
-            downloadURL: URL(string: "\(root)/LetItBrew-\(version)-SHA256SUMS")!,
+            name: "AgentBrew-\(version)-SHA256SUMS",
+            downloadURL: URL(string: "\(root)/AgentBrew-\(version)-SHA256SUMS")!,
             size: 10,
             githubSHA256: nil
         )

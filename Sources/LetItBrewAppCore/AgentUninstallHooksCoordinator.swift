@@ -89,7 +89,7 @@ public enum AgentUninstallHooksCoordinator {
                 return .init(
                     agentID: agent.rawValue,
                     state: .actionNeeded,
-                    details: ["Disconnected. Choose Connect to use this agent with Let It Brew."],
+                    details: ["Disconnected. Choose Connect to use this agent with AgentBrew."],
                     disposition: .intentionallyDisconnected
                 )
             }

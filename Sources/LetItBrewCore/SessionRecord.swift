@@ -144,18 +144,18 @@ public struct SessionRecord: Codable, Equatable, Sendable {
     /// not inherit the terminal's COPILOT_HOME environment override.
     public var copilotHome: String?
     /// When this agent session began. Optional so records written by older
-    /// Let It Brew versions continue to decode. Consumers should use
+    /// AgentBrew versions continue to decode. Consumers should use
     /// `effectiveStartedAt` when presenting elapsed session time.
     public var startedAt: Date?
     /// Completed working intervals accumulated before `updatedAt`. Optional
-    /// so records written by older Let It Brew versions continue to decode.
+    /// so records written by older AgentBrew versions continue to decode.
     /// A currently-working interval is added at presentation time.
     public var accumulatedWorkingTime: TimeInterval?
     /// Exact hook event that produced this snapshot. Optional so records from
-    /// older Let It Brew versions continue to decode safely.
+    /// older AgentBrew versions continue to decode safely.
     public var lastEvent: String?
     /// When the session most recently entered its current state. Optional so
-    /// records written by older Let It Brew versions remain valid.
+    /// records written by older AgentBrew versions remain valid.
     public var stateChangedAt: Date?
     /// Stable identity for the current state edge. Repeated hooks that leave
     /// the state unchanged retain this value, which lets consumers dedupe
@@ -391,7 +391,7 @@ public struct SessionStorage: Sendable {
     }
 
     public static func applicationSupportDirectory(in base: URL) -> URL {
-        base.appendingPathComponent("LetItBrew", isDirectory: true)
+        base.appendingPathComponent("AgentBrew", isDirectory: true)
     }
 
     public static var sessionsDirectory: URL {

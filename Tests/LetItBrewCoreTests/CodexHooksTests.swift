@@ -70,14 +70,14 @@ private func object(_ data: Data) throws -> [String: Any] {
 @Test func uninstallDoesNotDeleteADescriptionThatCoincidentallyMatchesOurDefault() throws {
     // Overturned from an earlier version that compared the description
     // against our own default text and dropped it on a match, reasoning
-    // that meant Let It Brew had created the file wholesale. A string match is
+    // that meant AgentBrew had created the file wholesale. A string match is
     // not a provenance signal: a user whose own description happened to
     // read the same way would have silently lost it. remove must not guess
     // at authorship from content — see the type-level docs on `remove`.
     let installed = try CodexHooks.install(into: nil, cliPath: "/opt/letitbrew")
     let root = try object(try CodexHooks.remove(from: installed))
     let description = try #require(root["description"] as? String)
-    #expect(description == "Let It Brew keep-awake hooks")
+    #expect(description == "AgentBrew keep-awake hooks")
 }
 
 @Test func unknownTopLevelKeyThrowsRatherThanBeingSilentlyDropped() {

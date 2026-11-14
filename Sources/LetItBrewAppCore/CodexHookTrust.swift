@@ -1,6 +1,6 @@
 import Foundation
 
-/// The runtime state Codex reports for Let It Brew's configured hooks. This is
+/// The runtime state Codex reports for AgentBrew's configured hooks. This is
 /// intentionally separate from the on-disk install report: a valid hooks.json
 /// is still inert until Codex trusts each current hook definition.
 public enum CodexHookTrustResult: Equatable, Sendable {
@@ -37,7 +37,7 @@ public enum CodexHookTrust {
         let result: Result?
     }
 
-    /// Classifies the supported `hooks/list` app-server response. Let It Brew never
+    /// Classifies the supported `hooks/list` app-server response. AgentBrew never
     /// reads or writes Codex's undocumented trust storage; only Codex's own
     /// runtime view can establish that installed hooks are actually runnable.
     /// `optionalEvents` are expected events an older Codex may leave out of
@@ -88,7 +88,7 @@ public enum CodexHookTrust {
     }
 
     /// App-server emits newline-delimited JSON and may answer initialization
-    /// before `hooks/list`. Select the response carrying Let It Brew's request id
+    /// before `hooks/list`. Select the response carrying AgentBrew's request id
     /// instead of depending on response order or treating another response as
     /// a trust failure.
     public static func classifyAppServerOutput(

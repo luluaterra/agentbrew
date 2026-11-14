@@ -16,7 +16,7 @@ import Testing
 
     for (argument, expected) in cases {
         let mode = LetItBrewLaunchMode(
-            arguments: ["Let It Brew", argument],
+            arguments: ["AgentBrew", argument],
             allowsDesignPreview: true
         )
 
@@ -27,7 +27,7 @@ import Testing
 
 @Test func anOrdinaryLaunchConstructsTheOnlyMenuBarScene() {
     let mode = LetItBrewLaunchMode(
-        arguments: ["Let It Brew"],
+        arguments: ["AgentBrew"],
         allowsDesignPreview: true
     )
 
@@ -37,7 +37,7 @@ import Testing
 
 @Test func releaseBuildsDoNotRecognizeTheDebugDesignPreviewFlag() {
     let mode = LetItBrewLaunchMode(
-        arguments: ["Let It Brew", "--design-preview"],
+        arguments: ["AgentBrew", "--design-preview"],
         allowsDesignPreview: false
     )
 
@@ -47,7 +47,7 @@ import Testing
 
 @Test func releaseBuildsDoNotRecognizeTheSettingsPreviewFlag() {
     let mode = LetItBrewLaunchMode(
-        arguments: ["Let It Brew", "--design-preview-settings"],
+        arguments: ["AgentBrew", "--design-preview-settings"],
         allowsDesignPreview: false
     )
 
@@ -57,7 +57,7 @@ import Testing
 
 @Test func aDiagnosticCommandWinsOverUnrelatedArguments() {
     let mode = LetItBrewLaunchMode(
-        arguments: ["Let It Brew", "--unknown", "--probe-daemon"],
+        arguments: ["AgentBrew", "--unknown", "--probe-daemon"],
         allowsDesignPreview: true
     )
 

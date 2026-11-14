@@ -46,14 +46,14 @@ struct LetItBrewSettingsView: View {
             Text(updateConfirmationMessage)
         }
         .confirmationDialog(
-            "Uninstall Let It Brew?",
+            "Uninstall AgentBrew?",
             isPresented: uninstallConfirmationBinding,
             titleVisibility: .visible
         ) {
             Button("Uninstall", role: .destructive) { model.confirmUninstall() }
             Button("Cancel", role: .cancel) { model.cancelUninstall() }
         } message: {
-            Text("This disconnects all connected agent integrations, stops Let It Brew's background service, removes its settings and session records, and moves Let It Brew to the Trash.")
+            Text("This disconnects all connected agent integrations, stops AgentBrew's background service, removes its settings and session records, and moves AgentBrew to the Trash.")
         }
     }
 
@@ -76,7 +76,7 @@ struct LetItBrewSettingsView: View {
                 LabeledContent {
                     updateAccessory
                 } label: {
-                    Text("Let It Brew \(shortVersion)")
+                    Text("AgentBrew \(shortVersion)")
                     Text(updateStatus)
                 }
 
@@ -129,10 +129,10 @@ struct LetItBrewSettingsView: View {
         switch model.updateState {
         case .idle: "Checks for updates daily. Nothing installs until you choose."
         case .checking: "Checking for updates…"
-        case .upToDate: "Let It Brew is up to date."
+        case .upToDate: "AgentBrew is up to date."
         case .available(let release): "Version \(release.version.description) is available."
         case .installing: "Downloading and verifying update…"
-        case .readyToQuit: "Update ready. Restarting Let It Brew…"
+        case .readyToQuit: "Update ready. Restarting AgentBrew…"
         case .failed: "The last update check didn’t finish."
         }
     }
@@ -225,7 +225,7 @@ struct LetItBrewSettingsView: View {
 
                 Toggle(isOn: $model.respectLowPowerMode) {
                     Text("Respect Low Power Mode")
-                    Text("Lets the Mac sleep when you turn on Low Power Mode. Let It Brew’s own closed-lid switch doesn’t count.")
+                    Text("Lets the Mac sleep when you turn on Low Power Mode. AgentBrew’s own closed-lid switch doesn’t count.")
                 }
             }
 
@@ -239,7 +239,7 @@ struct LetItBrewSettingsView: View {
             } header: {
                 Text("Display")
             } footer: {
-                Text("Let It Brew always releases its sleep holds under serious or critical thermal pressure.")
+                Text("AgentBrew always releases its sleep holds under serious or critical thermal pressure.")
                     .font(.callout)
                     .foregroundStyle(.secondary)
             }
@@ -272,7 +272,7 @@ struct LetItBrewSettingsView: View {
                     set: { model.setKeepWorkingWithLidClosed($0) }
                 )) {
                     Text("Keep agents working when the lid is closed")
-                    Text("Uses a local background helper only when enabled. Let It Brew never sends your agent data off this Mac.")
+                    Text("Uses a local background helper only when enabled. AgentBrew never sends your agent data off this Mac.")
                 }
 
                 Toggle(isOn: $model.useLowPowerModeWithLidClosed) {
@@ -345,7 +345,7 @@ struct LetItBrewSettingsView: View {
                         .textSelection(.enabled)
                 }
             } footer: {
-                Text("Required for closed-lid operation. The helper runs locally and releases its hold if communication with Let It Brew stops.")
+                Text("Required for closed-lid operation. The helper runs locally and releases its hold if communication with AgentBrew stops.")
                     .font(.callout)
                     .foregroundStyle(.secondary)
             }
@@ -379,7 +379,7 @@ struct LetItBrewSettingsView: View {
                         .interpolation(.high)
                         .frame(width: 72, height: 72)
                         .accessibilityHidden(true)
-                    Text("Let It Brew")
+                    Text("AgentBrew")
                         .font(.title2.weight(.semibold))
                     Text(versionDescription)
                         .font(.callout)
@@ -396,13 +396,13 @@ struct LetItBrewSettingsView: View {
 
                 HStack(alignment: .firstTextBaseline, spacing: 16) {
                     Link("GitHub", destination: ProductLinks.repository)
-                        .accessibilityHint("Open the Let It Brew repository")
+                        .accessibilityHint("Open the AgentBrew repository")
                     Link("Release Notes", destination: ProductLinks.releases)
-                        .accessibilityHint("Open Let It Brew releases")
+                        .accessibilityHint("Open AgentBrew releases")
                     Link("Report Issue", destination: ProductLinks.reportIssue)
-                        .accessibilityHint("Open a new Let It Brew issue")
+                        .accessibilityHint("Open a new AgentBrew issue")
                     Link("Privacy", destination: ProductLinks.privacy)
-                        .accessibilityHint("Open the Let It Brew privacy notice")
+                        .accessibilityHint("Open the AgentBrew privacy notice")
                 }
                 // Link paints itself with NSColor.linkColor, so the app
                 // accent has to be applied explicitly here.
@@ -423,7 +423,7 @@ struct LetItBrewSettingsView: View {
 
     private var uninstallControl: some View {
         VStack(spacing: 8) {
-            Button("Uninstall Let It Brew…") { model.beginUninstall() }
+            Button("Uninstall AgentBrew…") { model.beginUninstall() }
                 .disabled(model.uninstallInProgress || model.updateBlocksOtherActions)
                 .buttonStyle(.plain)
                 .foregroundStyle(uninstallHovered ? Color.red : Color.secondary)
@@ -450,7 +450,7 @@ struct LetItBrewSettingsView: View {
                         presentedRecovery = guidance
                     }
                     if model.isPaused {
-                        Button("Resume Let It Brew") {
+                        Button("Resume AgentBrew") {
                             model.resumeAfterBlockedUninstall()
                         }
                     }
@@ -467,9 +467,9 @@ struct LetItBrewSettingsView: View {
                 }
                 Text(bundleWasRemoved
                      ? (leftovers.count == 1
-                        ? "Let It Brew was removed, but one step needs attention"
-                        : "Let It Brew was removed, but some steps need attention")
-                     : "Let It Brew cleanup needs attention")
+                        ? "AgentBrew was removed, but one step needs attention"
+                        : "AgentBrew was removed, but some steps need attention")
+                     : "AgentBrew cleanup needs attention")
                     .font(.headline)
                 Text(bundleWasRemoved
                      ? "The app bundle and privileged background service are removed. This window remains open only to show you how to finish cleanup."
@@ -519,7 +519,7 @@ struct LetItBrewSettingsView: View {
         if let report = model.updateCompletionReport {
             VStack(alignment: .leading, spacing: 12) {
                 if report.outcome == .success {
-                    Text("Let It Brew was updated")
+                    Text("AgentBrew was updated")
                         .font(.headline)
                     Text(report.message)
                         .font(.callout)
@@ -559,13 +559,13 @@ struct LetItBrewSettingsView: View {
 
     private var updateConfirmationTitle: String {
         guard case .available(let release) = model.updateState else {
-            return "Install Let It Brew update?"
+            return "Install AgentBrew update?"
         }
-        return "Install Let It Brew \(release.version)?"
+        return "Install AgentBrew \(release.version)?"
     }
 
     private var updateConfirmationMessage: String {
-        "Let It Brew will download and verify the signed update, briefly quit, safely transition its background service if present, and relaunch. Your settings and session records stay in place."
+        "AgentBrew will download and verify the signed update, briefly quit, safely transition its background service if present, and relaunch. Your settings and session records stay in place."
     }
 
     private var updateConfirmationBinding: Binding<Bool> {

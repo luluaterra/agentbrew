@@ -170,7 +170,7 @@ func runInstall(agents: Set<AgentID> = Set(AgentID.allCases)) -> Int32 {
                 print("\(agent.displayName): installed")
             } catch { failure(agent, target, error, .install); failures += 1 }
         }
-    } catch { FileHandle.standardError.write(Data("Let It Brew: registry refused before configuration mutation (\(error)).\n".utf8)); return 1 }
+    } catch { FileHandle.standardError.write(Data("AgentBrew: registry refused before configuration mutation (\(error)).\n".utf8)); return 1 }
     return failures == 0 ? 0 : 1
 }
 
@@ -206,7 +206,7 @@ func runUninstall(agents: Set<AgentID> = Set(AgentID.allCases)) -> Int32 {
                 print("\(agent.displayName): hooks removed")
             } catch { failure(agent, target, error, .uninstall); failures += 1 }
         }
-    } catch { FileHandle.standardError.write(Data("Let It Brew: registry refused before configuration mutation (\(error)).\n".utf8)); return 1 }
+    } catch { FileHandle.standardError.write(Data("AgentBrew: registry refused before configuration mutation (\(error)).\n".utf8)); return 1 }
     return failures == 0 ? 0 : 1
 }
 

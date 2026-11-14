@@ -98,7 +98,7 @@ private struct LetItBrewSettingsPreviewApp: App {
     var body: some Scene {
         // A Settings scene opens only on request; this window makes that
         // request at launch, then closes.
-        Window("Let It Brew Settings Preview", id: SettingsPreviewLauncher.id) {
+        Window("AgentBrew Settings Preview", id: SettingsPreviewLauncher.id) {
             SettingsPreviewLauncher()
         }
 

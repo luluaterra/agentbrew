@@ -14,7 +14,7 @@ public enum AutomaticHookMutationDecision: Equatable, Sendable {
 /// path from Downloads, a DMG, App Translocation, DerivedData, or `/tmp`
 /// immediately makes the integration stale and invalidates Codex approval.
 /// Only a `.app` installed as a direct child of `/Applications` is stable
-/// enough for Let It Brew to write agent configuration automatically.
+/// enough for AgentBrew to write agent configuration automatically.
 public enum AutomaticHookMutationPolicy {
     public static func evaluate(appBundleURL: URL) -> AutomaticHookMutationDecision {
         let bundle = appBundleURL.resolvingSymlinksInPath().standardizedFileURL
@@ -24,7 +24,7 @@ public enum AutomaticHookMutationPolicy {
               bundle.deletingLastPathComponent() == applications
         else {
             return .actionNeeded(details: [
-                "Let It Brew can connect agents automatically after it is installed in /Applications.",
+                "AgentBrew can connect agents automatically after it is installed in /Applications.",
                 "Move the app there, reopen it, then choose Check Again.",
             ])
         }

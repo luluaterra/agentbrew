@@ -37,7 +37,7 @@ final class LiveOneClickUpdateEnvironment: OneClickUpdateEnvironment, @unchecked
         } catch {
             return .failure(OneClickUpdateFailure(
                 kind: .discovery,
-                message: "Let It Brew couldn't check for updates.",
+                message: "AgentBrew couldn't check for updates.",
                 diagnostic: "fetchLatestStableRelease: \(error.localizedDescription)"
             ))
         }
@@ -49,7 +49,7 @@ final class LiveOneClickUpdateEnvironment: OneClickUpdateEnvironment, @unchecked
         guard let installedBuild else {
             return .failure(OneClickUpdateFailure(
                 kind: .replacement,
-                message: "Let It Brew couldn't identify the installed build. Nothing was changed.",
+                message: "AgentBrew couldn't identify the installed build. Nothing was changed.",
                 diagnostic: "CFBundleVersion is missing or is not an unsigned decimal integer"
             ))
         }
@@ -63,6 +63,6 @@ final class LiveOneClickUpdateEnvironment: OneClickUpdateEnvironment, @unchecked
         let version = bundle.object(
             forInfoDictionaryKey: "CFBundleShortVersionString"
         ) as? String ?? "unknown"
-        return "LetItBrew/\(version) (macOS; +https://github.com/ruban-24/letitbrew)"
+        return "LetItBrew/\(version) (macOS; +https://github.com/luluaterra/agentbrew)"
     }
 }

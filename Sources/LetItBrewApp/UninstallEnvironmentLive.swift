@@ -26,7 +26,7 @@ extension LetItBrewAppModel: UninstallEnvironment {
         guard await releaseHoldsAwaitingConfirmation() else {
             return failure(
                 .releaseHolds,
-                "Let It Brew could not confirm this Mac's sleep settings were fully restored. Nothing was removed.",
+                "AgentBrew could not confirm this Mac's sleep settings were fully restored. Nothing was removed.",
                 "system/display power assertion release or daemon lid-hold release did not confirm"
             )
         }
@@ -48,7 +48,7 @@ extension LetItBrewAppModel: UninstallEnvironment {
         case .failed(let detail):
             return failure(
                 .reconcileDaemon,
-                "Let It Brew could not safely confirm that its background service released the Mac's sleep setting. Restart your Mac, reopen Let It Brew, and try uninstalling again. Nothing was removed.",
+                "AgentBrew could not safely confirm that its background service released the Mac's sleep setting. Restart your Mac, reopen AgentBrew, and try uninstalling again. Nothing was removed.",
                 detail.message
             )
         }
@@ -75,13 +75,13 @@ extension LetItBrewAppModel: UninstallEnvironment {
             // the user how to actually finish instead of leaving them stuck.
             return failure(
                 .unregisterDaemon,
-                "This copy of Let It Brew can't manage its background service from here. Quit it, then uninstall from a properly signed Let It Brew installed directly at /Applications/Let It Brew.app — installing it there first if needed.",
+                "This copy of AgentBrew can't manage its background service from here. Quit it, then uninstall from a properly signed AgentBrew installed directly at /Applications/AgentBrew.app — installing it there first if needed.",
                 message
             )
         case .failed(let message):
             return failure(
                 .unregisterDaemon,
-                "Let It Brew could not stop its background service. Nothing was removed.",
+                "AgentBrew could not stop its background service. Nothing was removed.",
                 message
             )
         }
@@ -148,14 +148,14 @@ extension LetItBrewAppModel: UninstallEnvironment {
         guard let result = results.first else {
             return failure(
                 step,
-                "To remove Let It Brew's \(agentName) hooks, restore Let It Brew from the Trash if needed, open it, turn off the \(agentName) watched-agent switch, then try uninstalling again. Until then, the hooks are inert.",
+                "To remove AgentBrew's \(agentName) hooks, restore AgentBrew from the Trash if needed, open it, turn off the \(agentName) watched-agent switch, then try uninstalling again. Until then, the hooks are inert.",
                 "no result"
             )
         }
         guard result.succeeded else {
             return failure(
                 step,
-                "To remove Let It Brew's \(agentName) hooks, restore Let It Brew from the Trash if needed, open it, turn off the \(agentName) watched-agent switch, then try uninstalling again. Until then, the hooks are inert.",
+                "To remove AgentBrew's \(agentName) hooks, restore AgentBrew from the Trash if needed, open it, turn off the \(agentName) watched-agent switch, then try uninstalling again. Until then, the hooks are inert.",
                 result.timedOut ? "timed out" : "status \(result.status): \(result.output)"
             )
         }
@@ -173,7 +173,7 @@ extension LetItBrewAppModel: UninstallEnvironment {
         case .failed(let launchAtLoginFailure):
             return failure(
                 .disableLaunchAtLogin,
-                "Open System Settings → General → Login Items & Extensions. Under Open at Login, select Let It Brew and click Remove (–). If Let It Brew appears under App Background Activity, turn it off.",
+                "Open System Settings → General → Login Items & Extensions. Under Open at Login, select AgentBrew and click Remove (–). If AgentBrew appears under App Background Activity, turn it off.",
                 launchAtLoginFailure.diagnostic
             )
         }
@@ -186,7 +186,7 @@ extension LetItBrewAppModel: UninstallEnvironment {
         ).first else {
             return failure(
                 .deleteUserData,
-                "Let It Brew could not locate its data folder automatically. In Finder, choose Go → Go to Folder…, enter ~/Library/Application Support/LetItBrew, then move that folder to the Trash if it exists.",
+                "AgentBrew could not locate its data folder automatically. In Finder, choose Go → Go to Folder…, enter ~/Library/Application Support/LetItBrew, then move that folder to the Trash if it exists.",
                 "no user Application Support URL; no path was deleted"
             )
         }
@@ -209,7 +209,7 @@ extension LetItBrewAppModel: UninstallEnvironment {
 
     func clearPreferences() async -> Result<Void, UninstallFailure> {
         guard let domain = Bundle.main.bundleIdentifier else {
-            return failure(.clearPreferences, "Let It Brew could not identify its own preferences.", "nil bundleIdentifier")
+            return failure(.clearPreferences, "AgentBrew could not identify its own preferences.", "nil bundleIdentifier")
         }
         await quiesceAutomaticUpdate()
         // One domain removal, not a key list: a hand-maintained list would

@@ -2,8 +2,8 @@ import Testing
 import Foundation
 @testable import LetItBrewCore
 
-@Test func sessionsUseTheCanonicalLetItBrewApplicationSupportDirectory() {
-    #expect(SessionStorage.applicationSupportDirectory.lastPathComponent == "LetItBrew")
+@Test func sessionsUseTheCanonicalAgentBrewApplicationSupportDirectory() {
+    #expect(SessionStorage.applicationSupportDirectory.lastPathComponent == "AgentBrew")
     #expect(SessionStorage.sessionsDirectory.deletingLastPathComponent()
             == SessionStorage.applicationSupportDirectory)
 }
@@ -16,7 +16,7 @@ import Foundation
 
     #expect(
         SessionStorage.applicationSupportDirectory(in: base)
-            == base.appendingPathComponent("LetItBrew", isDirectory: true)
+            == base.appendingPathComponent("AgentBrew", isDirectory: true)
     )
 }
 

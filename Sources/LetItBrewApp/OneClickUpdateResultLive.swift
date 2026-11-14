@@ -56,7 +56,7 @@ final class LiveUpdateResultStore: @unchecked Sendable {
         } catch {
             return .report(UpdateCompletionReport(
                 outcome: .failure,
-                message: "Let It Brew could not verify whether the update finished. Inspect the diagnostic before trying again.",
+                message: "AgentBrew could not verify whether the update finished. Inspect the diagnostic before trying again.",
                 diagnostic: "result.json: \(error.localizedDescription)",
                 workspace: workspace,
                 logFile: safeLogURL(in: workspace)
@@ -73,7 +73,7 @@ final class LiveUpdateResultStore: @unchecked Sendable {
             try? fileManager.removeItem(at: workspace)
             return .report(UpdateCompletionReport(
                 outcome: .success,
-                message: "Let It Brew was updated successfully.",
+                message: "AgentBrew was updated successfully.",
                 diagnostic: nil,
                 workspace: workspace,
                 logFile: nil
@@ -89,7 +89,7 @@ final class LiveUpdateResultStore: @unchecked Sendable {
             }
             return .report(UpdateCompletionReport(
                 outcome: .failure,
-                message: "The update did not finish. Let It Brew restored the previous app when recovery succeeded.",
+                message: "The update did not finish. AgentBrew restored the previous app when recovery succeeded.",
                 diagnostic: "runner exit \(parsed.exitCode)\n\(log)",
                 workspace: workspace,
                 logFile: logURL
@@ -100,7 +100,7 @@ final class LiveUpdateResultStore: @unchecked Sendable {
     func timedOutReport(for workspace: URL) -> UpdateCompletionReport {
         UpdateCompletionReport(
             outcome: .failure,
-            message: "Let It Brew did not receive a final result from the detached updater.",
+            message: "AgentBrew did not receive a final result from the detached updater.",
             diagnostic: "No result.json appeared within the 60-second relaunch window.",
             workspace: workspace,
             logFile: safeLogURL(in: workspace)
@@ -122,7 +122,7 @@ final class LiveUpdateResultStore: @unchecked Sendable {
 
     private var updateBaseURL: URL? {
         fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first?
-            .appendingPathComponent("com.ruban24.letitbrew", isDirectory: true)
+            .appendingPathComponent("com.agentbrew", isDirectory: true)
             .appendingPathComponent("Updates", isDirectory: true)
             .standardizedFileURL
     }

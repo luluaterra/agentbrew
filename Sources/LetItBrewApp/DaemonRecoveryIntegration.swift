@@ -204,7 +204,7 @@ final class LiveDaemonHandshakeChecker: DaemonHandshakeChecking, @unchecked Send
                 protocolVersion: received ?? LetItBrewDaemonProtocolVersion.current,
                 daemonBuild: "legacy-unidentified",
                 reconciliation: .blocked(message:
-                    "The running legacy service cannot prove that its prior power state is reconciled. Use Let It Brew’s supported upgrade workflow before replacing it."
+                    "The running legacy service cannot prove that its prior power state is reconciled. Use AgentBrew’s supported upgrade workflow before replacing it."
                 )
             ))
         case .handshakeTimedOut:
@@ -218,9 +218,9 @@ final class LiveDaemonHandshakeChecker: DaemonHandshakeChecking, @unchecked Send
 struct LiveDaemonServiceController: DaemonServiceControlling {
     private static let approvalInstructions =
         "Open System Settings → General → Login Items & Extensions. "
-        + "Under App Background Activity, turn on Let It Brew. "
+        + "Under App Background Activity, turn on AgentBrew. "
         + "macOS may ask for an administrator password or Touch ID. "
-        + "Return to Let It Brew when you’re done; it will check automatically."
+        + "Return to AgentBrew when you’re done; it will check automatically."
 
     func stopServiceForRefresh() async -> DaemonServiceOperationResult {
         do {

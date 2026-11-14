@@ -32,7 +32,7 @@ enum LiveCodexHookTrustInspection {
             "params": [
                 "clientInfo": [
                     "name": "letitbrew",
-                    "title": "Let It Brew",
+                    "title": "AgentBrew",
                     "version": appVersion,
                 ],
             ],

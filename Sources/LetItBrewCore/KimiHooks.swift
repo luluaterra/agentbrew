@@ -12,7 +12,7 @@ import Foundation
 /// and the generated command discards it.
 public enum KimiHooks {
     /// Frozen ownership marker for commands in `config.toml`.
-    public static let marker = "__letitbrew_kimi_hook"
+    public static let marker = "__agentbrew_kimi_hook"
 
     /// Each event to install, and the name `HookReducer` knows it by.
     /// `Interrupt` (Kimi 0.14.0+) fires in place of `Stop` on Esc.

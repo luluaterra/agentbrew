@@ -99,7 +99,7 @@ public struct PowerModeSnapshot: Codable, Equatable, Sendable {
         }
     }
 
-    /// The sources this Mac lets Let It Brew switch.
+    /// The sources this Mac lets AgentBrew switch.
     public var sources: [PowerModeSource] {
         PowerModeSource.allCases.filter { self[$0] != nil }
     }

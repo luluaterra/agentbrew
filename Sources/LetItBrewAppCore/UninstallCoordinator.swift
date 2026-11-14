@@ -137,7 +137,7 @@ public final class UninstallCoordinator {
 
     /// Gates run again here rather than trusting the precheck: the user may
     /// have sat on the confirmation sheet while an agent started working, or
-    /// resumed Let It Brew and reacquired a hold nothing else rechecks. All
+    /// resumed AgentBrew and reacquired a hold nothing else rechecks. All
     /// three hard gates precede every removal, so a refusal here has still
     /// removed nothing.
     public func confirm() async {
@@ -184,7 +184,7 @@ public final class UninstallCoordinator {
         if !leftovers.isEmpty {
             leftovers.append(UninstallFailure(
                 step: .retainBundleForHookRetry,
-                message: "Let It Brew was kept installed so hook removal can be retried.",
+                message: "AgentBrew was kept installed so hook removal can be retried.",
                 diagnostic: "Application bundle retained because one or more agent hooks could not be removed."
             ))
             state = .report(leftovers: leftovers)

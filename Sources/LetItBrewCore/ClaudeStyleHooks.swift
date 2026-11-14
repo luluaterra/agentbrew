@@ -38,7 +38,7 @@ public struct ClaudeStyleHooks: Sendable {
                 "type": "command",
                 "command": try hookCommand(event: event, cliPath: cliPath),
                 "timeout": timeout,
-                "name": "Let It Brew",
+                "name": "AgentBrew",
             ] as [String: Any]]])
             hooks[event] = groups
         }
@@ -77,7 +77,7 @@ public struct ClaudeStyleHooks: Sendable {
 /// notification after `BeforeTool`, and approving it sends no hook until
 /// `AfterTool`, so local input latches the answer, as with Claude.
 public enum GeminiHooks {
-    public static let marker = "__letitbrew_gemini_hook"
+    public static let marker = "__agentbrew_gemini_hook"
 
     public static let adapter = ClaudeStyleHooks(
         agent: .gemini,
@@ -111,7 +111,7 @@ public enum GeminiHooks {
 /// before Qwen decides, so it is not installed. Esc fires no `Stop`: it sends
 /// `idle_prompt`, or `PostToolUseFailure` with `is_interrupt` during a tool.
 public enum QwenHooks {
-    public static let marker = "__letitbrew_qwen_hook"
+    public static let marker = "__agentbrew_qwen_hook"
 
     public static let adapter = ClaudeStyleHooks(
         agent: .qwen,

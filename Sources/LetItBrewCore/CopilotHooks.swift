@@ -1,11 +1,11 @@
 import CoreFoundation
 import Foundation
 
-/// Installs Let It Brew's observational lifecycle hooks in GitHub Copilot
+/// Installs AgentBrew's observational lifecycle hooks in GitHub Copilot
 /// CLI's user-level hook file.
 ///
 /// Input hooks are observational: command output is discarded and the shell
-/// command always exits successfully, so Let It Brew cannot answer a question
+/// command always exits successfully, so AgentBrew cannot answer a question
 /// or allow, deny, or block a tool. Permission notifications and Copilot's
 /// question tool mark the session Waiting; `PermissionRequest` alone does not,
 /// because it fires before allow rules and session approvals decide.
@@ -19,7 +19,7 @@ import Foundation
 /// than replacing configuration they cannot safely understand.
 public enum CopilotHooks {
     /// Frozen ownership marker for commands in `~/.copilot/hooks/letitbrew.json`.
-    public static let marker = "__letitbrew_copilot_hook"
+    public static let marker = "__agentbrew_copilot_hook"
 
     private static func isOwnedEntry(_ entry: Any) -> Bool {
         ((entry as? [String: Any])?["bash"] as? String)?

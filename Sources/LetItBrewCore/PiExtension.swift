@@ -3,7 +3,7 @@ import Foundation
 /// Owns one global Pi extension. Requires Pi 0.87.1 or later for final
 /// settlement and blocking UI prompt events. No Pi settings are rewritten.
 public enum PiExtension {
-    public static let marker = "__letitbrew_pi_extension"
+    public static let marker = "__agentbrew_pi_extension"
     private static let reportKey = "extension"
 
     public static func extensionURL(
@@ -153,7 +153,7 @@ public enum PiExtension {
         return nil
     }
 
-    /// A missing or foreign file is absent from Let It Brew's perspective. An
+    /// A missing or foreign file is absent from AgentBrew's perspective. An
     /// owned file is healthy only when its bytes exactly match this build's
     /// generated source; all other owned content is stale. One file cannot
     /// contain duplicate or orphaned extensions, so those fields stay empty.

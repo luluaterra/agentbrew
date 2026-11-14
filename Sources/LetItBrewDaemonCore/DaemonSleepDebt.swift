@@ -32,7 +32,7 @@ public protocol DaemonSleepDebtStoring: AnyObject {
     func remove() -> Bool
 }
 
-/// Root-owned persistence for the `disablesleep` value Let It Brew may need to
+/// Root-owned persistence for the `disablesleep` value AgentBrew may need to
 /// restore. The daemon writes this before touching pmset and removes it only
 /// after a read-back confirms the prior value.
 public final class FileDaemonSleepDebtStore: DaemonSleepDebtStoring {
@@ -65,7 +65,7 @@ public final class FileDaemonSleepDebtStore: DaemonSleepDebtStoring {
     }
 }
 
-/// The exact per-source energy mode recorded before Let It Brew switched this
+/// The exact per-source energy mode recorded before AgentBrew switched this
 /// Mac to Low Power Mode for closed-lid work.
 public struct DaemonPowerModeDebt: Codable, Equatable, Sendable {
     public static let currentSchemaVersion = 1

@@ -5,7 +5,7 @@ import Foundation
 /// An install drifts in ways a boolean cannot express: the app moves and the
 /// baked path stops resolving, a settings sync drops some events, a version
 /// adds an event the file has never had, an older install leaves an entry
-/// under an event no longer used. Each leaves a file that still "has Let It Brew
+/// under an event no longer used. Each leaves a file that still "has AgentBrew
 /// hooks in it" while doing the wrong thing, or nothing.
 public struct HookInstallReport: Equatable, Sendable {
     /// Exactly one of ours, running the command this build would write.

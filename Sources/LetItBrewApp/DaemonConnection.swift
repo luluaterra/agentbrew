@@ -31,11 +31,11 @@ enum DaemonConnectionFailure: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .unsignedApp:
-            "Let It Brew's Apple signing identity could not be read."
+            "AgentBrew's Apple signing identity could not be read."
         case .invalidAppIdentifier:
-            "Let It Brew's daemon identifier could not be derived from the app signature."
+            "AgentBrew's daemon identifier could not be derived from the app signature."
         case .invalidEmbeddedDaemon(let message):
-            "Let It Brew's embedded daemon could not be verified: \(message)"
+            "AgentBrew's embedded daemon could not be verified: \(message)"
         case .unavailable(let message):
             "The privileged daemon is unavailable: \(message)"
         case .transportUnreachable(_, _, let message):
@@ -230,7 +230,7 @@ final class DaemonConnection: @unchecked Sendable {
         }
 
         let daemonURL = Bundle.main.bundleURL.appendingPathComponent(
-            "Contents/Library/LaunchServices/LetItBrewDaemon",
+            "Contents/Library/LaunchServices/AgentBrewDaemon",
             isDirectory: false
         )
         let embeddedCode: RuntimeSignedCodeIdentity

@@ -3,13 +3,13 @@ import Testing
 
 @Test func canonicalProductLinksAreExact() {
     #expect(ProductLinks.repository.absoluteString
-        == "https://github.com/ruban-24/letitbrew")
+        == "https://github.com/luluaterra/agentbrew")
     #expect(ProductLinks.releases.absoluteString
-        == "https://github.com/ruban-24/letitbrew/releases")
+        == "https://github.com/luluaterra/agentbrew/releases")
     #expect(ProductLinks.reportIssue.absoluteString
-        == "https://github.com/ruban-24/letitbrew/issues/new/choose")
+        == "https://github.com/luluaterra/agentbrew/issues/new/choose")
     #expect(ProductLinks.privacy.absoluteString
-        == "https://github.com/ruban-24/letitbrew/blob/main/docs/PRIVACY.md")
+        == "https://github.com/luluaterra/agentbrew/blob/main/docs/PRIVACY.md")
 }
 
 @Test func verificationFailureNeverSuggestsBypassingGatekeeper() {
@@ -55,7 +55,7 @@ import Testing
 }
 
 @Test func preferenceRecoveryPreservesTheCurrentBundleDomainInstruction() {
-    let instruction = "Open Terminal and run: defaults delete com.ruban24.letitbrew.dev"
+    let instruction = "Open Terminal and run: defaults delete com.agentbrew.dev"
     let guidance = OperationRecoveryCatalog.uninstall(
         step: .clearPreferences,
         failureInstruction: instruction,
@@ -64,7 +64,7 @@ import Testing
 
     #expect(guidance.steps.contains(RecoveryStep(text: instruction)))
     #expect(!guidance.steps.contains(RecoveryStep(
-        text: "Open Terminal and run: defaults delete com.ruban24.letitbrew"
+        text: "Open Terminal and run: defaults delete com.agentbrew"
     )))
 }
 
@@ -74,6 +74,6 @@ import Testing
         diagnostic: "Finder refused"
     )
     let copy = ([guidance.summary] + guidance.steps.map(\.text)).joined(separator: " ")
-    #expect(copy.contains("Move only Let It Brew.app to the Trash."))
+    #expect(copy.contains("Move only AgentBrew.app to the Trash."))
     #expect(guidance.actions.contains(.revealApplication))
 }

@@ -1,5 +1,5 @@
 /// Storage boundary for the one-time migration from the removed three-state
-/// hold controls to Let It Brew's explicit pause and closed-lid choices.
+/// hold controls to AgentBrew's explicit pause and closed-lid choices.
 public protocol LetItBrewSettingsMigrationPersisting: Sendable {
     func loadMigrationCompleted() -> Bool
     func loadExplicitPause() -> Bool?

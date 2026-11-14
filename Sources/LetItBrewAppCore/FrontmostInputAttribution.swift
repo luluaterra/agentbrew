@@ -24,7 +24,7 @@ public struct FrontmostInputAttribution: Equatable, Sendable {
     private var activations: [Activation] = []
     private var lastInputByApp: [Int32: Date] = [:]
     /// Input from before the first recorded activation, such as an approval
-    /// made before Let It Brew relaunched. Its app is unknown, so it counts
+    /// made before AgentBrew relaunched. Its app is unknown, so it counts
     /// for every app.
     private var unattributedInput: Date = .distantPast
 

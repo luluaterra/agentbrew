@@ -1,6 +1,6 @@
 import Foundation
 
-/// The single file Let It Brew owns in OpenCode's plugin discovery path.
+/// The single file AgentBrew owns in OpenCode's plugin discovery path.
 ///
 /// OpenCode loads the standard global and project plugin locations in addition
 /// to an `OPENCODE_CONFIG_DIR` location. This adapter deliberately installs at
@@ -8,7 +8,7 @@ import Foundation
 /// files from the others.
 public enum OpenCodePlugin {
     /// Frozen, exact first-line marker for `letitbrew.js` ownership.
-    public static let marker = "__letitbrew_opencode_plugin"
+    public static let marker = "__agentbrew_opencode_plugin"
 
     private static let reportKey = "plugin"
 
@@ -147,7 +147,7 @@ public enum OpenCodePlugin {
         return nil
     }
 
-    /// A missing or foreign file is absent from Let It Brew's perspective. An
+    /// A missing or foreign file is absent from AgentBrew's perspective. An
     /// owned file is healthy only when its bytes exactly match this build's
     /// generated source; all other owned content is stale. One file cannot
     /// contain duplicate or orphaned adapters, so those fields stay empty.

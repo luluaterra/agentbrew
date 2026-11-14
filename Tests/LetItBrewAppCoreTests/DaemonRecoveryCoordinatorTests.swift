@@ -785,7 +785,7 @@ func blockedReconciliationNeverStopsTheDaemon(
     )
     let approvalService = FakeServiceController(events: approvalEvents)
     let approvalRecovery = coordinator(
-        handshakes: [.approvalRequired(message: "Enable Let It Brew in Background Items.")],
+        handshakes: [.approvalRequired(message: "Enable AgentBrew in Background Items.")],
         persistence: approvalPersistence,
         service: approvalService,
         events: approvalEvents
@@ -807,7 +807,7 @@ func blockedReconciliationNeverStopsTheDaemon(
     let failure = await failureRecovery.run(context: context())
 
     #expect(approval == .approvalRequired(
-        message: "Enable Let It Brew in Background Items."
+        message: "Enable AgentBrew in Background Items."
     ))
     let presentation = DaemonRecoveryPresentation(state: approval)
     #expect(presentation.actions == [.openBackgroundItems])
@@ -834,7 +834,7 @@ func blockedReconciliationNeverStopsTheDaemon(
     let result = await recovery.run(context: context(eligible: false))
 
     #expect(result == .ineligible(
-        message: "Run the correctly signed Let It Brew app directly from /Applications."
+        message: "Run the correctly signed AgentBrew app directly from /Applications."
     ))
     #expect(events.events == ["state:ineligible"])
     #expect(persistence.healthyWrites.isEmpty)

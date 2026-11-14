@@ -17,14 +17,14 @@ public enum MountedUpdatePayloadValidation: Equatable, Sendable {
 public enum MountedUpdatePayloadValidator {
     private static let legacyNames: Set<String> = [
         "Applications",
-        "Let It Brew.app",
+        "AgentBrew.app",
     ]
     private static let guidedNames: Set<String> = [
         ".DS_Store",
         ".VolumeIcon.icns",
         ".background",
         "Applications",
-        "Let It Brew.app",
+        "AgentBrew.app",
     ]
 
     public static func validate(
@@ -52,7 +52,7 @@ public enum MountedUpdatePayloadValidator {
             return .invalidInventory
         }
 
-        let app = mountPoint.appendingPathComponent("Let It Brew.app", isDirectory: true)
+        let app = mountPoint.appendingPathComponent("AgentBrew.app", isDirectory: true)
         guard isOrdinaryDirectory(app) else { return .invalidAppBundle }
 
         let applications = mountPoint.appendingPathComponent("Applications")

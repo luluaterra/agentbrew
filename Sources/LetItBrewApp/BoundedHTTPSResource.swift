@@ -22,7 +22,7 @@ private enum BoundedHTTPSResourceError: LocalizedError {
         case .nonHTTPSRedirect:
             "The server tried to redirect the update to a non-HTTPS URL."
         case .invalidResponse:
-            "The update server returned a response Let It Brew could not validate."
+            "The update server returned a response AgentBrew could not validate."
         case .httpStatus(let status):
             "The update server returned HTTP \(status)."
         case .insecureFinalURL:
@@ -92,7 +92,7 @@ private final class BoundedHTTPSResourceDelegate:
                     configuration.requestCachePolicy = .reloadIgnoringLocalCacheData
                     configuration.urlCache = nil
                     let delegateQueue = OperationQueue()
-                    delegateQueue.name = "Let It Brew bounded update download"
+                    delegateQueue.name = "AgentBrew bounded update download"
                     delegateQueue.maxConcurrentOperationCount = 1
                     let session = URLSession(
                         configuration: configuration,

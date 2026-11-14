@@ -1,6 +1,6 @@
 import Foundation
 
-/// Installs and removes Let It Brew's lifecycle hooks in Claude Code's user
+/// Installs and removes AgentBrew's lifecycle hooks in Claude Code's user
 /// settings.
 ///
 /// This edits a file the user owns and cannot afford to lose, so two rules
@@ -18,7 +18,7 @@ import Foundation
 public enum ClaudeHooks {
     /// Ownership marker. Frozen: released versions must recognize each
     /// other's entries, so changing this orphans every existing install.
-    public static let marker = "__letitbrew_hook"
+    public static let marker = "__agentbrew_hook"
 
     /// Exactly the events `HookReducer` maps. Nothing speculative.
     public static let events = [
@@ -32,7 +32,7 @@ public enum ClaudeHooks {
 
     /// Where the CLI lives in a normal install, used as the fallback when the
     /// baked path stops resolving.
-    public static let fallbackCLIPath = "/Applications/Let It Brew.app/Contents/Helpers/letitbrew"
+    public static let fallbackCLIPath = "/Applications/AgentBrew.app/Contents/Helpers/agentbrew"
 
     public static func settingsURL(
         home: URL = FileManager.default.homeDirectoryForCurrentUser

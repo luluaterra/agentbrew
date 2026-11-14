@@ -7,9 +7,13 @@ import Foundation
 /// association away from the installed app, so callers must pass this check
 /// before constructing or using an `SMAppService`.
 public enum BackgroundServiceEligibility {
-    public static let productionAppIdentifier = "com.ruban24.letitbrew"
-    public static let developmentAppIdentifier = "com.ruban24.letitbrew.dev"
-    public static let expectedTeamIdentifier = "MV2UL94MDC"
+    public static let productionAppIdentifier = "com.agentbrew"
+    public static let developmentAppIdentifier = "com.agentbrew.dev"
+    // TODO(AB-003): set this to the Team ID the app is actually signed with.
+    // An empty value intentionally fails the stronger gate below, so no
+    // background-service registration can happen until the signing identity
+    // is decided.
+    public static let expectedTeamIdentifier = ""
 
     public static func mayManageBackgroundServices(
         bundleURL: URL,
@@ -30,7 +34,7 @@ public enum BackgroundServiceEligibility {
     /// The stronger gate used immediately before any Service Management call.
     /// Location and an allow-listed identifier are insufficient on their own:
     /// the live caller must also prove that its validated Apple signature has
-    /// the same identifier and Let It Brew's expected Team ID.
+    /// the same identifier and AgentBrew's expected Team ID.
     public static func mayManageBackgroundServices(
         bundleURL: URL,
         bundleIdentifier: String?,

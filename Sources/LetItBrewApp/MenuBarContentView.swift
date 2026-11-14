@@ -171,7 +171,7 @@ struct MenuBarContentView: View {
             Label("Uninstall needs attention", systemImage: "exclamationmark.circle.fill")
                 .font(.headline)
                 .foregroundStyle(.orange)
-            Text("Cleanup still needs your attention. Open the instructions to finish and quit Let It Brew.")
+            Text("Cleanup still needs your attention. Open the instructions to finish and quit AgentBrew.")
                 .font(.callout)
                 .foregroundStyle(.secondary)
             Button("Show Cleanup Instructions") { showSettings() }
@@ -192,7 +192,7 @@ struct MenuBarContentView: View {
 
                 Spacer(minLength: 8)
 
-                Toggle("Let It Brew enabled", isOn: Binding(
+                Toggle("AgentBrew enabled", isOn: Binding(
                     get: { model.isEnabled },
                     set: { model.setEnabled($0) }
                 ))
@@ -458,7 +458,7 @@ struct MenuBarContentView: View {
         VStack(spacing: 0) {
             menuCommand("Settings…", shortcut: "⌘,") { showSettings() }
                 .keyboardShortcut(",")
-            menuCommand("Quit Let It Brew", shortcut: "⌘Q") { model.cleanQuit() }
+            menuCommand("Quit AgentBrew", shortcut: "⌘Q") { model.cleanQuit() }
                 .keyboardShortcut("q")
         }
     }
@@ -520,13 +520,13 @@ struct MenuBarContentView: View {
 
     private var updateConfirmationTitle: String {
         guard case .available(let release) = model.updateState else {
-            return "Install Let It Brew update?"
+            return "Install AgentBrew update?"
         }
-        return "Install Let It Brew \(release.version)?"
+        return "Install AgentBrew \(release.version)?"
     }
 
     private var updateConfirmationMessage: String {
-        "Let It Brew will download and verify the signed update, briefly quit, safely transition its background service if present, and relaunch. Your settings and session records stay in place."
+        "AgentBrew will download and verify the signed update, briefly quit, safely transition its background service if present, and relaunch. Your settings and session records stay in place."
     }
 
     private var updateConfirmationBinding: Binding<Bool> {

@@ -4,38 +4,38 @@ import Testing
 
 @Test func onlyDirectApplicationsChildrenMayManageBackgroundServices() {
     #expect(BackgroundServiceEligibility.mayManageBackgroundServices(
-        bundleURL: URL(fileURLWithPath: "/Applications/Let It Brew.app"),
-        bundleIdentifier: "com.ruban24.letitbrew"
+        bundleURL: URL(fileURLWithPath: "/Applications/AgentBrew.app"),
+        bundleIdentifier: "com.agentbrew"
     ))
     #expect(BackgroundServiceEligibility.mayManageBackgroundServices(
-        bundleURL: URL(fileURLWithPath: "/Applications/Let It Brew Dev.app"),
-        bundleIdentifier: "com.ruban24.letitbrew.dev"
+        bundleURL: URL(fileURLWithPath: "/Applications/AgentBrew Dev.app"),
+        bundleIdentifier: "com.agentbrew.dev"
     ))
     #expect(!BackgroundServiceEligibility.mayManageBackgroundServices(
-        bundleURL: URL(fileURLWithPath: "/tmp/Let It Brew.app"),
-        bundleIdentifier: "com.ruban24.letitbrew"
+        bundleURL: URL(fileURLWithPath: "/tmp/AgentBrew.app"),
+        bundleIdentifier: "com.agentbrew"
     ))
     #expect(!BackgroundServiceEligibility.mayManageBackgroundServices(
-        bundleURL: URL(fileURLWithPath: "/Applications/Tools/Let It Brew.app"),
-        bundleIdentifier: "com.ruban24.letitbrew"
+        bundleURL: URL(fileURLWithPath: "/Applications/Tools/AgentBrew.app"),
+        bundleIdentifier: "com.agentbrew"
     ))
 }
 
 @Test func lookalikeIdentifiersAndNonAppBundlesAreRejected() {
     #expect(!BackgroundServiceEligibility.mayManageBackgroundServices(
-        bundleURL: URL(fileURLWithPath: "/Applications/Let It Brew.app"),
-        bundleIdentifier: "com.ruban24.letitbrew.evil"
+        bundleURL: URL(fileURLWithPath: "/Applications/AgentBrew.app"),
+        bundleIdentifier: "com.agentbrew.evil"
     ))
     #expect(!BackgroundServiceEligibility.mayManageBackgroundServices(
-        bundleURL: URL(fileURLWithPath: "/Applications/Let It Brew"),
-        bundleIdentifier: "com.ruban24.letitbrew"
+        bundleURL: URL(fileURLWithPath: "/Applications/AgentBrew"),
+        bundleIdentifier: "com.agentbrew"
     ))
 }
 
 @Test func serviceManagementRequiresTheLiveExpectedSigningIdentity() {
-    let productionURL = URL(fileURLWithPath: "/Applications/Let It Brew.app")
+    let productionURL = URL(fileURLWithPath: "/Applications/AgentBrew.app")
     let production = RuntimeSigningIdentity(
-        identifier: "com.ruban24.letitbrew",
+        identifier: "com.agentbrew",
         teamIdentifier: BackgroundServiceEligibility.expectedTeamIdentifier
     )
     #expect(BackgroundServiceEligibility.mayManageBackgroundServices(
@@ -46,17 +46,17 @@ import Testing
 
     for identity in [
         RuntimeSigningIdentity(
-            identifier: "com.ruban24.letitbrew.dev",
+            identifier: "com.agentbrew.dev",
             teamIdentifier: BackgroundServiceEligibility.expectedTeamIdentifier
         ),
         RuntimeSigningIdentity(
-            identifier: "com.ruban24.letitbrew",
+            identifier: "com.agentbrew",
             teamIdentifier: "ATTACKERTEAM"
         ),
     ] {
         #expect(!BackgroundServiceEligibility.mayManageBackgroundServices(
             bundleURL: productionURL,
-            bundleIdentifier: "com.ruban24.letitbrew",
+            bundleIdentifier: "com.agentbrew",
             signingIdentity: identity
         ))
     }

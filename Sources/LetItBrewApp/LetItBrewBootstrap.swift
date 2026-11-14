@@ -10,7 +10,7 @@ import SwiftUI
 /// AppKit delegate for lifecycle and explicit daemon diagnostic commands.
 /// The ordinary application entry point lives in `LetItBrewMenuBarApp`.
 final class LetItBrewBootstrap: NSObject, NSApplicationDelegate, @unchecked Sendable {
-    private static let logger = Logger(subsystem: "com.ruban24.letitbrew", category: "bootstrap")
+    private static let logger = Logger(subsystem: "com.agentbrew", category: "bootstrap")
     private var daemonConnection: DaemonConnection?
 #if DEBUG
     private var designPreviewWindow: NSWindow?
@@ -75,7 +75,7 @@ final class LetItBrewBootstrap: NSObject, NSApplicationDelegate, @unchecked Send
         showDesignPreviewWindow(
             rootView: content,
             size: NSSize(width: 380, height: 570),
-            title: "Let It Brew Design Preview"
+            title: "AgentBrew Design Preview"
         )
     }
 
@@ -106,7 +106,7 @@ final class LetItBrewBootstrap: NSObject, NSApplicationDelegate, @unchecked Send
         if register {
             do {
                 try DaemonRegistration.register()
-                print("Let It Brew development daemon submitted for approval.")
+                print("AgentBrew development daemon submitted for approval.")
                 fflush(stdout)
                 exit(EXIT_SUCCESS)
             } catch {
@@ -118,7 +118,7 @@ final class LetItBrewBootstrap: NSObject, NSApplicationDelegate, @unchecked Send
         Task {
             do {
                 try await DaemonRegistration.unregisterAndWait()
-                print("Let It Brew development daemon unregistered and stopped.")
+                print("AgentBrew development daemon unregistered and stopped.")
                 fflush(stdout)
                 exit(EXIT_SUCCESS)
             } catch {
@@ -162,7 +162,7 @@ final class LetItBrewBootstrap: NSObject, NSApplicationDelegate, @unchecked Send
                         case .failure(let error):
                             Self.fail(error)
                         case .success:
-                            print("Let It Brew daemon hold active for client pid \(getpid()).")
+                            print("AgentBrew daemon hold active for client pid \(getpid()).")
                             fflush(stdout)
                         }
                     }
@@ -199,7 +199,7 @@ final class LetItBrewBootstrap: NSObject, NSApplicationDelegate, @unchecked Send
                                 ])
                             } else {
                                 print(
-                                    "Let It Brew daemon prepared for upgrade; SleepDisabled baseline \(value)."
+                                    "AgentBrew daemon prepared for upgrade; SleepDisabled baseline \(value)."
                                 )
                             }
                             fflush(stdout)
@@ -259,7 +259,7 @@ final class LetItBrewBootstrap: NSObject, NSApplicationDelegate, @unchecked Send
             ])
         } else {
             print(
-                "Let It Brew daemon protocol v\(LetItBrewDaemonProtocolVersion.current) build \(buildIdentity.versionDescription) cdhash \(buildIdentity.codeDirectoryHash) ready."
+                "AgentBrew daemon protocol v\(LetItBrewDaemonProtocolVersion.current) build \(buildIdentity.versionDescription) cdhash \(buildIdentity.codeDirectoryHash) ready."
             )
         }
     }

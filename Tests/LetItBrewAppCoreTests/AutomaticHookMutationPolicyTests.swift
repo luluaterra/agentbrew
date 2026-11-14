@@ -4,9 +4,9 @@ import Testing
 
 @Test func directApplicationBundlesAreEligibleForAutomaticHookWrites() {
     for path in [
-        "/Applications/Let It Brew.app",
-        "/Applications/Let It Brew Dev.app",
-        "/Applications/A Renamed Let It Brew.app",
+        "/Applications/AgentBrew.app",
+        "/Applications/AgentBrew Dev.app",
+        "/Applications/A Renamed AgentBrew.app",
     ] {
         #expect(AutomaticHookMutationPolicy.evaluate(
             appBundleURL: URL(fileURLWithPath: path)
@@ -16,13 +16,13 @@ import Testing
 
 @Test func ephemeralNestedAndNonBundleLaunchesAreReadOnly() {
     let paths = [
-        "/tmp/DerivedData/Build/Products/Debug/Let It Brew.app",
-        "/Users/test/Downloads/Let It Brew.app",
-        "/Volumes/Let It Brew/Let It Brew.app",
-        "/private/var/folders/AppTranslocation/Let It Brew.app",
-        "/Applications/Utilities/Let It Brew.app",
-        "/Applications/Let It Brew.app/Contents/MacOS/LetItBrew",
-        "/Applications/Let It Brew",
+        "/tmp/DerivedData/Build/Products/Debug/AgentBrew.app",
+        "/Users/test/Downloads/AgentBrew.app",
+        "/Volumes/AgentBrew/AgentBrew.app",
+        "/private/var/folders/AppTranslocation/AgentBrew.app",
+        "/Applications/Utilities/AgentBrew.app",
+        "/Applications/AgentBrew.app/Contents/MacOS/LetItBrew",
+        "/Applications/AgentBrew",
     ]
 
     for path in paths {
@@ -39,7 +39,7 @@ import Testing
 }
 
 @Test func dotSegmentsCannotMakeANestedBundleLookDirectlyInstalled() {
-    let nested = URL(fileURLWithPath: "/Applications/Utilities/../Utilities/Let It Brew.app")
+    let nested = URL(fileURLWithPath: "/Applications/Utilities/../Utilities/AgentBrew.app")
 
     #expect(AutomaticHookMutationPolicy.evaluate(appBundleURL: nested).isEligible == false)
 }

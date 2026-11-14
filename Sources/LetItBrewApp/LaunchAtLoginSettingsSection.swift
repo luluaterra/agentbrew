@@ -11,11 +11,11 @@ struct LaunchAtLoginSettingsSection: View {
     var body: some View {
         Section("Startup") {
             HStack(spacing: 8) {
-                Text("Launch Let It Brew at login")
+                Text("Launch AgentBrew at login")
                     .accessibilityHidden(true)
                 Spacer(minLength: 8)
                 status
-                Toggle("Launch Let It Brew at login", isOn: $isOn)
+                Toggle("Launch AgentBrew at login", isOn: $isOn)
                     .labelsHidden()
                     .disabled(isUpdating || actionsBlocked)
             }

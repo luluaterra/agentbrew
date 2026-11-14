@@ -1,7 +1,7 @@
 import Foundation
 import LetItBrewCore
 
-/// Discards key presses and clicks aimed at Let It Brew's own menu, so opening
+/// Discards key presses and clicks aimed at AgentBrew's own menu, so opening
 /// the menu to see that an agent is waiting does not count as answering it.
 ///
 /// The HID counters report only each kind's latest event, so a discarded one

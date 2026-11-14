@@ -1,11 +1,11 @@
 /// Persists the user's explicit choice to let the Mac sleep. The pause is
-/// intentionally durable: Let It Brew must not silently resume after a relaunch.
+/// intentionally durable: AgentBrew must not silently resume after a relaunch.
 public protocol LetItBrewPausePersisting: Sendable {
     func loadPause() -> Bool
     func savePause(_ isPaused: Bool)
 }
 
-/// The sleep holds Let It Brew may request after automatic policy and the
+/// The sleep holds AgentBrew may request after automatic policy and the
 /// user's pause choice have both been applied.
 public struct LetItBrewHoldIntent: Equatable, Sendable {
     public let system: Bool
@@ -21,7 +21,7 @@ public struct LetItBrewHoldIntent: Equatable, Sendable {
 
 /// Applies a persisted manual pause without affecting session observation.
 /// Callers continue collecting and presenting sessions while this controller
-/// suppresses only Let It Brew's three sleep holds.
+/// suppresses only AgentBrew's three sleep holds.
 public struct LetItBrewPauseController: Sendable {
     private let persistence: any LetItBrewPausePersisting
     public private(set) var isPaused: Bool

@@ -11,7 +11,7 @@ private func hook(
     event: String,
     trust: String = "trusted",
     enabled: Bool = true,
-    command: String = "run; : # __letitbrew_codex_hook",
+    command: String = "run; : # __agentbrew_codex_hook",
     sourcePath: String = "/Users/test/.codex/hooks.json"
 ) -> [String: Any] {
     [
@@ -46,7 +46,7 @@ private func response(
         responseData: try response(hooks: hooks),
         expectedEvents: expectedCodexEvents,
         expectedSourcePath: "/Users/test/.codex/hooks.json",
-        ownershipSuffix: ": # __letitbrew_codex_hook"
+        ownershipSuffix: ": # __agentbrew_codex_hook"
     )
     #expect(result == .trusted)
 }
@@ -57,7 +57,7 @@ private func response(
         responseData: try response(hooks: hooks),
         expectedEvents: expectedCodexEvents,
         expectedSourcePath: "/Users/test/.codex/hooks.json",
-        ownershipSuffix: ": # __letitbrew_codex_hook"
+        ownershipSuffix: ": # __agentbrew_codex_hook"
     )
     #expect(result == .trusted)
 }
@@ -74,7 +74,7 @@ private func response(
             responseData: try response(hooks: hooks),
             expectedEvents: expectedCodexEvents,
             expectedSourcePath: "/Users/test/.codex/hooks.json",
-            ownershipSuffix: ": # __letitbrew_codex_hook"
+            ownershipSuffix: ": # __agentbrew_codex_hook"
         )
         #expect(result == .approvalRequired)
     }
@@ -88,7 +88,7 @@ private func response(
         responseData: try response(hooks: foreign),
         expectedEvents: expectedCodexEvents,
         expectedSourcePath: "/Users/test/.codex/hooks.json",
-        ownershipSuffix: ": # __letitbrew_codex_hook"
+        ownershipSuffix: ": # __agentbrew_codex_hook"
     )
     #expect(result == .couldNotVerify)
 }
@@ -108,7 +108,7 @@ private func response(
             responseData: data,
             expectedEvents: expectedCodexEvents,
             expectedSourcePath: "/Users/test/.codex/hooks.json",
-            ownershipSuffix: ": # __letitbrew_codex_hook"
+            ownershipSuffix: ": # __agentbrew_codex_hook"
         )
         #expect(result == .couldNotVerify)
     }
@@ -126,7 +126,7 @@ private func response(
         output,
         expectedEvents: expectedCodexEvents,
         expectedSourcePath: "/Users/test/.codex/hooks.json",
-        ownershipSuffix: ": # __letitbrew_codex_hook"
+        ownershipSuffix: ": # __agentbrew_codex_hook"
     )
     #expect(result == .trusted)
 }
@@ -141,7 +141,7 @@ private func response(
             expectedEvents: expected,
             optionalEvents: ["interrupt"],
             expectedSourcePath: "/Users/test/.codex/hooks.json",
-            ownershipSuffix: ": # __letitbrew_codex_hook"
+            ownershipSuffix: ": # __agentbrew_codex_hook"
         )
     }
     #expect(try classify(required) == .trusted)

@@ -55,7 +55,7 @@ final class RecordingUninstallEnvironment: UninstallEnvironment, @unchecked Send
 func makeFailure(_ step: UninstallStep) -> UninstallFailure {
     UninstallFailure(
         step: step,
-        message: "Let It Brew could not complete \(step.rawValue).",
+        message: "AgentBrew could not complete \(step.rawValue).",
         diagnostic: "diagnostic for \(step.rawValue)"
     )
 }
@@ -322,7 +322,7 @@ func makeFailure(_ step: UninstallStep) -> UninstallFailure {
     #expect(coordinator.state == .report(leftovers: [
         makeFailure(.removePiHooks),
         UninstallFailure(step: .retainBundleForHookRetry,
-                         message: "Let It Brew was kept installed so hook removal can be retried.",
+                         message: "AgentBrew was kept installed so hook removal can be retried.",
                          diagnostic: "Application bundle retained because one or more agent hooks could not be removed.")
     ]))
     #expect(!environment.calls.contains(.deleteUserData))

@@ -1,4 +1,4 @@
-/// The exact app/daemon pair whose health Let It Brew is trying to establish.
+/// The exact app/daemon pair whose health AgentBrew is trying to establish.
 ///
 /// The strings are deliberately opaque to AppCore. The application integration
 /// may use a signed build manifest or code-directory hashes without coupling the

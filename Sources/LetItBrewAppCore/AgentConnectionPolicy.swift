@@ -5,7 +5,7 @@ public enum AgentConnectionState: String, Equatable, Sendable {
     case couldNotConnect = "Couldn’t connect"
 }
 
-/// Whether Let It Brew is managing an agent connection or the user has explicitly
+/// Whether AgentBrew is managing an agent connection or the user has explicitly
 /// disconnected it. This is state, not presentation copy: UI behavior must not
 /// depend on matching a localized detail string.
 public enum AgentConnectionDisposition: Equatable, Sendable {
@@ -30,7 +30,7 @@ public enum AgentHookConfigurationState: Equatable, Sendable {
     case invalid
 }
 
-/// Combines the two independent gates for a working integration: Let It Brew's
+/// Combines the two independent gates for a working integration: AgentBrew's
 /// definitions must be healthy on disk, and Codex must say those exact
 /// definitions are enabled and trusted at runtime.
 public enum AgentConnectionPolicy {

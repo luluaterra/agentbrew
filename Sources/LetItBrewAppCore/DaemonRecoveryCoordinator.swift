@@ -36,7 +36,7 @@ public struct DaemonRecoveryContext: Equatable, Sendable {
         expectedIdentity: DaemonRecoveryIdentity,
         closedLidEnabled: Bool,
         mayManageService: Bool,
-        ineligibleMessage: String = "Run the correctly signed Let It Brew app directly from /Applications."
+        ineligibleMessage: String = "Run the correctly signed AgentBrew app directly from /Applications."
     ) {
         self.expectedIdentity = expectedIdentity
         self.closedLidEnabled = closedLidEnabled

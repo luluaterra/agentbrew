@@ -42,7 +42,7 @@ import Testing
         let root = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
             .appendingPathComponent("LetItBrewMountedPayload-\(UUID().uuidString)", isDirectory: true)
         try FileManager.default.createDirectory(
-            at: root.appendingPathComponent("Let It Brew.app", isDirectory: true),
+            at: root.appendingPathComponent("AgentBrew.app", isDirectory: true),
             withIntermediateDirectories: true
         )
         try FileManager.default.createSymbolicLink(
@@ -84,7 +84,7 @@ import Testing
                     atPath: destination.path,
                     withDestinationPath: contract.applicationsDestination
                 )
-            case "Let It Brew.app", ".background":
+            case "AgentBrew.app", ".background":
                 try FileManager.default.createDirectory(
                     at: destination,
                     withIntermediateDirectories: false
@@ -148,11 +148,11 @@ import Testing
 
         let symlinkedApp = try makeLegacyPayload()
         defer { try? FileManager.default.removeItem(at: symlinkedApp) }
-        let app = symlinkedApp.appendingPathComponent("Let It Brew.app")
+        let app = symlinkedApp.appendingPathComponent("AgentBrew.app")
         try FileManager.default.removeItem(at: app)
         try FileManager.default.createSymbolicLink(
             atPath: app.path,
-            withDestinationPath: "/Applications/Let It Brew.app"
+            withDestinationPath: "/Applications/AgentBrew.app"
         )
         #expect(MountedUpdatePayloadValidator.validate(at: symlinkedApp) == .invalidAppBundle)
     }

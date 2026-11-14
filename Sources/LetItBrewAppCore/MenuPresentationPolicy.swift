@@ -576,7 +576,7 @@ public enum MenuHeaderCopy {
         releaseConstraint: ReleaseConstraint? = nil,
         isWaitingForYou: Bool = false
     ) -> String {
-        if isPaused { return "Let It Brew is paused" }
+        if isPaused { return "AgentBrew is paused" }
         if isKeepingAwake { return "Keeping your Mac awake" }
         if let releaseConstraint { return releaseConstraint.message }
         if isWaitingForYou { return "Agents are waiting for you" }

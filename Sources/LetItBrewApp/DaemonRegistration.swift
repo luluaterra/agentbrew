@@ -15,7 +15,7 @@ enum DaemonRegistrationFailure: LocalizedError {
         case .missingBundleIdentifier:
             "The app bundle identifier is missing."
         case .invalidSigningIdentity(let message):
-            "Let It Brew's signing identity could not be verified: \(message)"
+            "AgentBrew's signing identity could not be verified: \(message)"
         }
     }
 }

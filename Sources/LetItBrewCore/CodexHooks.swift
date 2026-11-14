@@ -1,6 +1,6 @@
 import Foundation
 
-/// Installs and removes Let It Brew's lifecycle hooks in Codex.
+/// Installs and removes AgentBrew's lifecycle hooks in Codex.
 ///
 /// Codex models its hooks on Claude Code's closely enough that the event
 /// names and payload fields match, so `HookPayload` and `HookReducer` serve
@@ -35,7 +35,7 @@ import Foundation
 /// refuses to load *any* hooks from a file shaped that way, so nothing
 /// usable was being thrown away. That reasoning does not survive contact
 /// with time: a *future* Codex version could legitimately accept a new
-/// top-level field, and at that moment an older Let It Brew would silently
+/// top-level field, and at that moment an older AgentBrew would silently
 /// delete valid user configuration on every install and every uninstall,
 /// with no way for the user to know it happened. "Codex ignores it today" is
 /// not the same claim as "it is disposable" — refusing is recoverable (the
@@ -51,20 +51,20 @@ import Foundation
 ///   with the wrong type): Codex's parser denies unknown fields, so a file
 ///   in this shape is *already* rejected by Codex in its entirety — none of
 ///   its hooks load, ours or the user's own — independent of anything
-///   Let It Brew does. The error names the exact key so the user knows what to
+///   AgentBrew does. The error names the exact key so the user knows what to
 ///   go remove or fix right now.
 /// - **Inside `hooks`** (an event value that exists but isn't a group
 ///   array): Codex's own per-event matching is lenient (edge 2 above) in a
 ///   way its top-level parsing is not, so a malformed event value does not
 ///   carry the same "Codex already gave up on this file" guarantee. It
-///   could still be a shape that loads fine for events Let It Brew doesn't
+///   could still be a shape that loads fine for events AgentBrew doesn't
 ///   touch, holding genuine automation the user set up themselves. Refusing
 ///   here is "we can't verify what's inside, so we won't guess," not "this
 ///   key is already dead weight."
 public enum CodexHooks {
     /// Distinct from Claude Code's marker so removing one integration can
     /// never strip the other's entries. Frozen, like the other marker.
-    public static let marker = "__letitbrew_codex_hook"
+    public static let marker = "__agentbrew_codex_hook"
 
     /// Spelled exactly as Codex matches them. Load-bearing strings: a
     /// lowercase letter here disables the integration with no error anywhere.
@@ -98,12 +98,12 @@ public enum CodexHooks {
 
     /// Shown in the UI after installing: hooks are inert until approved.
     public static let needsUserApprovalNote =
-        "Codex installs new hooks untrusted. Approve Let It Brew's hooks in Codex to activate them."
+        "Codex installs new hooks untrusted. Approve AgentBrew's hooks in Codex to activate them."
 
     /// Used only by `install` when it is creating `hooks.json` from nothing.
     /// An existing file's missing `description` is left missing — see
     /// ``install(into:cliPath:)``.
-    private static let defaultDescription = "Let It Brew keep-awake hooks"
+    private static let defaultDescription = "AgentBrew keep-awake hooks"
 
     /// `~/.codex/hooks.json`. `CODEX_HOME` relocates the whole directory.
     public static func hooksURL(
@@ -315,14 +315,14 @@ public enum CodexHooks {
     /// exactly like our own default text — passes through completely
     /// unchanged. An earlier version of this function compared it against
     /// `defaultDescription` and dropped it on a match, reasoning that a file
-    /// left with only that exact text and no hooks was one Let It Brew had
+    /// left with only that exact text and no hooks was one AgentBrew had
     /// created wholesale. That reasoning does not hold: a string match is
     /// not a provenance signal, and a user whose own description happened to
     /// read the same way would have silently lost it. There is no reliable
-    /// way to know whether Let It Brew created a given file without actually
+    /// way to know whether AgentBrew created a given file without actually
     /// tracking that, which is out of scope here.
     ///
-    /// One consequence: uninstalling a file Let It Brew created entirely from
+    /// One consequence: uninstalling a file AgentBrew created entirely from
     /// nothing leaves `{"description": "…", "hooks": {}}` behind rather than
     /// true absence — a deliberate choice, not an oversight. Deleting a
     /// user-visible config file outright is a bigger risk than leaving an

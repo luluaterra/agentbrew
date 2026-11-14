@@ -11,14 +11,17 @@ configs:
 
 settings:
   base:
-    DEVELOPMENT_TEAM: MV2UL94MDC
+    # TODO(AB-003): fill in your Apple Developer Team ID before the first
+    # xcodebuild. The runtime gate in BackgroundServiceEligibility must be
+    # updated to the same value.
+    DEVELOPMENT_TEAM: ""
     CODE_SIGN_STYLE: Automatic
     ENABLE_HARDENED_RUNTIME: true
     MACOSX_DEPLOYMENT_TARGET: "14.0"
     SWIFT_VERSION: "6.0"
     VERSIONING_SYSTEM: apple-generic
-    CURRENT_PROJECT_VERSION: 45
-    MARKETING_VERSION: 1.0.0
+    CURRENT_PROJECT_VERSION: 1
+    MARKETING_VERSION: 0.1.0
 
 targets:
   LetItBrewAppCore:
@@ -31,7 +34,7 @@ targets:
     settings:
       base:
         PRODUCT_NAME: LetItBrewAppCore
-        PRODUCT_BUNDLE_IDENTIFIER: com.ruban24.letitbrew.app-core
+        PRODUCT_BUNDLE_IDENTIFIER: com.agentbrew.app-core
         SKIP_INSTALL: true
 
   LetItBrewCore:
@@ -42,7 +45,7 @@ targets:
     settings:
       base:
         PRODUCT_NAME: LetItBrewCore
-        PRODUCT_BUNDLE_IDENTIFIER: com.ruban24.letitbrew.core
+        PRODUCT_BUNDLE_IDENTIFIER: com.agentbrew.core
         SKIP_INSTALL: true
 
   LetItBrewDaemonCore:
@@ -55,7 +58,7 @@ targets:
     settings:
       base:
         PRODUCT_NAME: LetItBrewDaemonCore
-        PRODUCT_BUNDLE_IDENTIFIER: com.ruban24.letitbrew.daemon-core
+        PRODUCT_BUNDLE_IDENTIFIER: com.agentbrew.daemon-core
         SKIP_INSTALL: true
 
   LetItBrew:
@@ -64,9 +67,9 @@ targets:
     sources:
       - path: Sources/LetItBrewApp
     info:
-      path: Config/LetItBrew-Info.plist
+      path: Config/AgentBrew-Info.plist
       properties:
-        CFBundleDisplayName: "Let It Brew"
+        CFBundleDisplayName: "AgentBrew Dev"
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         LSMinimumSystemVersion: $(MACOSX_DEPLOYMENT_TARGET)
@@ -77,18 +80,19 @@ targets:
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         GENERATE_INFOPLIST_FILE: false
-        PRODUCT_NAME: "Let It Brew"
         PRODUCT_MODULE_NAME: LetItBrew
-        EXECUTABLE_NAME: LetItBrew
+        EXECUTABLE_NAME: AgentBrew
       configs:
         Debug:
-          PRODUCT_BUNDLE_IDENTIFIER: com.ruban24.letitbrew.dev
-          LETITBREW_DAEMON_LABEL: com.ruban24.letitbrew.dev.daemon
-          LETITBREW_DAEMON_PLIST: $(SRCROOT)/Config/LaunchDaemons/com.ruban24.letitbrew.dev.daemon.plist
+          PRODUCT_NAME: "AgentBrew Dev"
+          PRODUCT_BUNDLE_IDENTIFIER: com.agentbrew.dev
+          LETITBREW_DAEMON_LABEL: com.agentbrew.dev.daemon
+          LETITBREW_DAEMON_PLIST: $(SRCROOT)/Config/LaunchDaemons/com.agentbrew.dev.daemon.plist
         Release:
-          PRODUCT_BUNDLE_IDENTIFIER: com.ruban24.letitbrew
-          LETITBREW_DAEMON_LABEL: com.ruban24.letitbrew.daemon
-          LETITBREW_DAEMON_PLIST: $(SRCROOT)/Config/LaunchDaemons/com.ruban24.letitbrew.daemon.plist
+          PRODUCT_NAME: "AgentBrew"
+          PRODUCT_BUNDLE_IDENTIFIER: com.agentbrew
+          LETITBREW_DAEMON_LABEL: com.agentbrew.daemon
+          LETITBREW_DAEMON_PLIST: $(SRCROOT)/Config/LaunchDaemons/com.agentbrew.daemon.plist
     dependencies:
       - target: LetItBrewDaemon
         embed: false
@@ -108,8 +112,8 @@ targets:
           update_support_dir="$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/UpdateSupport"
           legal_dir="$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/Legal"
           /bin/mkdir -p "$services_dir" "$plists_dir" "$helpers_dir" "$update_support_dir" "$legal_dir"
-          /usr/bin/install -m 755 "$BUILT_PRODUCTS_DIR/LetItBrewDaemon" "$services_dir/LetItBrewDaemon"
-          /usr/bin/install -m 755 "$BUILT_PRODUCTS_DIR/letitbrew" "$helpers_dir/letitbrew"
+          /usr/bin/install -m 755 "$BUILT_PRODUCTS_DIR/AgentBrewDaemon" "$services_dir/AgentBrewDaemon"
+          /usr/bin/install -m 755 "$BUILT_PRODUCTS_DIR/agentbrew" "$helpers_dir/agentbrew"
           /usr/bin/install -m 644 "$LETITBREW_DAEMON_PLIST" "$plists_dir/$LETITBREW_DAEMON_LABEL.plist"
           /usr/bin/install -m 755 "$SRCROOT/scripts/run-update.sh" "$update_support_dir/run-update.sh"
           /usr/bin/install -m 755 "$SRCROOT/scripts/upgrade-installed-app.sh" "$update_support_dir/upgrade-installed-app.sh"
@@ -140,13 +144,13 @@ targets:
         ENTITLEMENTS_REQUIRED: false
         CREATE_INFOPLIST_SECTION_IN_BINARY: true
         GENERATE_INFOPLIST_FILE: true
-        PRODUCT_NAME: LetItBrewDaemon
+        PRODUCT_NAME: AgentBrewDaemon
         SKIP_INSTALL: true
       configs:
         Debug:
-          PRODUCT_BUNDLE_IDENTIFIER: com.ruban24.letitbrew.dev.daemon
+          PRODUCT_BUNDLE_IDENTIFIER: com.agentbrew.dev.daemon
         Release:
-          PRODUCT_BUNDLE_IDENTIFIER: com.ruban24.letitbrew.daemon
+          PRODUCT_BUNDLE_IDENTIFIER: com.agentbrew.daemon
 
   LetItBrewCLI:
     type: tool
@@ -161,13 +165,13 @@ targets:
         ENTITLEMENTS_REQUIRED: false
         CREATE_INFOPLIST_SECTION_IN_BINARY: true
         GENERATE_INFOPLIST_FILE: true
-        PRODUCT_NAME: letitbrew
+        PRODUCT_NAME: agentbrew
         SKIP_INSTALL: true
       configs:
         Debug:
-          PRODUCT_BUNDLE_IDENTIFIER: com.ruban24.letitbrew.dev.cli
+          PRODUCT_BUNDLE_IDENTIFIER: com.agentbrew.dev.cli
         Release:
-          PRODUCT_BUNDLE_IDENTIFIER: com.ruban24.letitbrew.cli
+          PRODUCT_BUNDLE_IDENTIFIER: com.agentbrew.cli
 
 schemes:
   LetItBrew:

@@ -34,7 +34,7 @@ private final class RecordingPreparationOperations:
             checksumFile: root.appendingPathComponent("Checksums"),
             diskImage: root.appendingPathComponent("Update.dmg"),
             mountPoint: root.appendingPathComponent("Mount"),
-            stagedApp: root.appendingPathComponent("Candidate/Let It Brew.app"),
+            stagedApp: root.appendingPathComponent("Candidate/AgentBrew.app"),
             updateSupportDirectory: root.appendingPathComponent("UpdateSupport"),
             resultFile: root.appendingPathComponent("result.json"),
             logFile: root.appendingPathComponent("update.log")
@@ -61,7 +61,7 @@ private final class RecordingPreparationOperations:
 
     func readSmallFile(at url: URL, maximumBytes: Int64) throws -> Data {
         try record("readChecksums")
-        return Data("\(digest)  LetItBrew-0.5.0.dmg\n".utf8)
+        return Data("\(digest)  AgentBrew-0.5.0.dmg\n".utf8)
     }
 
     func sha256(of url: URL) throws -> String {
@@ -83,7 +83,7 @@ private final class RecordingPreparationOperations:
         let actualMount = mountedPointOverride ?? mountPoint
         return MountedUpdateImage(
             mountPoint: actualMount,
-            appBundle: actualMount.appendingPathComponent("Let It Brew.app")
+            appBundle: actualMount.appendingPathComponent("AgentBrew.app")
         )
     }
 
@@ -134,14 +134,14 @@ private func preparationRelease(
     return StableUpdateRelease(
         version: version,
         dmg: UpdateAsset(
-            name: "LetItBrew-0.5.0.dmg",
-            downloadURL: URL(string: "https://github.com/ruban-24/letitbrew/releases/download/v0.5.0/LetItBrew-0.5.0.dmg")!,
+            name: "AgentBrew-0.5.0.dmg",
+            downloadURL: URL(string: "https://github.com/luluaterra/agentbrew/releases/download/v0.5.0/AgentBrew-0.5.0.dmg")!,
             size: 10,
             githubSHA256: dmgGitHubDigest
         ),
         checksums: UpdateAsset(
-            name: "LetItBrew-0.5.0-SHA256SUMS",
-            downloadURL: URL(string: "https://github.com/ruban-24/letitbrew/releases/download/v0.5.0/LetItBrew-0.5.0-SHA256SUMS")!,
+            name: "AgentBrew-0.5.0-SHA256SUMS",
+            downloadURL: URL(string: "https://github.com/luluaterra/agentbrew/releases/download/v0.5.0/AgentBrew-0.5.0-SHA256SUMS")!,
             size: 10,
             githubSHA256: checksumGitHubDigest
         )

@@ -27,7 +27,7 @@ private func requireSoleOwnedEntry(
 }
 
 @Test func singleQuotesPathsSafely() {
-    #expect(ClaudeHooks.shellSingleQuoted("/Applications/Let It Brew.app") == "'/Applications/Let It Brew.app'")
+    #expect(ClaudeHooks.shellSingleQuoted("/Applications/AgentBrew.app") == "'/Applications/AgentBrew.app'")
     #expect(ClaudeHooks.shellSingleQuoted("/Users/o'brien/app") == #"'/Users/o'\''brien/app'"#)
     #expect(ClaudeHooks.shellSingleQuoted("/a b/c") == "'/a b/c'")
 }
@@ -137,7 +137,7 @@ private func requireSoleOwnedEntry(
 
 @Test func installSweepsOursOutOfEventsWeNoLongerUse() throws {
     let orphan = Data("""
-    {"hooks":{"LegacyEvent":[{"hooks":[{"type":"command","command":"x; : # __letitbrew_hook"}]}]}}
+    {"hooks":{"LegacyEvent":[{"hooks":[{"type":"command","command":"x; : # __agentbrew_hook"}]}]}}
     """.utf8)
     let root = try object(try ClaudeHooks.install(into: orphan, cliPath: "/opt/letitbrew"))
     let hooks = try #require(root["hooks"] as? [String: Any])

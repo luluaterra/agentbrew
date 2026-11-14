@@ -44,7 +44,7 @@ private final class ProcessOutputBox: @unchecked Sendable {
 }
 
 /// Runs a child process without allowing a full output pipe or a hung child to
-/// block Let It Brew's agent orchestration indefinitely.
+/// block AgentBrew's agent orchestration indefinitely.
 public enum BoundedProcessRunner {
     public static func run(
         executableURL: URL,
@@ -125,7 +125,7 @@ public enum BoundedProcessRunner {
         process.waitUntilExit()
 
         if outputFinished.wait(timeout: .now() + 2) == .timedOut {
-            // A descendant should not keep Let It Brew's reader alive after the
+            // A descendant should not keep AgentBrew's reader alive after the
             // launched process is reaped. Closing the descriptor unblocks it.
             try? outputHandle.close()
             _ = outputFinished.wait(timeout: .now() + 0.25)

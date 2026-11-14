@@ -4,7 +4,7 @@ import os
 import LetItBrewDaemonCore
 
 private let logger = Logger(
-    subsystem: "com.ruban24.letitbrew.daemon",
+    subsystem: "com.agentbrew.daemon",
     category: "lifecycle"
 )
 
@@ -162,7 +162,7 @@ guard let daemonBuildIdentity = LetItBrewDaemonBuildIdentity(
 }
 
 let stateDirectory = URL(
-    fileURLWithPath: "/Library/Application Support/LetItBrew",
+    fileURLWithPath: "/Library/Application Support/AgentBrew",
     isDirectory: true
 )
 let debtURL = stateDirectory.appendingPathComponent(
@@ -178,7 +178,11 @@ let coordinator = DaemonHoldCoordinator(
     debtStore: FileDaemonSleepDebtStore(url: debtURL),
     sleepControl: pmsetControl,
     powerModeDebtStore: FileDaemonPowerModeDebtStore(url: powerModeDebtURL),
-    powerModeControl: pmsetControl
+    powerModeControl: pmsetControl,
+    // The upstream Let It Brew may be installed beside this app and its
+    // daemon owns the same global SleepDisabled flag. Refuse and defer
+    // rather than fight it; see ForeignSleepHoldDetection.swift.
+    foreignSleepHoldDetector: ForeignSleepHoldDetector()
 )
 
 switch coordinator.reconcileAtLaunch() {
@@ -218,6 +222,6 @@ listener.delegate = delegate
 listener.resume()
 let restoreRetryTimer = coordinator.startRestoreRetryTimer()
 logger.notice(
-    "Let It Brew daemon protocol v\(LetItBrewDaemonProtocolVersion.current) build \(daemonBuildIdentity.versionDescription, privacy: .public) cdhash \(daemonBuildIdentity.codeDirectoryHash, privacy: .public) ready."
+    "AgentBrew daemon protocol v\(LetItBrewDaemonProtocolVersion.current) build \(daemonBuildIdentity.versionDescription, privacy: .public) cdhash \(daemonBuildIdentity.codeDirectoryHash, privacy: .public) ready."
 )
 RunLoop.current.run()

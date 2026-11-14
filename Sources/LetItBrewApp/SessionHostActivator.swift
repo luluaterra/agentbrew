@@ -18,7 +18,7 @@ enum SessionHostActivator {
     @discardableResult
     static func activate(agentPID: Int32) -> Bool {
         guard let app = hostApp(of: agentPID) else { return false }
-        // Cooperative activation: the menu-bar popover makes Let It Brew the
+        // Cooperative activation: the menu-bar popover makes AgentBrew the
         // active app, which may hand activation to the session's app.
         NSApp.yieldActivation(to: app)
         return app.activate()

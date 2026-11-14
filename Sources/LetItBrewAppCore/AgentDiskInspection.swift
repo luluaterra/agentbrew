@@ -96,7 +96,7 @@ public enum AgentDiskInspection {
         switch registry {
         case .invalid(let message):
             return .init(target: nil, snapshot: nil, state: .invalid,
-                         diagnostic: "Let It Brew could not safely read its recorded agent target: \(message)",
+                         diagnostic: "AgentBrew could not safely read its recorded agent target: \(message)",
                          usedRecordedTarget: false)
         case .valid(let value):
             recorded = value?.targets[agent]
@@ -107,7 +107,7 @@ public enum AgentDiskInspection {
         switch readExactTarget(target, usedRecordedTarget) {
         case .absent(let snapshot):
             return .init(target: URL(fileURLWithPath: snapshot.path), snapshot: snapshot, state: .absent,
-                         diagnostic: "No Let It Brew connection is installed.",
+                         diagnostic: "No AgentBrew connection is installed.",
                          usedRecordedTarget: usedRecordedTarget)
         case .invalid(let resolvedURL, let reason):
             return .init(target: resolvedURL, snapshot: nil, state: .invalid,
@@ -122,7 +122,7 @@ public enum AgentDiskInspection {
                              diagnostic: details(report), usedRecordedTarget: usedRecordedTarget)
             } catch {
                 return .init(target: resolvedTarget, snapshot: snapshot, state: .invalid,
-                             diagnostic: "Let It Brew will not change this unreadable or unowned configuration: \(error)",
+                             diagnostic: "AgentBrew will not change this unreadable or unowned configuration: \(error)",
                              usedRecordedTarget: usedRecordedTarget)
             }
         }
@@ -161,8 +161,8 @@ public enum AgentDiskInspection {
     }
 
     private static func details(_ report: HookInstallReport) -> String {
-        if report.isHealthy { return "Let It Brew’s connection is healthy." }
-        if report.isAbsent { return "No Let It Brew connection is installed." }
-        return "Let It Brew’s connection needs repair."
+        if report.isHealthy { return "AgentBrew’s connection is healthy." }
+        if report.isAbsent { return "No AgentBrew connection is installed." }
+        return "AgentBrew’s connection needs repair."
     }
 }

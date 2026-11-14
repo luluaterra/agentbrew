@@ -5,14 +5,14 @@ import LetItBrewCore
 
 @Test func headerCopyPrioritizesPausedThenAwakeThenSafetyRelease() {
     #expect(MenuHeaderCopy.resolve(isPaused: true, isKeepingAwake: true)
-        == "Let It Brew is paused")
+        == "AgentBrew is paused")
     #expect(MenuHeaderCopy.resolve(isPaused: false, isKeepingAwake: true)
         == "Keeping your Mac awake")
     #expect(MenuHeaderCopy.resolve(
         isPaused: true,
         isKeepingAwake: false,
         releaseConstraint: .battery(percent: 20)
-    ) == "Let It Brew is paused")
+    ) == "AgentBrew is paused")
     #expect(MenuHeaderCopy.resolve(
         isPaused: false,
         isKeepingAwake: true,
@@ -870,7 +870,7 @@ private func group(
     ) == "Keeping your Mac awake")
     #expect(MenuHeaderCopy.resolve(
         isPaused: true, isKeepingAwake: false, isWaitingForYou: true
-    ) == "Let It Brew is paused")
+    ) == "AgentBrew is paused")
     #expect(MenuHeaderCopy.resolve(
         isPaused: false, isKeepingAwake: false,
         releaseConstraint: .thermal, isWaitingForYou: true

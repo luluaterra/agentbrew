@@ -76,7 +76,7 @@ public struct Decision: Equatable, Sendable {
 /// Claude approval kept before Waiting existed.
 ///
 /// The latch keeps that evidence for the life of the wait, so a later input
-/// the caller discards (such as a click in Let It Brew's own menu) cannot
+/// the caller discards (such as a click in AgentBrew's own menu) cannot
 /// erase an earlier answer.
 public struct WaitAnswerLatch: Equatable, Sendable {
     /// Input this long before a Claude permission notification still counts:
@@ -224,7 +224,7 @@ public func decide(
     }
 
     // 3. Low Power Mode releases active holds when the setting is enabled.
-    // Low Power Mode that Let It Brew turned on for closed-lid work is not the
+    // Low Power Mode that AgentBrew turned on for closed-lid work is not the
     // person's choice, so it must not release the hold that requested it.
     if settings.respectLowPowerMode, power.lowPowerModeEnabled,
        !lowPowerModeOwnedByLetItBrew {

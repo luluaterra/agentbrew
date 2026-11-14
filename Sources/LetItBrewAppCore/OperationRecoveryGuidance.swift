@@ -29,12 +29,12 @@ public enum OperationRecoveryCatalog {
             guidance(
                 id: "update-discovery",
                 title: "Could not check for updates",
-                summary: "Let It Brew did not change the installed app.",
+                summary: "AgentBrew did not change the installed app.",
                 steps: [
                     "Check your internet connection.",
                     "Open Releases and download the signed versioned DMG.",
-                    "Quit Let It Brew before replacing the app in Applications.",
-                    "Your Let It Brew settings stay in place.",
+                    "Quit AgentBrew before replacing the app in Applications.",
+                    "Your AgentBrew settings stay in place.",
                 ],
                 actions: [.openURL(ProductLinks.releases)],
                 diagnostic: diagnostic
@@ -43,12 +43,12 @@ public enum OperationRecoveryCatalog {
             guidance(
                 id: "update-download",
                 title: "Could not download the update",
-                summary: "Let It Brew did not change the installed app.",
+                summary: "AgentBrew did not change the installed app.",
                 steps: [
                     "Check your internet connection.",
                     "Open Releases and download the signed versioned DMG.",
-                    "Quit Let It Brew before replacing the app in Applications.",
-                    "Your Let It Brew settings stay in place.",
+                    "Quit AgentBrew before replacing the app in Applications.",
+                    "Your AgentBrew settings stay in place.",
                 ],
                 actions: [.openURL(ProductLinks.releases)],
                 diagnostic: diagnostic
@@ -57,12 +57,12 @@ public enum OperationRecoveryCatalog {
             guidance(
                 id: "update-verification",
                 title: "Could not verify the update",
-                summary: "Let It Brew stopped before replacing the installed app.",
+                summary: "AgentBrew stopped before replacing the installed app.",
                 steps: [
                     "Remove only the failed download.",
                     "Open Releases and download a fresh signed versioned DMG.",
                     "Keep Gatekeeper enabled and reopen the DMG normally.",
-                    "Quit Let It Brew before replacing the app in Applications. Your settings stay in place.",
+                    "Quit AgentBrew before replacing the app in Applications. Your settings stay in place.",
                 ],
                 actions: [.openURL(ProductLinks.releases)],
                 diagnostic: diagnostic
@@ -70,13 +70,13 @@ public enum OperationRecoveryCatalog {
         case .replacement:
             guidance(
                 id: "update-replacement",
-                title: "Could not replace Let It Brew",
+                title: "Could not replace AgentBrew",
                 summary: "The installed app may still be the previous version.",
                 steps: [
                     "Open Releases and download the signed versioned DMG.",
-                    "Quit Let It Brew before replacing the app in Applications.",
-                    "Replace only Let It Brew.app, then reopen it normally.",
-                    "Your Let It Brew settings stay in place.",
+                    "Quit AgentBrew before replacing the app in Applications.",
+                    "Replace only AgentBrew.app, then reopen it normally.",
+                    "Your AgentBrew settings stay in place.",
                 ],
                 actions: [.openURL(ProductLinks.releases), .revealApplication],
                 diagnostic: diagnostic
@@ -85,12 +85,12 @@ public enum OperationRecoveryCatalog {
             guidance(
                 id: "update-relaunch",
                 title: "Finish the update manually",
-                summary: "Let It Brew could not confirm that the updated app reopened.",
+                summary: "AgentBrew could not confirm that the updated app reopened.",
                 steps: [
                     "Open Releases and download the signed versioned DMG.",
-                    "Quit Let It Brew before replacing the app in Applications.",
-                    "Replace only Let It Brew.app, then reopen it normally.",
-                    "Your Let It Brew settings stay in place.",
+                    "Quit AgentBrew before replacing the app in Applications.",
+                    "Replace only AgentBrew.app, then reopen it normally.",
+                    "Your AgentBrew settings stay in place.",
                 ],
                 actions: [.openURL(ProductLinks.releases), .revealApplication],
                 diagnostic: diagnostic
@@ -107,11 +107,11 @@ public enum OperationRecoveryCatalog {
         case .releaseHolds:
             guidance(
                 id: "uninstall-release-holds",
-                title: "Let It Brew is still releasing sleep holds",
+                title: "AgentBrew is still releasing sleep holds",
                 summary: "Nothing was removed.",
                 steps: [
-                    "Keep Let It Brew in Applications.",
-                    "Quit and reopen Let It Brew, then try uninstalling again.",
+                    "Keep AgentBrew in Applications.",
+                    "Quit and reopen AgentBrew, then try uninstalling again.",
                     "Do not move the app to the Trash until uninstall confirms the sleep holds are released.",
                 ],
                 actions: [],
@@ -123,8 +123,8 @@ public enum OperationRecoveryCatalog {
                 title: "Could not check the background service",
                 summary: "Nothing was removed.",
                 steps: [
-                    "Keep Let It Brew in Applications.",
-                    "Restart your Mac, reopen Let It Brew, then try uninstalling again.",
+                    "Keep AgentBrew in Applications.",
+                    "Restart your Mac, reopen AgentBrew, then try uninstalling again.",
                     "Do not move the app to the Trash until uninstall confirms the background service is reconciled.",
                 ],
                 actions: [],
@@ -136,8 +136,8 @@ public enum OperationRecoveryCatalog {
                 title: "Could not unregister the background service",
                 summary: "Nothing was removed.",
                 steps: [
-                    "Keep Let It Brew installed in Applications.",
-                    "Open Let It Brew from Applications and try uninstalling again.",
+                    "Keep AgentBrew installed in Applications.",
+                    "Open AgentBrew from Applications and try uninstalling again.",
                     "Do not move the app to the Trash until uninstall confirms the background service is unregistered.",
                 ],
                 actions: [.revealApplication],
@@ -164,11 +164,11 @@ public enum OperationRecoveryCatalog {
         case .retainBundleForHookRetry:
             guidance(
                 id: "uninstall-retained-app",
-                title: "Keep Let It Brew installed for now",
-                summary: "Let It Brew and one or more agent hooks may remain.",
+                title: "Keep AgentBrew installed for now",
+                summary: "AgentBrew and one or more agent hooks may remain.",
                 steps: [
-                    "Keep Let It Brew installed in Applications.",
-                    "Open Let It Brew and turn off each affected watched-agent switch.",
+                    "Keep AgentBrew installed in Applications.",
+                    "Open AgentBrew and turn off each affected watched-agent switch.",
                     "Try uninstalling again.",
                 ],
                 actions: [],
@@ -178,10 +178,10 @@ public enum OperationRecoveryCatalog {
             guidance(
                 id: "uninstall-login-item",
                 title: "Could not turn off Launch at Login",
-                summary: "The Let It Brew login item may still be enabled.",
+                summary: "The AgentBrew login item may still be enabled.",
                 steps: [
                     "Open Login Items & Extensions in System Settings.",
-                    "Remove Let It Brew from Open at Login and turn off its App Background Activity entry if it appears.",
+                    "Remove AgentBrew from Open at Login and turn off its App Background Activity entry if it appears.",
                 ],
                 actions: [.openLoginItems],
                 diagnostic: diagnostic
@@ -189,12 +189,12 @@ public enum OperationRecoveryCatalog {
         case .deleteUserData:
             guidance(
                 id: "uninstall-user-data",
-                title: "Could not remove Let It Brew data",
-                summary: "Let It Brew's user data may remain.",
+                title: "Could not remove AgentBrew data",
+                summary: "AgentBrew's user data may remain.",
                 steps: [
                     "In Finder, choose Go → Go to Folder…",
                     "Enter ~/Library/Application Support/LetItBrew.",
-                    "Move only that Let It Brew folder to the Trash.",
+                    "Move only that AgentBrew folder to the Trash.",
                 ],
                 actions: [],
                 diagnostic: diagnostic
@@ -202,12 +202,12 @@ public enum OperationRecoveryCatalog {
         case .clearPreferences:
             guidance(
                 id: "uninstall-preferences",
-                title: "Could not remove Let It Brew preferences",
-                summary: "Let It Brew preferences may remain.",
+                title: "Could not remove AgentBrew preferences",
+                summary: "AgentBrew preferences may remain.",
                 steps: [
-                    "Quit Let It Brew.",
+                    "Quit AgentBrew.",
                     failureInstruction
-                        ?? "Reopen this copy of Let It Brew and try uninstalling again.",
+                        ?? "Reopen this copy of AgentBrew and try uninstalling again.",
                 ],
                 actions: [],
                 diagnostic: diagnostic
@@ -215,11 +215,11 @@ public enum OperationRecoveryCatalog {
         case .trashBundle:
             guidance(
                 id: "uninstall-app",
-                title: "Could not move Let It Brew to the Trash",
+                title: "Could not move AgentBrew to the Trash",
                 summary: "The background service was already handled.",
                 steps: [
                     "Open Applications in Finder.",
-                    "Move only Let It Brew.app to the Trash.",
+                    "Move only AgentBrew.app to the Trash.",
                 ],
                 actions: [.revealApplication],
                 diagnostic: diagnostic
@@ -235,11 +235,11 @@ public enum OperationRecoveryCatalog {
         guidance(
             id: "uninstall-\(id)-hooks",
             title: "Could not remove the \(agent) hook",
-            summary: "The Let It Brew-owned \(agent) hook may remain.",
+            summary: "The AgentBrew-owned \(agent) hook may remain.",
             steps: [
-                "Restore Let It Brew from the Trash if needed, then open it.",
+                "Restore AgentBrew from the Trash if needed, then open it.",
                 "Turn off the \(agent) watched-agent switch.",
-                "Try uninstalling again. Let It Brew leaves foreign hooks and project settings alone.",
+                "Try uninstalling again. AgentBrew leaves foreign hooks and project settings alone.",
             ],
             actions: [],
             diagnostic: diagnostic

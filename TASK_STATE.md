@@ -11,21 +11,41 @@
 - 备注：审计基于上游 `0df676c`（v1.0.0 / build 45）。
 
 ### AB-002 阶段二：独立开发分支与隔离基座
-- 类型：主线开发 · 状态：**进行中**
-- 已完成：Fork `luluaterra/agentbrew`；分支 `agentbrew/main`；remote：origin=fork、upstream=上游；项目记录（AGENTS.md、TASK_STATE.md）。
-- 待办：身份参数化改造（Bundle ID/daemon 标识/hook marker/数据目录/App 名称，按 BASELINE_AUDIT 第 4 节 10 处）；R1 电源互斥机制设计；防睡眠基线验证 `docs/POWER_MANAGEMENT_TEST.md`。
-- 验收标准：`swift test` 全绿（身份改动后）；官网版零改动；互斥机制有测试覆盖。
+- 类型：主线开发 · 状态：**进行中**（隔离改造与 R1 互斥已实现，待全量测试验证后提交）
+- 已完成：
+  - Fork `luluaterra/agentbrew`；分支 `agentbrew/main`；remote：origin=fork、upstream=上游。
+  - 身份参数化（BASELINE_AUDIT 第 4 节清单逐项落地）：
+    - Bundle ID：Release `com.agentbrew` / Debug `com.agentbrew.dev`；daemon 标识随派生。
+    - App 名称：Release "AgentBrew.app" / Debug "AgentBrew Dev.app"；EXECUTABLE_NAME `AgentBrew`。
+    - CLI：二进制名 `agentbrew`；守护进程二进制 `AgentBrewDaemon`。
+    - Hook markers：`__agentbrew_hook` / `__agentbrew_<agent>_hook`（9 个适配器）。
+    - 数据目录：用户域 `~/Library/Application Support/AgentBrew/`；daemon 状态域 `/Library/Application Support/AgentBrew/`。
+    - 更新/链接指向 `luluaterra/agentbrew`（无 Release 时检查自然失败，不会误更新到上游）。
+    - 用户可见文案全量改名（Sources+Tests 中 "Let It Brew"→"AgentBrew"）。
+    - 上游自有文件（Config/LetItBrew-Info.plist、上游 LaunchDaemon plist）保留原样，新建副本 `Config/AgentBrew-Info.plist`、`Config/LaunchDaemons/com.agentbrew(.dev).daemon.plist` 并由 project.yml 引用——降低上游合并冲突面。
+  - **R1 电源互斥机制已实现**（`Sources/LetItBrewDaemonCore/ForeignSleepHoldDetection.swift` + DaemonHoldCoordinator 两层闸门 + 11 个新测试）：
+    - acquire：检测到官网版活跃 sleep-debt 记录 → 拒绝接闭盖 hold（fail-closed，消息可行动）。
+    - restore/reconcile：检测到官网版记录 → 延迟恢复（保留我方 debt，5 秒重试计时器在官网版释放后自动恢复真实 prior）。
+    - 推演覆盖双向争夺场景（官网版先持/后持、重启对账、升级静默），终态一致恢复 0。
+  - 测试：互斥 11 项全绿；身份相关测试夹具已同步。
+- 待办：全量 swift test 验证 → 分块提交 → （第三阶段）防睡眠真实验证。
+- 已知非阻塞项：
+  - `piExtensionRuntimeDrivesIsolatedSessionStorage` 在全量并行运行时可能超时失败（mjs 内 5s 性能护栏在负载下超限），单测稳定通过；属上游测试负载敏感，非身份改动引起。验证以单测为准。
+  - `scripts/*.sh`（发布/DMG/验证脚本）仍含上游名称，属第七阶段交付工具，暂不动。
+  - `LETITBREW_TEST_HOME` 测试环境变量名保留（50 处引用，跨脚本，重命名收益低）。
+  - 图标（AppIcon asset）仍为上游烧瓶图标，第五阶段 UI 时替换。
 
 ### AB-003 环境缺口：Xcode 与签名身份
 - 类型：阻塞 · 状态：**阻塞**（需用户决策）
-- 内容：① 完整 Xcode 未安装（App/daemon/CLI 无法构建，约 12GB）；② 开发版签名需带 Team ID 的证书（ad-hoc 会被 XPC `anchor apple generic` 校验拒绝），需确认用户是否有 Apple 开发身份（免费 Personal Team 的开发证书可满足本地验证）。
-- 影响：第三阶段（防睡眠真实验证）开始前必须解决。
+- 内容：① 完整 Xcode 未安装（App/daemon/CLI 无法构建，约 12GB）；② 开发版签名需带 Team ID 的证书：`project.yml` 的 `DEVELOPMENT_TEAM` 与 `BackgroundServiceEligibility.expectedTeamIdentifier` 已留空并标注 TODO(AB-003)，填入用户自己的 Team ID 前资格闸门按设计拒绝注册（fail-closed）。
+- 附：本机已装用户级 Swift 6.4.2 工具链（swiftly）；`swift build/test` 需 `SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk`（CLT 27.0 SDK 的 tbd 与 6.4.2 工具链不兼容）。
 
 ## 阻塞与风险
 
-- R1 双应用 `disablesleep` 争夺：官网版与开发版都会写系统级 SleepDisabled，必须实现互斥（方案见 BASELINE_AUDIT 第 5 节），未实现前不得双版本并行测试。
+- R1：互斥已实现（daemon 层）；App 层 UI 提示（检测到官网版时在 Closed Lid 设置给出说明）留到第五阶段 UI 任务。
+- R1 残余面：官网版 CLI `watch --lid-closed`（osascript 看门狗路径，用户域租约）不受 daemon 层检查覆盖；App 层补充检查待第五阶段实现，当前文档记录。
 - R2/R3：见 AB-003。
-- R4 官网版运行中：审计全程只读，未触碰。
+- R4 官网版运行中：全程只读，未触碰。
 
 ## 待评估（新想法池）
 

@@ -64,7 +64,7 @@ import Testing
     //
     // Deliberately does not assert true/false: that's this Mac's current
     // `disablesleep` state today, but it must not be a fixed expectation —
-    // a Mac actually running Let It Brew with lid-closed mode on would have it
+    // a Mac actually running AgentBrew with lid-closed mode on would have it
     // flip to true, and a test that fails when the product does its job
     // is worse than no test. What's invariant is that the process launches,
     // the pipe drains, the exit status is handled, and the output parses to

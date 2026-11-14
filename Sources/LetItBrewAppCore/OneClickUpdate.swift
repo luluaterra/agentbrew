@@ -80,30 +80,30 @@ public enum UpdateReleaseValidationFailure: Error, Equatable, LocalizedError, Se
     public var errorDescription: String? {
         switch self {
         case .invalidResponse:
-            "GitHub returned update information Let It Brew could not read."
+            "GitHub returned update information AgentBrew could not read."
         case .draftRelease:
-            "GitHub's latest Let It Brew release is still a draft."
+            "GitHub's latest AgentBrew release is still a draft."
         case .prerelease:
-            "GitHub's latest Let It Brew release is not a published update."
+            "GitHub's latest AgentBrew release is not a published update."
         case .invalidStableTag(let tag):
-            "GitHub's latest Let It Brew tag '\(tag)' is not a supported numeric version."
+            "GitHub's latest AgentBrew tag '\(tag)' is not a supported numeric version."
         case .missingAsset(let name):
-            "The latest Let It Brew release is missing \(name)."
+            "The latest AgentBrew release is missing \(name)."
         case .duplicateAsset(let name):
-            "The latest Let It Brew release contains more than one \(name)."
+            "The latest AgentBrew release contains more than one \(name)."
         case .invalidAssetURL(let name):
-            "The latest Let It Brew release has an untrusted URL for \(name)."
+            "The latest AgentBrew release has an untrusted URL for \(name)."
         case .invalidAssetSize(let name):
-            "The latest Let It Brew release has an invalid size for \(name)."
+            "The latest AgentBrew release has an invalid size for \(name)."
         case .invalidAssetDigest(let name):
-            "The latest Let It Brew release has an invalid digest for \(name)."
+            "The latest AgentBrew release has an invalid digest for \(name)."
         }
     }
 }
 
 public enum StableUpdateReleaseParser {
     public static let endpoint = URL(
-        string: "https://api.github.com/repos/ruban-24/letitbrew/releases/latest"
+        string: "https://api.github.com/repos/luluaterra/agentbrew/releases/latest"
     )!
     public static let maximumDMGSize: Int64 = 128 * 1_024 * 1_024
     public static let maximumChecksumSize: Int64 = 1_024 * 1_024
@@ -123,8 +123,8 @@ public enum StableUpdateReleaseParser {
             throw UpdateReleaseValidationFailure.invalidStableTag(response.tagName)
         }
 
-        let dmgName = "LetItBrew-\(version).dmg"
-        let checksumName = "LetItBrew-\(version)-SHA256SUMS"
+        let dmgName = "AgentBrew-\(version).dmg"
+        let checksumName = "AgentBrew-\(version)-SHA256SUMS"
         let dmg = try asset(
             named: dmgName,
             in: response.assets,
@@ -146,13 +146,13 @@ public enum StableUpdateReleaseParser {
         let releaseTag = "v\(release.version)"
         try validate(
             release.dmg,
-            named: "LetItBrew-\(release.version).dmg",
+            named: "AgentBrew-\(release.version).dmg",
             maximumSize: maximumDMGSize,
             releaseTag: releaseTag
         )
         try validate(
             release.checksums,
-            named: "LetItBrew-\(release.version)-SHA256SUMS",
+            named: "AgentBrew-\(release.version)-SHA256SUMS",
             maximumSize: maximumChecksumSize,
             releaseTag: releaseTag
         )
@@ -238,7 +238,7 @@ public enum StableUpdateReleaseParser {
               url.query == nil,
               url.fragment == nil
         else { return false }
-        return url.path == "/ruban-24/letitbrew/releases/download/\(releaseTag)/\(assetName)"
+        return url.path == "/luluaterra/agentbrew/releases/download/\(releaseTag)/\(assetName)"
     }
 
     private static func isSHA256(_ value: String) -> Bool {

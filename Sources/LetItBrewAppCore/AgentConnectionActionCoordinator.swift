@@ -30,7 +30,7 @@ public enum AgentConnectionActionCoordinator {
                 return .init(
                     selectedAgentIDs: selectedAgentIDs,
                     state: .actionNeeded,
-                    details: ["Disconnected. Choose Connect to use this agent with Let It Brew."],
+                    details: ["Disconnected. Choose Connect to use this agent with AgentBrew."],
                     disposition: .intentionallyDisconnected
                 )
             case .connect:
