@@ -184,7 +184,7 @@ struct MenuBarContentView: View {
     private var header: some View {
         VStack(alignment: .leading, spacing: 3) {
             HStack(spacing: 12) {
-                Text(model.reason)
+                Text(L10n.zh(model.reason))
                     .font(.body.weight(.semibold))
                     .lineLimit(1)
                     .minimumScaleFactor(0.85)
@@ -192,7 +192,7 @@ struct MenuBarContentView: View {
 
                 Spacer(minLength: 8)
 
-                Toggle("AgentBrew enabled", isOn: Binding(
+                Toggle(L10n.zh("AgentBrew enabled"), isOn: Binding(
                     get: { model.isEnabled },
                     set: { model.setEnabled($0) }
                 ))
@@ -201,7 +201,7 @@ struct MenuBarContentView: View {
                 .controlSize(.mini)
                 .accessibilityHint("Controls whether working agents may keep this Mac awake")
             }
-            Text(headerDetail)
+            Text(L10n.zh(headerDetail))
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
             if let batteryPresentation {
@@ -213,7 +213,7 @@ struct MenuBarContentView: View {
 
     private func batteryLine(_ presentation: MenuBatteryPresentation) -> some View {
         Label {
-            Text(presentation.text)
+            Text(L10n.zh(presentation.text))
         } icon: {
             Image(systemName: presentation.isAttention
                   ? "exclamationmark.triangle.fill"
@@ -289,9 +289,9 @@ struct MenuBarContentView: View {
                     .accessibilityHidden(true)
 
                 VStack(alignment: .leading, spacing: 1) {
-                    Text(attention.title)
+                    Text(L10n.zh(attention.title))
                         .fontWeight(.medium)
-                    Text(attention.detail)
+                    Text(L10n.zh(attention.detail))
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
@@ -456,9 +456,9 @@ struct MenuBarContentView: View {
 
     private var footer: some View {
         VStack(spacing: 0) {
-            menuCommand("Settings…", shortcut: "⌘,") { showSettings() }
+            menuCommand(L10n.zh("Settings…"), shortcut: "⌘,") { showSettings() }
                 .keyboardShortcut(",")
-            menuCommand("Quit AgentBrew", shortcut: "⌘Q") { model.cleanQuit() }
+            menuCommand(L10n.zh("Quit AgentBrew"), shortcut: "⌘Q") { model.cleanQuit() }
                 .keyboardShortcut("q")
         }
     }
@@ -582,7 +582,7 @@ private struct RepositoryGroupRowView: View {
                     }
                 }
 
-                Text(group.sessionCountText)
+                Text(L10n.zh(group.sessionCountText))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
 
@@ -704,8 +704,8 @@ private struct SessionRowView: View {
     private var subtitle: String {
         let isMonitoringState = session.isMonitoring || (!session.isWorking && !session.isWaiting)
         return isGrouped || isMonitoringState
-            ? session.stateText
-            : "\(session.toolName) · \(session.stateText)"
+            ? L10n.zh(session.stateText)
+            : "\(session.toolName) · \(L10n.zh(session.stateText))"
     }
 
     private var stateDot: some View {
