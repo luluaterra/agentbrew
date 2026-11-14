@@ -69,9 +69,11 @@
 - 待办：按调研文档实现轮询适配器（不被阻塞，可与 AB-402 并行）
 
 ### AB-402 WorkBuddy 双版适配器（部分状态监控）
-- 类型：主线开发 · 状态：**待办**
-- 方案：一个适配器参数化 `~/.workbuddy` / `~/.workbuddy-ai` 双根目录；SQLite（复制后读）+ audit-log JSONL 轮询；锚定数据目录路径而非 Bundle ID。
+- 类型：主线开发 · 状态：**待验收**（核心完成 `89524f9`）
+- 已实现：WorkBuddySource（双版一 schema，SQLite mode=ro + immutable 兜底）+ PollingSessionSynchronizer 镜像进统一 SessionStore；5 分钟新鲜度门（25 个陈旧 active 行真机验证不误 hold）；安装器合成健康报告；接入 App 每秒轮询。
+- 遗留：真实活跃会话的菜单显示待用户跑一个 WorkBuddy 会话验证；Waiting 判定（audit-log needs-approval）未实现——当前 Unknown 如实呈现。
 
-### AB-403 豆包 Z 适配器（部分状态监控 + 人工保持开关）
-- 类型：主线开发 · 状态：**待办**
-- 方案：`index.json` + `coding/snapshot` + `output.log` 心跳轮询；Waiting 不可判 → Unknown + 人工保持唤醒开关（2h 失效保护，复用 MonitoringLease 模式）；隐私红线：不读 fileContents/output.log 正文。
+### AB-403 豆包 Z 适配器（部分状态监控）
+- 类型：主线开发 · 状态：**待验收**（核心完成 `89524f9`）
+- 已实现：DoubaoSource（coding/snapshot 最新快照轮询；字段缺失跳过降级；fileContents/output.log 零接触）+ 同一新鲜度门；真机验证 11 个 ended 执行全部正确静默。
+- 遗留：真实运行任务的活体验证；人工保持唤醒开关（任务书要求的保守策略）留到第五阶段 UI。
