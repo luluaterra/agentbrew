@@ -7,7 +7,7 @@
         <string>com.agentbrew</string>
     </array>
     <key>BundleProgram</key>
-    <string>Contents/Library/LaunchServices/LetItBrewDaemon</string>
+    <string>Contents/Library/LaunchServices/AgentBrewDaemon</string>
     <key>Label</key>
     <string>com.agentbrew.daemon</string>
     <key>MachServices</key>
