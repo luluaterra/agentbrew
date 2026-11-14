@@ -160,6 +160,10 @@ public enum AgentDiskInspection {
         case .zcode:
             _ = try ZCodeHooks.install(into: data, cliPath: helperPath)
             return ZCodeHooks.report(for: data, cliPath: helperPath)
+        case .workbuddy, .workbuddyai, .doubao:
+            var synthetic = HookInstallReport()
+            synthetic.healthy = [agent.rawValue]
+            return synthetic
         }
     }
 

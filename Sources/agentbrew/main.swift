@@ -14,7 +14,7 @@ case "install":
         exit(runInstall())
     }
     guard arguments.count == 2, let agent = AgentID(rawValue: arguments[1]) else {
-        FileHandle.standardError.write(Data("Usage: agentbrew install [claude|codex|opencode|copilot|pi|cursor|gemini|qwen|kimi|zcode]\n".utf8))
+        FileHandle.standardError.write(Data("Usage: agentbrew install [claude|codex|opencode|copilot|pi|cursor|gemini|qwen|kimi|zcode|workbuddy|workbuddyai|doubao]\n".utf8))
         exit(1)
     }
     exit(runInstall(agents: [agent]))
@@ -23,7 +23,7 @@ case "uninstall":
         exit(runUninstall())
     }
     guard arguments.count == 2, let agent = AgentID(rawValue: arguments[1]) else {
-        FileHandle.standardError.write(Data("Usage: agentbrew uninstall [claude|codex|opencode|copilot|pi|cursor|gemini|qwen|kimi|zcode]\n".utf8))
+        FileHandle.standardError.write(Data("Usage: agentbrew uninstall [claude|codex|opencode|copilot|pi|cursor|gemini|qwen|kimi|zcode|workbuddy|workbuddyai|doubao]\n".utf8))
         exit(1)
     }
     exit(runUninstall(agents: [agent]))
@@ -46,9 +46,9 @@ default:
     agentbrew - keep your Mac awake while AI agents work
 
     Usage:
-      agentbrew install [claude|codex|opencode|copilot|pi|cursor|gemini|qwen|kimi|zcode]
+      agentbrew install [claude|codex|opencode|copilot|pi|cursor|gemini|qwen|kimi|zcode|workbuddy|workbuddyai|doubao]
                               install hooks for all agents, or one agent
-      agentbrew uninstall [claude|codex|opencode|copilot|pi|cursor|gemini|qwen|kimi|zcode]
+      agentbrew uninstall [claude|codex|opencode|copilot|pi|cursor|gemini|qwen|kimi|zcode|workbuddy|workbuddyai|doubao]
                               remove hooks for all agents, or one agent
       agentbrew doctor         report install health per event
       agentbrew watch          hold the Mac awake while agents work

@@ -1521,6 +1521,9 @@ final class LetItBrewAppModel: ObservableObject {
         case .qwen: QwenHooks.settingsURL(home: home, environment: environment)
         case .kimi: KimiHooks.configURL(home: home, environment: environment)
         case .zcode: ZCodeHooks.configURL(home: home)
+        case .workbuddy: home.appendingPathComponent(".workbuddy", isDirectory: true)
+        case .workbuddyai: home.appendingPathComponent(".workbuddy-ai", isDirectory: true)
+        case .doubao: DoubaoSource.defaultSnapshotRoot
         }
     }
 
@@ -1620,6 +1623,9 @@ final class LetItBrewAppModel: ObservableObject {
         case .qwen: configured = QwenHooks.settingsURL(home: home, environment: environment)
         case .kimi: configured = KimiHooks.configURL(home: home, environment: environment)
         case .zcode: configured = ZCodeHooks.configURL(home: home)
+        case .workbuddy: configured = home.appendingPathComponent(".workbuddy", isDirectory: true)
+        case .workbuddyai: configured = home.appendingPathComponent(".workbuddy-ai", isDirectory: true)
+        case .doubao: configured = DoubaoSource.defaultSnapshotRoot
         }
         return ExactTargetSelection(
             recordedTarget: registry?.targets[agent],
@@ -2067,9 +2073,22 @@ final class LetItBrewAppModel: ObservableObject {
 
     private func pollOnce() async {
         let storage = storage
+        let synchronizer = PollingSessionSynchronizer(storage: storage)
+        let pollingSources: [any PollingAgentSource] = [
+            WorkBuddySource.domestic(),
+            WorkBuddySource.international(),
+            DoubaoSource(),
+        ]
         let clamshellMonitor = clamshellMonitor
         let activeDisplayMonitor = activeDisplayMonitor
         let read = await Task.detached(priority: .utility) {
+            // Polling adapters (WorkBuddy editions, Doubao Z) have no hooks:
+            // every tick their own stores are mirrored into the shared
+            // session storage so the same decision engine sees them. A failed
+            // or torn read inside a source keeps the previous records.
+            for source in pollingSources {
+                synchronizer.apply(source, now: Date())
+            }
             let sessions = MenuSessionSnapshot.read(
                 loadRecords: { CopilotCancellation.reconcile(storage.loadAll()) },
                 ttl: 12 * 3_600

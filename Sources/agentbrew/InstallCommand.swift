@@ -81,6 +81,10 @@ private final class CommandFilesystem {
         case .qwen: url = QwenHooks.settingsURL(home: homeURL, environment: adapterEnvironment)
         case .kimi: url = KimiHooks.configURL(home: homeURL, environment: adapterEnvironment)
         case .zcode: url = ZCodeHooks.configURL(home: homeURL)
+        case .workbuddy: url = homeURL.appendingPathComponent(".workbuddy", isDirectory: true)
+        case .workbuddyai: url = homeURL.appendingPathComponent(".workbuddy-ai", isDirectory: true)
+        case .doubao: url = SessionStorage.applicationSupportDirectory(in: homeURL)
+            .appendingPathComponent("../Doubao", isDirectory: true)
         }
         return try target(at: url, resolvingParentSymlinks: true)
     }
@@ -128,7 +132,19 @@ private func replacement(agent: AgentID, data: Data?, cli: String, removing: Boo
     case .qwen: return removing ? try QwenHooks.adapter.remove(from: data) : try QwenHooks.adapter.install(into: data, cliPath: cli)
     case .kimi: return removing ? try KimiHooks.remove(from: data) : try KimiHooks.install(into: data, cliPath: cli)
     case .zcode: return removing ? try ZCodeHooks.remove(from: data) : try ZCodeHooks.install(into: data, cliPath: cli)
+    // Polling adapters install nothing: their connection is the data root
+    // existing on disk, so the file is passed through untouched.
+    case .workbuddy, .workbuddyai, .doubao: return data
     }
+}
+
+
+/// A polling adapter is connected whenever its agent exists; the report is
+/// synthetic because there is no hook file to classify.
+private func pollingAgentReport(_ agent: AgentID) -> HookInstallReport {
+    var synthetic = HookInstallReport()
+    synthetic.healthy = [agent.rawValue]
+    return synthetic
 }
 
 private func report(agent: AgentID, data: Data?, cli: String) -> HookInstallReport {
@@ -143,6 +159,9 @@ private func report(agent: AgentID, data: Data?, cli: String) -> HookInstallRepo
     case .qwen: QwenHooks.adapter.report(for: data, cliPath: cli)
     case .kimi: KimiHooks.report(for: data, cliPath: cli)
     case .zcode: ZCodeHooks.report(for: data, cliPath: cli)
+    // A polling adapter is connected whenever its agent exists; the report
+    // is synthetic because there is no hook file to classify.
+    case .workbuddy, .workbuddyai, .doubao: pollingAgentReport(agent)
     }
 }
 

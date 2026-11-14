@@ -9,6 +9,9 @@ public enum AgentID: String, CaseIterable, Codable, Sendable {
     case qwen
     case kimi
     case zcode
+    case workbuddy
+    case workbuddyai
+    case doubao
 
     /// Owned executable adapters must never follow a same-name file symlink.
     public var ownsWholeConfigurationFile: Bool {
@@ -20,6 +23,13 @@ public enum AgentID: String, CaseIterable, Codable, Sendable {
     /// sides must agree, or an interrupted cleanup leaves children Working.
     public var tracksSubagentFamilies: Bool {
         self == .claude || self == .codex
+    }
+
+    /// Polling adapters read an external app's own session store instead of
+    /// installed lifecycle hooks. There is nothing to install for them: their
+    /// connection is the data root existing on disk.
+    public var isPollingAdapter: Bool {
+        self == .workbuddy || self == .workbuddyai || self == .doubao
     }
 
     public var displayName: String {
@@ -34,6 +44,9 @@ public enum AgentID: String, CaseIterable, Codable, Sendable {
         case .qwen: "Qwen Code"
         case .kimi: "Kimi Code"
         case .zcode: "ZCode"
+        case .workbuddy: "WorkBuddy"
+        case .workbuddyai: "WorkBuddy AI"
+        case .doubao: "Doubao Z"
         }
     }
 }

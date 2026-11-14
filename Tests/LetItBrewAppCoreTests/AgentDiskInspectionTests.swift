@@ -19,6 +19,7 @@ private func generatedBytes(_ agent: AgentID) -> Data {
     case .qwen: return try! QwenHooks.adapter.install(into: nil, cliPath: "/letitbrew")
     case .kimi: return try! KimiHooks.install(into: nil, cliPath: "/letitbrew")
     case .zcode: return try! ZCodeHooks.install(into: nil, cliPath: "/letitbrew")
+    case .workbuddy, .workbuddyai, .doubao: return Data()
     }
 }
 
@@ -45,13 +46,24 @@ func diskInspectionClassifiesAbsentAndUnreadableForEveryAdapter(agent: AgentID) 
     #expect(unreadable.state == .invalid)
 }
 
-@Test(arguments: AgentID.allCases)
+@Test(arguments: AgentID.allCases.filter { !$0.isPollingAdapter })
 func diskInspectionClassifiesRepairableOwnedBytesForEveryAdapter(agent: AgentID) {
     let target = URL(fileURLWithPath: "/repair/\(agent.rawValue)")
     let result = AgentDiskInspection.inspect(agent: agent, registry: .valid(nil), defaultTarget: target, helperPath: "/other-letitbrew") { _, _ in
         .regular(diskSnapshot(target.path), generatedBytes(agent))
     }
     #expect(result.state == .repairableOwned)
+}
+
+@Test(arguments: AgentID.allCases.filter { $0.isPollingAdapter })
+func diskInspectionAlwaysReadsHealthyForPollingAdapters(agent: AgentID) {
+    // Polling adapters have no hook file: drifted or foreign bytes cannot
+    // make them "repairable", so the synthetic report stays healthy.
+    let target = URL(fileURLWithPath: "/repair/\(agent.rawValue)")
+    let result = AgentDiskInspection.inspect(agent: agent, registry: .valid(nil), defaultTarget: target, helperPath: "/other-letitbrew") { _, _ in
+        .regular(diskSnapshot(target.path), Data("whatever bytes".utf8))
+    }
+    #expect(result.state == .healthyOwned)
 }
 
 @Test(arguments: [AgentID.claude, .codex, .copilot])
