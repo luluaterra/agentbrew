@@ -61,7 +61,6 @@ enum L10n {
         "Checking for updates…": "正在检查更新…",
         "Checking…": "检查中…",
         "AgentBrew is up to date.": "已是最新版本。",
-        "AgentBrew will download and verify the signed update, briefly quit, safely transition its background service if present, and relaunch. Your settings and session records stay in place.": "AgentBrew 将下载并校验签名更新，短暂退出并安全切换后台服务后重启。你的设置与会话记录保持不变。",
         "Downloading and verifying update…": "正在下载并校验更新…",
         "Finish the update manually": "手动完成更新",
         "Keep AgentBrew in Applications.": "请把 AgentBrew 保留在“应用程序”内。",

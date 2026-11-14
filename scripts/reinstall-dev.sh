@@ -18,6 +18,20 @@ HASH_FILE="/tmp/agentbrew-registered-daemon-cdhash.txt"
 
 export SDKROOT="${SDKROOT:-/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk}"
 
+echo "==> 自检：L10n 映射表重复键扫描"
+python3 - <<'LINT'
+import re, sys
+src = open('Sources/LetItBrewApp/Localization.swift').read()
+start = src.index('private static let exact')
+end = src.index('private static let patterns')
+keys = re.findall(r'^\s{8}"((?:[^"\\]|\\.)*)":', src[start:end], re.M)
+dupes = {k for k in keys if keys.count(k) > 1}
+if dupes:
+    print("!! L10n.exact 存在重复键（会导致启动崩溃）:", list(dupes)[:3])
+    sys.exit(1)
+print("   L10n.exact", len(keys), "键，无重复")
+LINT
+
 echo "==> 构建（$([ "${1:-}" = "--clean" ] && echo clean || echo incremental)）"
 if [ "${1:-}" = "--clean" ]; then
     xcodebuild -scheme LetItBrew -configuration Debug clean build -quiet
