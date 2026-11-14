@@ -1,0 +1,60 @@
+/* AgentBrew zh-Hans — settings window and shared UI literals.
+   Keys are the exact English literals SwiftUI localizes. */
+
+/* Tabs */
+"General" = "通用";
+"Agents" = "Agent";
+"Power" = "电源";
+"Closed Lid" = "闭盖";
+"About" = "关于";
+
+/* General */
+"Startup" = "启动";
+"Launch AgentBrew at login" = "登录时启动 AgentBrew";
+"Updates" = "更新";
+"Check for Updates…" = "检查更新…";
+"Check Again" = "再次检查";
+"Install Update" = "安装更新";
+"AgentBrew was updated" = "AgentBrew 已更新";
+"AgentBrew is up to date." = "已是最新版本。";
+"Cancel" = "取消";
+"Done" = "完成";
+"Dismiss" = "关闭";
+
+/* Agents */
+"Watched Agents" = "监控中的 Agent";
+"Refresh Connections" = "刷新连接";
+"Open Background Items…" = "打开登录项设置…";
+"Open Login Items…" = "打开登录项…";
+
+/* Power */
+"Only keep Mac awake while connected to power" = "仅接通电源时保持 Mac 唤醒";
+"Stop keeping Mac awake below" = "低于此电量时停止保持唤醒";
+"Respect Low Power Mode" = "尊重低电量模式";
+"Lets the Mac sleep when you turn on Low Power Mode. AgentBrew's own closed-lid switch doesn't count." = "开启低电量模式时允许 Mac 睡眠。AgentBrew 为闭盖自己切换的低电量模式不算在内。";
+"Allow displays to sleep while agents are working" = "Agent 工作时允许显示器睡眠";
+"AgentBrew always releases its sleep holds under serious or critical thermal pressure." = "系统温度压力达到严重级别时，AgentBrew 总是释放保持唤醒。";
+
+/* Closed Lid */
+"Keep agents working when the lid is closed" = "合盖时保持 Agent 工作";
+"Use Low Power Mode while the lid is closed" = "合盖时使用低电量模式";
+"Switches to Low Power Mode while agents work with the lid shut and no external display, then restores your own setting when the lid opens or the work stops." = "合盖且无外接显示器时切换到低电量模式；开盖或工作结束后恢复你的原有设置。";
+"Background helper" = "后台助手";
+"Repair Helper" = "修复助手";
+"Required for closed-lid operation. The helper runs locally and releases its hold if communication with AgentBrew stops." = "闭盖运行的必要组件。助手仅在本地运行，与 AgentBrew 失去通信时会自动释放保持唤醒。";
+
+/* About */
+"Keeps your Mac awake while local agents work, then lets it sleep when they finish." = "本地 Agent 工作时保持 Mac 唤醒，工作结束后自动允许睡眠。";
+"Uses a local background helper only when enabled. AgentBrew never sends your agent data off this Mac." = "仅在启用时使用本地后台助手。AgentBrew 绝不会把你的 Agent 数据发送到这台 Mac 之外。";
+"Uninstall AgentBrew…" = "卸载 AgentBrew…";
+"This disconnects all connected agent integrations, stops AgentBrew's background service, removes its settings and session records, and moves AgentBrew to the Trash." = "将断开所有已连接的 Agent 集成，停止 AgentBrew 的后台服务，删除设置与会话记录，并把 AgentBrew 移入废纸篓。";
+"Uninstall" = "卸载";
+"Finish & Quit" = "完成并退出";
+"Resume AgentBrew" = "恢复 AgentBrew";
+"Recovery Steps…" = "恢复步骤…";
+"Reveal Log" = "显示日志";
+"Reveal in Finder" = "在 Finder 中显示";
+"Try Again" = "重试";
+
+/* Launch-at-login section */
+"Couldn't update launch at login" = "无法更新登录启动设置";

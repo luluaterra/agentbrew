@@ -745,7 +745,7 @@ enum SettingsPane: String, CaseIterable, Identifiable {
     case about = "About"
 
     var id: String { rawValue.lowercased() }
-    var title: String { rawValue }
+    var title: String { L10n.zh(rawValue) }
 
     var systemImage: String {
         switch self {
