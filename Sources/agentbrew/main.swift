@@ -14,7 +14,7 @@ case "install":
         exit(runInstall())
     }
     guard arguments.count == 2, let agent = AgentID(rawValue: arguments[1]) else {
-        FileHandle.standardError.write(Data("Usage: letitbrew install [claude|codex|opencode|copilot|pi|cursor|gemini|qwen|kimi]\n".utf8))
+        FileHandle.standardError.write(Data("Usage: agentbrew install [claude|codex|opencode|copilot|pi|cursor|gemini|qwen|kimi|zcode]\n".utf8))
         exit(1)
     }
     exit(runInstall(agents: [agent]))
@@ -23,7 +23,7 @@ case "uninstall":
         exit(runUninstall())
     }
     guard arguments.count == 2, let agent = AgentID(rawValue: arguments[1]) else {
-        FileHandle.standardError.write(Data("Usage: letitbrew uninstall [claude|codex|opencode|copilot|pi|cursor|gemini|qwen|kimi]\n".utf8))
+        FileHandle.standardError.write(Data("Usage: agentbrew uninstall [claude|codex|opencode|copilot|pi|cursor|gemini|qwen|kimi|zcode]\n".utf8))
         exit(1)
     }
     exit(runUninstall(agents: [agent]))
@@ -39,28 +39,28 @@ case "status":
 case "repair":
     exit(runRepair())
 case "--version":
-    print("letitbrew 1.0.0")
+    print("agentbrew 0.1.0")
     exit(0)
 default:
     print("""
-    letitbrew - keep your Mac awake while AI agents work
+    agentbrew - keep your Mac awake while AI agents work
 
     Usage:
-      letitbrew install [claude|codex|opencode|copilot|pi|cursor|gemini|qwen|kimi]
+      agentbrew install [claude|codex|opencode|copilot|pi|cursor|gemini|qwen|kimi|zcode]
                               install hooks for all agents, or one agent
-      letitbrew uninstall [claude|codex|opencode|copilot|pi|cursor|gemini|qwen|kimi]
+      agentbrew uninstall [claude|codex|opencode|copilot|pi|cursor|gemini|qwen|kimi|zcode]
                               remove hooks for all agents, or one agent
-      letitbrew doctor         report install health per event
-      letitbrew watch          hold the Mac awake while agents work
-      letitbrew watch --lid-closed
+      agentbrew doctor         report install health per event
+      agentbrew watch          hold the Mac awake while agents work
+      agentbrew watch --lid-closed
                               also keep it awake with the lid shut (asks for
                               your password once, at startup)
-      letitbrew status [--json]  one-shot board
-      letitbrew repair          clear a sleep-watchdog lease left by a dead
-                              watchdog loop (see `letitbrew doctor`)
-      letitbrew hook <agent> <event>
+      agentbrew status [--json]  one-shot board
+      agentbrew repair          clear a sleep-watchdog lease left by a dead
+                              watchdog loop (see `agentbrew doctor`)
+      agentbrew hook <agent> <event>
                               internal: called by agent lifecycle hooks
-      letitbrew --version
+      agentbrew --version
 
     Testing only:
       LETITBREW_TEST_HOME      redirect agent config paths beneath this

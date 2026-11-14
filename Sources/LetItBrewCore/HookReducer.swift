@@ -98,9 +98,10 @@ public enum HookReducer {
             return .set(.working, detail: nil)
         case "PostToolUseFailure":
             // A failed or cancelled Copilot tool, including its question
-            // tool, returns to the turn it interrupted. Qwen fires no Stop
-            // after Esc, so a tool the person cancelled ends the turn here.
-            if agent == .qwen {
+            // tool, returns to the turn it interrupted. Qwen and ZCode fire
+            // no Stop after Esc, so a tool the person cancelled ends the
+            // turn here.
+            if agent == .qwen || agent == .zcode {
                 return isInterrupt ? .set(.idle, detail: nil) : .set(.working, detail: nil)
             }
             return agent == .copilot ? .set(.working, detail: nil) : nil
@@ -115,11 +116,11 @@ public enum HookReducer {
             // auto mode, an allow rule, or Codex's auto-reviewer decides, so it
             // does not prove a person is being asked. Their approvals keep the
             // prior state; Copilot's question tool still blocks on the person.
-            // OpenCode and Kimi report it only when they ask.
+            // OpenCode, Kimi, and ZCode report it only when they ask.
             if agent == .copilot, isUserQuestionTool(agent: agent, toolName: toolName) {
                 return .set(.waiting, detail: SessionWaitDetail.question)
             }
-            return agent == .opencode || agent == .kimi
+            return agent == .opencode || agent == .kimi || agent == .zcode
                 ? .set(.waiting, detail: SessionWaitDetail.approval)
                 : nil
         case "Notification":
@@ -196,6 +197,7 @@ public enum HookReducer {
              (.copilot, "AskUserQuestion"),
              (.claude, "AskUserQuestion"),
              (.codex, "request_user_input"),
+             (.zcode, "AskUserQuestion"),
              (.gemini, "ask_user"),
              (.qwen, "ask_user_question"), (.qwen, "AskUserQuestion"),
              (.kimi, "AskUserQuestion"):

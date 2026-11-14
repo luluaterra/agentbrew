@@ -11,10 +11,18 @@ import LetItBrewCore
 func runHook(
     agent: AgentID,
     event: String,
-    storage: SessionStorage = SessionStorage()
+    storage: SessionStorage = SessionStorage(),
+    environment: [String: String] = ProcessInfo.processInfo.environment
 ) -> Int32 {
     let input = FileHandle.standardInput.readDataToEndOfFile()
-    let payload = (try? JSONDecoder().decode(HookPayload.self, from: input)) ?? HookPayload()
+    var payload = (try? JSONDecoder().decode(HookPayload.self, from: input)) ?? HookPayload()
+
+    // ZCode carries the working directory in the environment, not in the
+    // hook payload on stdin. Both variable names ZCode sets are accepted.
+    if agent == .zcode, payload.cwd == nil {
+        payload.cwd = environment["ZCODE_PROJECT_DIR"]
+            ?? environment["CLAUDE_PROJECT_DIR"]
+    }
 
     try? HookSessionUpdater.apply(
         event: event,

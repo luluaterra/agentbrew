@@ -157,6 +157,9 @@ public enum AgentDiskInspection {
         case .kimi:
             _ = try KimiHooks.install(into: data, cliPath: helperPath)
             return KimiHooks.report(for: data, cliPath: helperPath)
+        case .zcode:
+            _ = try ZCodeHooks.install(into: data, cliPath: helperPath)
+            return ZCodeHooks.report(for: data, cliPath: helperPath)
         }
     }
 

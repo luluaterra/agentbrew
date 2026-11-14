@@ -1520,6 +1520,7 @@ final class LetItBrewAppModel: ObservableObject {
         case .gemini: GeminiHooks.settingsURL(home: home, environment: environment)
         case .qwen: QwenHooks.settingsURL(home: home, environment: environment)
         case .kimi: KimiHooks.configURL(home: home, environment: environment)
+        case .zcode: ZCodeHooks.configURL(home: home)
         }
     }
 
@@ -1618,6 +1619,7 @@ final class LetItBrewAppModel: ObservableObject {
         case .gemini: configured = GeminiHooks.settingsURL(home: home, environment: environment)
         case .qwen: configured = QwenHooks.settingsURL(home: home, environment: environment)
         case .kimi: configured = KimiHooks.configURL(home: home, environment: environment)
+        case .zcode: configured = ZCodeHooks.configURL(home: home)
         }
         return ExactTargetSelection(
             recordedTarget: registry?.targets[agent],

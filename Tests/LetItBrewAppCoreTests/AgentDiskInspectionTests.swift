@@ -18,6 +18,7 @@ private func generatedBytes(_ agent: AgentID) -> Data {
     case .gemini: return try! GeminiHooks.adapter.install(into: nil, cliPath: "/letitbrew")
     case .qwen: return try! QwenHooks.adapter.install(into: nil, cliPath: "/letitbrew")
     case .kimi: return try! KimiHooks.install(into: nil, cliPath: "/letitbrew")
+    case .zcode: return try! ZCodeHooks.install(into: nil, cliPath: "/letitbrew")
     }
 }
 

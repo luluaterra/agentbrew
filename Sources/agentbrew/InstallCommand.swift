@@ -80,6 +80,7 @@ private final class CommandFilesystem {
         case .gemini: url = GeminiHooks.settingsURL(home: homeURL, environment: adapterEnvironment)
         case .qwen: url = QwenHooks.settingsURL(home: homeURL, environment: adapterEnvironment)
         case .kimi: url = KimiHooks.configURL(home: homeURL, environment: adapterEnvironment)
+        case .zcode: url = ZCodeHooks.configURL(home: homeURL)
         }
         return try target(at: url, resolvingParentSymlinks: true)
     }
@@ -126,6 +127,7 @@ private func replacement(agent: AgentID, data: Data?, cli: String, removing: Boo
     case .gemini: return removing ? try GeminiHooks.adapter.remove(from: data) : try GeminiHooks.adapter.install(into: data, cliPath: cli)
     case .qwen: return removing ? try QwenHooks.adapter.remove(from: data) : try QwenHooks.adapter.install(into: data, cliPath: cli)
     case .kimi: return removing ? try KimiHooks.remove(from: data) : try KimiHooks.install(into: data, cliPath: cli)
+    case .zcode: return removing ? try ZCodeHooks.remove(from: data) : try ZCodeHooks.install(into: data, cliPath: cli)
     }
 }
 
@@ -140,6 +142,7 @@ private func report(agent: AgentID, data: Data?, cli: String) -> HookInstallRepo
     case .gemini: GeminiHooks.adapter.report(for: data, cliPath: cli)
     case .qwen: QwenHooks.adapter.report(for: data, cliPath: cli)
     case .kimi: KimiHooks.report(for: data, cliPath: cli)
+    case .zcode: ZCodeHooks.report(for: data, cliPath: cli)
     }
 }
 
