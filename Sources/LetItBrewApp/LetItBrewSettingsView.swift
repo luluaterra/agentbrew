@@ -77,7 +77,7 @@ struct LetItBrewSettingsView: View {
                     updateAccessory
                 } label: {
                     Text("AgentBrew \(shortVersion)")
-                    Text(updateStatus)
+                    Text(L10n.zh(updateStatus))
                 }
 
                 if case .failed(let failure, _) = model.updateState {
@@ -86,9 +86,9 @@ struct LetItBrewSettingsView: View {
                         diagnostic: model.updateDiagnostic(for: failure)
                     )
                     VStack(alignment: .leading, spacing: 8) {
-                        Text(guidance.title)
+                        Text(L10n.zh(guidance.title))
                             .fontWeight(.medium)
-                        Text(guidance.summary)
+                        Text(L10n.zh(guidance.summary))
                             .foregroundStyle(.secondary)
                             .fixedSize(horizontal: false, vertical: true)
                         HStack(spacing: 8) {
@@ -109,9 +109,9 @@ struct LetItBrewSettingsView: View {
     private var updateAccessory: some View {
         switch model.updateState {
         case .idle, .failed:
-            checkForUpdatesButton("Check for Updates…")
+            checkForUpdatesButton(L10n.zh("Check for Updates…"))
         case .upToDate:
-            checkForUpdatesButton("Check Again")
+            checkForUpdatesButton(L10n.zh("Check Again"))
         case .checking, .installing, .readyToQuit:
             ProgressView()
                 .controlSize(.small)
@@ -436,9 +436,9 @@ struct LetItBrewSettingsView: View {
                         ? model.uninstallDiagnostic(for: [failure])
                         : nil
                 )
-                Text(guidance.title)
+                Text(L10n.zh(guidance.title))
                     .font(.callout.weight(.medium))
-                Text(guidance.summary)
+                Text(L10n.zh(guidance.summary))
                     .font(.callout)
                     .multilineTextAlignment(.center)
                     .frame(maxWidth: 360)
@@ -485,9 +485,9 @@ struct LetItBrewSettingsView: View {
                                 diagnostic: model.uninstallDiagnostic(for: [leftover])
                             )
                             VStack(alignment: .leading, spacing: 5) {
-                                Text(guidance.title)
+                                Text(L10n.zh(guidance.title))
                                     .font(.callout.weight(.semibold))
-                                Text(guidance.summary)
+                                Text(L10n.zh(guidance.summary))
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                                     .fixedSize(horizontal: false, vertical: true)
@@ -531,12 +531,12 @@ struct LetItBrewSettingsView: View {
                         kind: .relaunch,
                         diagnostic: report.diagnostic
                     )
-                    Text(guidance.title)
+                    Text(L10n.zh(guidance.title))
                         .font(.headline)
                     Text(report.message)
                         .font(.callout)
                         .foregroundStyle(.secondary)
-                    Text(guidance.summary)
+                    Text(L10n.zh(guidance.summary))
                         .font(.callout)
                         .foregroundStyle(.secondary)
                     Button("Recovery Steps…") {
@@ -687,10 +687,10 @@ private struct RecoveryGuidanceSheet: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text(guidance.title)
+            Text(L10n.zh(guidance.title))
                 .font(.headline)
 
-            Text(guidance.summary)
+            Text(L10n.zh(guidance.summary))
                 .font(.callout)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
@@ -896,11 +896,11 @@ private struct WatchedAgentRow: View {
         if showsRecovery, let detail = health.details.first {
             return detail
         }
-        guard isWatched else { return "Not watched" }
+        guard isWatched else { return L10n.zh("Not watched") }
         return switch health.state {
-        case .connecting: "Checking…"
-        case .connected: "Connected"
-        case .actionNeeded, .couldNotConnect: health.state.rawValue
+        case .connecting: L10n.zh("Checking…")
+        case .connected: L10n.zh("Connected")
+        case .actionNeeded, .couldNotConnect: L10n.zh(health.state.rawValue)
         }
     }
 

@@ -58,3 +58,21 @@
 
 /* Launch-at-login section */
 "Couldn't update launch at login" = "无法更新登录启动设置";
+
+/* 链接与详情 */
+"Copy Details" = "拷贝详情";
+"Open Link" = "打开链接";
+"Open Releases" = "打开 Releases";
+"Open AgentBrew releases" = "打开 AgentBrew 的 Releases";
+"Open a new AgentBrew issue" = "新建 AgentBrew 问题反馈";
+"Open the AgentBrew privacy notice" = "查看 AgentBrew 隐私说明";
+"Check watched agent connections again" = "再次检查被监控的 Agent 连接";
+
+/* 更新与卸载对话框 */
+"Install AgentBrew update?" = "安装 AgentBrew 更新？";
+"AgentBrew cleanup needs attention" = "AgentBrew 清理需要处理";
+"AgentBrew was removed, but one step needs attention" = "AgentBrew 已移除，还有一步需要处理";
+"AgentBrew was removed, but some steps need attention" = "AgentBrew 已移除，部分步骤需要处理";
+"Display idle sleep is held only while an agent keeps the Mac awake." = "仅在有 Agent 保持 Mac 唤醒时，显示器空闲睡眠才会被保持。";
+"Displays may sleep while the system sleep hold remains active." = "系统保持唤醒期间，显示器仍可能睡眠。";
+"Watch %@" = "监控 %@";
