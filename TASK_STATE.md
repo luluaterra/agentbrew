@@ -36,17 +36,17 @@
   - `LETITBREW_TEST_HOME` 测试环境变量名保留（50 处引用，跨脚本，重命名收益低）。
   - 图标（AppIcon asset）仍为上游烧瓶图标，第五阶段 UI 时替换。
 
-### AB-003 环境缺口：Xcode 与签名身份
-- 类型：阻塞 · 状态：**阻塞**（需用户决策）
-- 内容：① 完整 Xcode 未安装（App/daemon/CLI 无法构建，约 12GB）；② 开发版签名需带 Team ID 的证书：`project.yml` 的 `DEVELOPMENT_TEAM` 与 `BackgroundServiceEligibility.expectedTeamIdentifier` 已留空并标注 TODO(AB-003)，填入用户自己的 Team ID 前资格闸门按设计拒绝注册（fail-closed）。
-- 附：本机已装用户级 Swift 6.4.2 工具链（swiftly）；`swift build/test` 需 `SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk`（CLT 27.0 SDK 的 tbd 与 6.4.2 工具链不兼容）。
+### AB-003 环境缺口：Xcode 与签名身份（已解除）
+- 状态：**已关闭**（2026-11-14）
+- Xcode 27.2 已安装；Apple Development 证书（Personal Team `A7HHMGNNZ2`）已创建；WWDR G6 中间证书从 Xcode 内置资源补齐；Team ID 已填入 project.yml 与 BackgroundServiceEligibility（`1085399`）。
+- 关键结论：免费 Personal Team **可以**注册 SMAppService daemon（注册失败的真因是 plist 二进制名错位，`3dafa41`）。
 
 ## 阻塞与风险
 
-- R1：互斥已实现（daemon 层）；App 层 UI 提示（检测到官网版时在 Closed Lid 设置给出说明）留到第五阶段 UI 任务。
-- R1 残余面：官网版 CLI `watch --lid-closed`（osascript 看门狗路径，用户域租约）不受 daemon 层检查覆盖；App 层补充检查待第五阶段实现，当前文档记录。
-- R2/R3：见 AB-003。
+- 阶段三已完成（`e333139`）：防睡眠核心测试全部通过（A1-A4、B1/B2/B4/B5 实测，C 组单测覆盖），按任务书纪律可进入第四阶段正式集成。
+- R1 残余：App 层互斥 UI 提示（第五阶段）；官网版 CLI watch 路径的 App 层检查（第五阶段）。
 - R4 官网版运行中：全程只读，未触碰。
+- 待验收项：AB-001（审计）、AB-002（隔离基座）、AB-401（ZCode 适配器）等待用户验收确认。
 
 ## 待评估（新想法池）
 
