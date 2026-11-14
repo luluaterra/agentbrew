@@ -27,7 +27,8 @@ fi
 
 codesign -v "$SRC_APP" || { echo "!! 构建产物签名无效（增量构建改动过资源时用 --clean）"; exit 1; }
 
-NEW_CDHASH=$(codesign -dvvv "$SRC_APP/Contents/Library/LaunchServices/AgentBrewDaemon" 2>/dev/null | awk '/CDHash=/ {print $NF}')
+# codesign 的详细信息走 stderr。
+NEW_CDHASH=$(codesign -dvvv "$SRC_APP/Contents/Library/LaunchServices/AgentBrewDaemon" 2>&1 | awk '/CDHash=/ {print $NF}')
 
 echo "==> 退出旧实例并替换 App"
 osascript -e 'tell application "AgentBrew Dev" to quit' >/dev/null 2>&1 || true
