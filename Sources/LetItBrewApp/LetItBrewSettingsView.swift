@@ -894,7 +894,7 @@ private struct WatchedAgentRow: View {
 
     private var statusText: String {
         if showsRecovery, let detail = health.details.first {
-            return detail
+            return L10n.zh(detail)
         }
         guard isWatched else { return L10n.zh("Not watched") }
         return switch health.state {

@@ -122,6 +122,21 @@ enum L10n {
         "Couldn’t connect": "无法连接",
         "Not watched": "未监控",
         "Development": "开发版",
+        // Agent 连接健康与诊断（Agents 页每行详情）
+        "AgentBrew's connection is healthy.": "AgentBrew 连接正常。",
+        "AgentBrew's connection needs repair.": "AgentBrew 连接需要修复。",
+        "No AgentBrew connection is installed.": "未安装 AgentBrew 连接。",
+        "Unknown project": "未知项目",
+        "AgentBrew could not inspect this selected connection.": "AgentBrew 无法检查这个选中的连接。",
+        "AgentBrew did not prepare this selected connection.": "AgentBrew 未对这个选中的连接完成准备。",
+        "AgentBrew did not receive a preparation result.": "AgentBrew 未收到准备结果。",
+        "AgentBrew could not verify Codex hook approval.": "AgentBrew 无法确认 Codex 钩子授权。",
+        "Approve AgentBrew in Codex, then try again.": "先在 Codex 中批准 AgentBrew，然后重试。",
+        "AgentBrew will not change this invalid connection. Fix it, then choose Check Again.": "此连接无效，AgentBrew 不会改动它。修复后再点“再次检查”。",
+        "AgentBrew's hooks are still present, so disconnect did not finish.": "AgentBrew 的钩子仍然存在，断开未完成。",
+        "Choose Retry Disconnect to remove them, or Connect to keep using this agent.": "选择“重试断开”以移除它们，或选择“连接”继续使用该 Agent。",
+        "Disconnected. Choose Connect to use this agent with AgentBrew.": "已断开。选择“连接”可让 AgentBrew 监控该 Agent。",
+        "Fix or restore that file, then choose Check Again.": "修复或恢复该文件后，再点“再次检查”。",
         // 面板固定件
         "AgentBrew enabled": "启用 AgentBrew",
         "Settings…": "设置…",
@@ -154,6 +169,10 @@ enum L10n {
             (regex("^Turn off the (.+) watched-agent switch.$"), "关闭 $1 的监控开关。"),
             (regex("^Watch (.+)$"), "监控 $1"),
             (regex("^Version (.+) is available.$"), "新版本 $1 可用。"),
+            (regex("^AgentBrew could not safely read its recorded agent target: (.+)$"),
+             "AgentBrew 无法安全读取其记录的 Agent 目标：$1"),
+            (regex("^AgentBrew will not change this unreadable or unowned configuration: (.+)$"),
+             "此配置不可读或非 AgentBrew 所有，AgentBrew 不会改动它：$1"),
         ]
     }()
 
