@@ -51,3 +51,18 @@
 ## 待评估（新想法池）
 
 - 暂无。
+
+## 第四阶段前置（AB-4xx，均已登记方案，待防睡眠验证解锁后实施）
+
+### AB-401 ZCode 适配器（完整生命周期监控）
+- 类型：主线开发 · 状态：**待办**（前置 AB-002 验收；唯一不受 AB-003 阻塞的适配器代码工作）
+- 方案：hook 安装器写入 `~/.zcode/cli/config.json`（7 事件，`enabled:true` 必须），映射到 HookReducer；`Stop` 触发问题需真机实测。
+- 调研：`docs/AGENT-INTEGRATION-RESEARCH.md` §1。
+
+### AB-402 WorkBuddy 双版适配器（部分状态监控）
+- 类型：主线开发 · 状态：**待办**
+- 方案：一个适配器参数化 `~/.workbuddy` / `~/.workbuddy-ai` 双根目录；SQLite（复制后读）+ audit-log JSONL 轮询；锚定数据目录路径而非 Bundle ID。
+
+### AB-403 豆包 Z 适配器（部分状态监控 + 人工保持开关）
+- 类型：主线开发 · 状态：**待办**
+- 方案：`index.json` + `coding/snapshot` + `output.log` 心跳轮询；Waiting 不可判 → Unknown + 人工保持唤醒开关（2h 失效保护，复用 MonitoringLease 模式）；隐私红线：不读 fileContents/output.log 正文。

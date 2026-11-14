@@ -8,7 +8,7 @@ let package = Package(
         .target(name: "LetItBrewAppCore", dependencies: ["LetItBrewCore"]),
         .target(name: "LetItBrewCore"),
         .target(name: "LetItBrewDaemonCore", dependencies: ["LetItBrewCore"]),
-        .executableTarget(name: "letitbrew", dependencies: ["LetItBrewCore"]),
+        .executableTarget(name: "agentbrew", dependencies: ["LetItBrewCore"]),
         .testTarget(
             name: "LetItBrewAppCoreTests",
             dependencies: ["LetItBrewAppCore"]

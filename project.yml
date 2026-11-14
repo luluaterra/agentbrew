@@ -156,7 +156,7 @@ targets:
     type: tool
     platform: macOS
     sources:
-      - path: Sources/letitbrew
+      - path: Sources/agentbrew
     dependencies:
       - target: LetItBrewCore
     settings:
