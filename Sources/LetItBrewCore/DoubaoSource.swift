@@ -42,6 +42,19 @@ public struct DoubaoSource: PollingAgentSource {
         self.taskRuntimeRootsOverride = taskRuntimeRoots
     }
 
+    /// The agent-mode workspace every interactive run executes inside —
+    /// the honest cwd fallback when the client records no project path.
+    static var agentWorkspacePath: String {
+        let base = FileManager.default
+            .urls(for: .applicationSupportDirectory, in: .userDomainMask).first
+            ?? FileManager.default.temporaryDirectory
+        return base
+            .appendingPathComponent(
+                "Doubao/Default/.doubao/agent_mode/workspace", isDirectory: true
+            )
+            .path
+    }
+
     public static var defaultSnapshotRoot: URL {
         let base = FileManager.default
             .urls(for: .applicationSupportDirectory, in: .userDomainMask).first
@@ -111,13 +124,19 @@ public struct DoubaoSource: PollingAgentSource {
             let cwdURL = runtime.appendingPathComponent(
                 "non_interactive_cwd_\(freshest.task).txt"
             )
-            let cwd = (try? String(contentsOf: cwdURL, encoding: .utf8))?
+            var cwd = (try? String(contentsOf: cwdURL, encoding: .utf8))?
                 .trimmingCharacters(in: .whitespacesAndNewlines)
+            if cwd?.isEmpty != false {
+                // Interactive sessions write no cwd file (or "/"): fall back
+                // to the agent workspace that genuinely hosts the run, so
+                // the board shows "workspace" rather than "/".
+                cwd = DoubaoSource.agentWorkspacePath
+            }
             sessions.append(PolledSession(
                 key: "runtime-\(runtime.lastPathComponent)",
                 state: .working,
                 detail: nil,
-                cwd: (cwd?.isEmpty == false) ? cwd : nil,
+                cwd: cwd,
                 startedAt: nil,
                 lastActivity: freshest.modified,
                 isTerminal: false
