@@ -55,10 +55,18 @@
 ## 第四阶段前置（AB-4xx，均已登记方案，待防睡眠验证解锁后实施）
 
 ### AB-401 ZCode 适配器（完整生命周期监控）
-- 类型：主线开发 · 状态：**待验收**（代码完成并提交 `a9c9af7`；真实 hook 安装待用户同意 + 真机事件实测）
-- 已完成：`ZCodeHooks`（`~/.zcode/cli/config.json` 顶层 hooks，7 事件，`enabled:true` 语义，复用 HookFile）；AgentID/安装器/磁盘检查/AppModel/CLI 全接线；reducer 映射（PermissionRequest→waiting、PostToolUseFailure 按 is_interrupt、问题工具→waiting）；`runHook` 的 ZCODE_PROJECT_DIR cwd 回退；16 个新测试。
-- 验证：串行全量 922 项全绿；隔离端到端（LETITBREW_TEST_HOME）install→doctor healthy→uninstall 还原 `{}`。
-- 遗留：真实安装（写入用户 `~/.zcode/cli/config.json`）需用户同意后执行；`Stop` hook 触发问题（第三方报告）需真机复现；菜单栏 ZCode 图标资产留到第五阶段（暂用通用终端图标）。
+- 类型：主线开发 · 状态：**待验收**（代码完成 `a9c9af7`；真实 hook 已安装并部分验证 `0428f23`）
+- 真机验证（2026-11-14，hook 已装入用户真实 `~/.zcode/cli/config.json`，原配置备份为 `config.json.pre-agentbrew-backup`）：
+  - ✅ SessionStart/UserPromptSubmit hook 真实触发，记录写入 AgentBrew 隔离目录，tool=zcode、state=working
+  - ✅ cwd 经 ZCODE_PROJECT_DIR 环境变量回退正确落盘
+  - ✅ 会话进程退出后 status 正确过滤（不误保持唤醒）
+  - ✅ 外来键（mcp/plugins）逐字保留；doctor 报 healthy
+  - ⏸️ Stop/PreToolUse/PostToolUse/PermissionRequest 未验证：headless CLI 稳定报 authentication_error（凭据在桌面 app 侧）。**验证途径：用户在 ZCode 桌面 app 开一个新会话跑一轮任务，hook 即触发**
+  - 测试基线：串行全量 923 项全绿（含 registry 隔离修复 +1）
+
+### AB-403 豆包 Z：运行期观测已完成
+- ✅ 三路数据源全部实证（2026-11-14 豆包运行中）：AgentInfraService XPC 常驻 + 每会话 `file_utils_host` 进程；`output.log` 心跳（1 小时内活跃）；`coding/snapshot` 11 个 execution（startedAt/endedAtMs 齐全）；`fileContents` 隐私红线确认存在
+- 待办：按调研文档实现轮询适配器（不被阻塞，可与 AB-402 并行）
 
 ### AB-402 WorkBuddy 双版适配器（部分状态监控）
 - 类型：主线开发 · 状态：**待办**
