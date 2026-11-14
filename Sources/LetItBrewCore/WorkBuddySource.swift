@@ -82,7 +82,8 @@ public struct WorkBuddySource: PollingAgentSource {
 
         let statementSQL = """
         SELECT id, cwd, status, created_at, updated_at,
-               COALESCE(last_activity_at, updated_at)
+               COALESCE(last_activity_at, updated_at),
+               COALESCE(NULLIF(custom_title, ''), NULLIF(title, ''))
         FROM sessions WHERE deleted_at IS NULL
         """
         var statement: OpaquePointer?
@@ -101,6 +102,8 @@ public struct WorkBuddySource: PollingAgentSource {
             let lastActivity = Self.date(statement, 5)
                 ?? startedAt
                 ?? Date(timeIntervalSince1970: 0)
+            // The app's own task title (custom first, then generated).
+            let title = Self.text(statement, 6)
 
             var mapped = Self.map(status: status)
             if mapped.state == .working,
@@ -116,10 +119,26 @@ public struct WorkBuddySource: PollingAgentSource {
                 cwd: cwd,
                 startedAt: startedAt,
                 lastActivity: lastActivity,
+                title: Self.cleanTitle(title),
                 isTerminal: mapped.isTerminal
             ))
         }
         return sessions
+    }
+
+    /// First line only, markdown header marks stripped, bounded — a board
+    /// row shows one line. Never reads anything but the title column.
+    static func cleanTitle(_ raw: String?) -> String? {
+        guard var title = raw?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !title.isEmpty
+        else { return nil }
+        if title.hasPrefix("#") {
+            title = title.drop(while: { $0 == "#" }).trimmingCharacters(in: .whitespaces)
+        }
+        title = title.components(separatedBy: .newlines)[0]
+            .trimmingCharacters(in: .whitespaces)
+        guard !title.isEmpty else { return nil }
+        return title.count <= 80 ? title : String(title.prefix(80))
     }
 
     private static func map(

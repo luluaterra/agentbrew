@@ -114,6 +114,8 @@ public struct SessionMenuInput: Sendable {
     public let activeWorkingTime: TimeInterval
     public let updatedAt: Date
     public let agentPID: Int32?
+    /// The task title from the app's own store, when it records one.
+    public let title: String?
 
     public init(
         id: String,
@@ -123,7 +125,8 @@ public struct SessionMenuInput: Sendable {
         state: MenuSessionState,
         activeWorkingTime: TimeInterval,
         updatedAt: Date,
-        agentPID: Int32? = nil
+        agentPID: Int32? = nil,
+        title: String? = nil
     ) {
         self.id = id
         self.tool = tool
@@ -133,6 +136,7 @@ public struct SessionMenuInput: Sendable {
         self.activeWorkingTime = activeWorkingTime
         self.updatedAt = updatedAt
         self.agentPID = agentPID
+        self.title = title
     }
 }
 
@@ -152,6 +156,8 @@ public struct MenuSessionPresentation: Identifiable, Equatable, Sendable {
     public let isMonitoring: Bool
     /// The agent process, for bringing its app forward. Nil when unknown.
     public let agentPID: Int32?
+    /// The task title from the app's own store, when it records one.
+    public let title: String?
 
     public var accessibilityState: String {
         stateText
@@ -257,7 +263,8 @@ public enum MenuSessionPresentationPolicy {
                 isWaiting: input.state.isWaiting,
                 isWorking: input.state.isWorking,
                 isMonitoring: input.state == .monitoring,
-                agentPID: input.agentPID
+                agentPID: input.agentPID,
+                title: input.title
             )
             }
             .sorted {

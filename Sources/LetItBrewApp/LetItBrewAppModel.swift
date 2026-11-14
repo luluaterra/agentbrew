@@ -2074,6 +2074,7 @@ final class LetItBrewAppModel: ObservableObject {
     private func pollOnce() async {
         let storage = storage
         let synchronizer = PollingSessionSynchronizer(storage: storage)
+        let zcodeTitleSource = ZCodeTitleSource()
         let pollingSources: [any PollingAgentSource] = [
             WorkBuddySource.domestic(),
             WorkBuddySource.international(),
@@ -2089,6 +2090,9 @@ final class LetItBrewAppModel: ObservableObject {
             for source in pollingSources {
                 synchronizer.apply(source, now: Date())
             }
+            // Hook payloads carry no task title; ZCode's own session
+            // database does, so board rows can name the actual task.
+            zcodeTitleSource.apply(to: storage)
             let sessions = MenuSessionSnapshot.read(
                 loadRecords: { CopilotCancellation.reconcile(storage.loadAll()) },
                 ttl: 12 * 3_600
@@ -2654,7 +2658,8 @@ final class LetItBrewAppModel: ObservableObject {
             state: state,
             activeWorkingTime: record.activeWorkingTime(at: now),
             updatedAt: record.updatedAt,
-            agentPID: record.pid
+            agentPID: record.pid,
+            title: record.title
         )
     }
 }

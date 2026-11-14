@@ -683,7 +683,7 @@ private struct SessionRowView: View {
             AgentLogo(toolID: session.toolID)
                 .frame(width: 20, height: 20)
             VStack(alignment: .leading, spacing: 1) {
-                Text(isGrouped ? session.toolName : session.project)
+                Text(rowTitle)
                     .lineLimit(1)
                 HStack(spacing: 5) {
                     stateDot
@@ -697,6 +697,14 @@ private struct SessionRowView: View {
             Spacer(minLength: 0)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    /// The task title from the app's own store names the row when the agent
+    /// records one; otherwise the project folder (standalone) or the agent
+    /// name (grouped) does.
+    private var rowTitle: String {
+        if let title = session.title, !title.isEmpty { return title }
+        return isGrouped ? session.toolName : session.project
     }
 
     /// The agent's name joins the state on a row of its own, except for the

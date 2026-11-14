@@ -23,7 +23,8 @@ private func makeFixtureDatabase(
     CREATE TABLE sessions (
         id TEXT PRIMARY KEY, cwd TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'Pending',
         created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL,
-        last_activity_at INTEGER, deleted_at INTEGER
+        last_activity_at INTEGER, deleted_at INTEGER,
+        custom_title TEXT, title TEXT
     );
     INSERT INTO sessions (id, cwd, status, created_at, updated_at, last_activity_at, deleted_at)
     VALUES ('row-1', '/fixture/project', '\(status)', 1000, 1000, \(lastActivityMs),

@@ -19,6 +19,8 @@ public struct PolledSession: Equatable, Sendable {
     public let cwd: String?
     public let startedAt: Date?
     public let lastActivity: Date
+    /// The task title from the source's own store, when it records one.
+    public let title: String?
     /// A terminal session's record is deleted, matching what a SessionEnd
     /// hook would do.
     public let isTerminal: Bool
@@ -30,6 +32,7 @@ public struct PolledSession: Equatable, Sendable {
         cwd: String?,
         startedAt: Date?,
         lastActivity: Date,
+        title: String? = nil,
         isTerminal: Bool = false
     ) {
         self.key = key
@@ -38,6 +41,7 @@ public struct PolledSession: Equatable, Sendable {
         self.cwd = cwd
         self.startedAt = startedAt
         self.lastActivity = lastActivity
+        self.title = title
         self.isTerminal = isTerminal
     }
 }
@@ -111,7 +115,8 @@ public struct PollingSessionSynchronizer: Sendable {
                 startedAt: polled.startedAt
                     ?? SessionTimeline.startedAt(previous: previous, now: now),
                 stateChangedAt: transition.changedAt,
-                stateTransitionID: transition.id
+                stateTransitionID: transition.id,
+                title: polled.title ?? previous?.title
             )
             try? storage.mutate(id: key) { _ in .replace(record) }
         }

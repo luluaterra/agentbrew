@@ -161,8 +161,12 @@ public struct SessionRecord: Codable, Equatable, Sendable {
     /// the state unchanged retain this value, which lets consumers dedupe
     /// effects without tying them to the hook polling cadence.
     public var stateTransitionID: String?
+    /// The task title the external app itself records for this session
+    /// (ZCode's session table, WorkBuddy's sessions.title). Optional metadata
+    /// sourced from the app's own store — never conversation content.
+    public var title: String?
     enum CodingKeys: String, CodingKey {
-        case id, tool, state, detail, cwd, pid
+        case id, tool, state, detail, cwd, pid, title
         case updatedAt = "updated_at"
         case legacyUpdatedAt = "updatedAt"
         case eventObservedAt = "event_observed_at"
@@ -185,7 +189,8 @@ public struct SessionRecord: Codable, Equatable, Sendable {
                 stateChangedAt: Date? = nil, stateTransitionID: String? = nil,
                 eventObservedAt: TimeInterval? = nil, reopenedAt: TimeInterval? = nil,
                 promptObservedAt: TimeInterval? = nil, staleChildCutoff: TimeInterval? = nil,
-                familyEdgeAt: TimeInterval? = nil, copilotHome: String? = nil) {
+                familyEdgeAt: TimeInterval? = nil, copilotHome: String? = nil,
+                title: String? = nil) {
         self.id = id
         self.tool = tool
         self.state = state
@@ -204,6 +209,7 @@ public struct SessionRecord: Codable, Equatable, Sendable {
         self.lastEvent = lastEvent
         self.stateChangedAt = stateChangedAt
         self.stateTransitionID = stateTransitionID
+        self.title = title
     }
 
     public init(from decoder: Decoder) throws {
@@ -236,6 +242,7 @@ public struct SessionRecord: Codable, Equatable, Sendable {
         lastEvent = try container.decodeIfPresent(String.self, forKey: .lastEvent)
         stateChangedAt = try container.decodeIfPresent(Date.self, forKey: .stateChangedAt)
         stateTransitionID = try container.decodeIfPresent(String.self, forKey: .stateTransitionID)
+        title = try container.decodeIfPresent(String.self, forKey: .title)
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -258,6 +265,7 @@ public struct SessionRecord: Codable, Equatable, Sendable {
         try container.encodeIfPresent(lastEvent, forKey: .lastEvent)
         try container.encodeIfPresent(stateChangedAt, forKey: .stateChangedAt)
         try container.encodeIfPresent(stateTransitionID, forKey: .stateTransitionID)
+        try container.encodeIfPresent(title, forKey: .title)
     }
 
     /// The parent's latest proof that older child observations are finished:
