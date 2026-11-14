@@ -1474,7 +1474,7 @@ final class LetItBrewAppModel: ObservableObject {
         } else {
             persisted = .malformed
         }
-        let registryURL = home.appendingPathComponent("Library/Application Support/LetItBrew/agent-hook-targets.json")
+        let registryURL = SessionStorage.agentHookTargetsURL(in: home)
         let registry = AgentLiveDiskReader.readRegistry(at: registryURL)
         let inspections = AgentID.allCases.map { agent -> AgentConnectionInspection in
             let inspected = AgentLiveDiskReader.inspect(
@@ -1601,7 +1601,7 @@ final class LetItBrewAppModel: ObservableObject {
     private nonisolated static func exactTargetSelection(
         agent: AgentID, home: URL, environment: [String: String]
     ) throws -> ExactTargetSelection {
-        let registryURL = home.appendingPathComponent("Library/Application Support/LetItBrew/agent-hook-targets.json")
+        let registryURL = SessionStorage.agentHookTargetsURL(in: home)
         let registry: AgentInstallRegistry?
         if FileManager.default.fileExists(atPath: registryURL.path) {
             registry = try JSONDecoder().decode(AgentInstallRegistry.self, from: Data(contentsOf: registryURL))

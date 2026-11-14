@@ -398,6 +398,15 @@ public struct SessionStorage: Sendable {
         applicationSupportDirectory.appendingPathComponent("sessions", isDirectory: true)
     }
 
+    /// The versioned registry recording the exact hook target selected for
+    /// each agent. Lives beside the sessions directory so every AgentBrew
+    /// file the hooks and the app share sits under one application-support
+    /// root. The `in:` variant honors a redirected home (the test anchor).
+    public static func agentHookTargetsURL(in base: URL) -> URL {
+        applicationSupportDirectory(in: base)
+            .appendingPathComponent("agent-hook-targets.json", isDirectory: false)
+    }
+
     /// Maps a session id to a filename that cannot escape the directory.
     /// `session_id` comes from another tool and is untrusted input.
     ///

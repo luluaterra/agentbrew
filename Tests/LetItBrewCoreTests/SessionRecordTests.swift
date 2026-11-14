@@ -20,6 +20,18 @@ import Foundation
     )
 }
 
+@Test func agentHookTargetsRegistryLivesBesideTheSessionsDirectory() {
+    let base = URL(fileURLWithPath: "/Users/example/Library/Application Support", isDirectory: true)
+    #expect(
+        SessionStorage.agentHookTargetsURL(in: base)
+            == base.appendingPathComponent("AgentBrew/agent-hook-targets.json")
+    )
+    #expect(
+        SessionStorage.agentHookTargetsURL(in: base)
+            .deletingLastPathComponent() == SessionStorage.applicationSupportDirectory(in: base)
+    )
+}
+
 @Test func recentPreToolUseIsPresentedAsAnActiveToolCall() {
     let now = Date(timeIntervalSince1970: 1_000)
     let record = SessionRecord(

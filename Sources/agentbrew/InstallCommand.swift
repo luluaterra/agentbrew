@@ -61,7 +61,7 @@ private final class CommandFilesystem {
     }
 
     func registryTarget() throws -> ExactFileTarget {
-        try target(at: homeURL.appendingPathComponent("Library/Application Support/LetItBrew/agent-hook-targets.json"), resolvingParentSymlinks: true)
+        try target(at: SessionStorage.agentHookTargetsURL(in: homeURL), resolvingParentSymlinks: true)
     }
 
     func recordedTarget(_ path: String) throws -> ExactFileTarget {
