@@ -55,9 +55,10 @@
 ## 第四阶段前置（AB-4xx，均已登记方案，待防睡眠验证解锁后实施）
 
 ### AB-401 ZCode 适配器（完整生命周期监控）
-- 类型：主线开发 · 状态：**待办**（前置 AB-002 验收；唯一不受 AB-003 阻塞的适配器代码工作）
-- 方案：hook 安装器写入 `~/.zcode/cli/config.json`（7 事件，`enabled:true` 必须），映射到 HookReducer；`Stop` 触发问题需真机实测。
-- 调研：`docs/AGENT-INTEGRATION-RESEARCH.md` §1。
+- 类型：主线开发 · 状态：**待验收**（代码完成并提交 `a9c9af7`；真实 hook 安装待用户同意 + 真机事件实测）
+- 已完成：`ZCodeHooks`（`~/.zcode/cli/config.json` 顶层 hooks，7 事件，`enabled:true` 语义，复用 HookFile）；AgentID/安装器/磁盘检查/AppModel/CLI 全接线；reducer 映射（PermissionRequest→waiting、PostToolUseFailure 按 is_interrupt、问题工具→waiting）；`runHook` 的 ZCODE_PROJECT_DIR cwd 回退；16 个新测试。
+- 验证：串行全量 922 项全绿；隔离端到端（LETITBREW_TEST_HOME）install→doctor healthy→uninstall 还原 `{}`。
+- 遗留：真实安装（写入用户 `~/.zcode/cli/config.json`）需用户同意后执行；`Stop` hook 触发问题（第三方报告）需真机复现；菜单栏 ZCode 图标资产留到第五阶段（暂用通用终端图标）。
 
 ### AB-402 WorkBuddy 双版适配器（部分状态监控）
 - 类型：主线开发 · 状态：**待办**
