@@ -110,7 +110,7 @@ enum L10n {
         "Try uninstalling again.": "重试卸载。",
         "Move only AgentBrew.app to the Trash.": "只把 AgentBrew.app 移入废纸篓。",
         "Move only that AgentBrew folder to the Trash.": "只把那个 AgentBrew 文件夹移入废纸篓。",
-        "Enter ~/Library/Application Support/LetItBrew.": "前往 ~/Library/Application Support/LetItBrew。",
+        "Enter ~/Library/Application Support/AgentBrew.": "前往 ~/Library/Application Support/AgentBrew。",
         "In Finder, choose Go → Go to Folder…": "在 Finder 中选择“前往 → 前往文件夹…”。",
         "The AgentBrew login item may still be enabled.": "AgentBrew 的登录项可能仍处于开启状态。",
         "Your AgentBrew settings stay in place.": "你的 AgentBrew 设置保持不变。",

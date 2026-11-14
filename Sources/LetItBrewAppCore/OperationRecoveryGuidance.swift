@@ -193,7 +193,7 @@ public enum OperationRecoveryCatalog {
                 summary: "AgentBrew's user data may remain.",
                 steps: [
                     "In Finder, choose Go → Go to Folder…",
-                    "Enter ~/Library/Application Support/LetItBrew.",
+                    "Enter ~/Library/Application Support/AgentBrew.",
                     "Move only that AgentBrew folder to the Trash.",
                 ],
                 actions: [],
