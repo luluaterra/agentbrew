@@ -198,9 +198,65 @@ private func makeFixtureSnapshot(
 
 @Test func doubaoMissingRootIsEmptyNotFailure() {
     let source = DoubaoSource(
-        snapshotRoot: URL(fileURLWithPath: "/nonexistent/agentbrew/snapshot")
+        snapshotRoot: URL(fileURLWithPath: "/nonexistent/agentbrew/snapshot"),
+        taskRuntimeRoots: []
     )
     #expect(source.sample() == [])
+}
+
+@Test func doubaoTaskHeartbeatIsWorkingWithItsOwnWorkingDirectory() throws {
+    let runtime = FileManager.default.temporaryDirectory
+        .appendingPathComponent("agentbrew-doubao-rt-\(UUID().uuidString)", isDirectory: true)
+    let lr = runtime.appendingPathComponent("lr_abc123", isDirectory: true)
+    let task = lr.appendingPathComponent("task_outputs/t-1", isDirectory: true)
+    try FileManager.default.createDirectory(at: task, withIntermediateDirectories: true)
+    defer { try? FileManager.default.removeItem(at: runtime) }
+
+    try "log".write(to: task.appendingPathComponent("output.log"), atomically: true, encoding: .utf8)
+    try "/fixture/doubao-work".write(
+        to: lr.appendingPathComponent("non_interactive_cwd_t-1.txt"),
+        atomically: true, encoding: .utf8
+    )
+
+    let source = DoubaoSource(
+        snapshotRoot: URL(fileURLWithPath: "/nonexistent/agentbrew/snapshot"),
+        taskRuntimeRoots: [lr]
+    )
+    let sessions = try #require(source.sample())
+    #expect(sessions.count == 1)
+    #expect(sessions[0].key == "runtime-lr_abc123")
+    #expect(sessions[0].state == .working)
+    #expect(sessions[0].cwd == "/fixture/doubao-work")
+}
+
+@Test func doubaoQuietRuntimeIsTerminalEvenWithStaleSiblings() throws {
+    // One runtime with a fresh sub-task and one quiet runtime: only the
+    // fresh instance is Working. A quiet runtime's stale siblings never
+    // resurrect it.
+    let base = FileManager.default.temporaryDirectory
+        .appendingPathComponent("agentbrew-doubao-rt-\(UUID().uuidString)", isDirectory: true)
+    defer { try? FileManager.default.removeItem(at: base) }
+    let fresh = base.appendingPathComponent("lr_fresh", isDirectory: true)
+    let quiet = base.appendingPathComponent("lr_quiet", isDirectory: true)
+    for (runtime, age) in [(fresh, -10.0), (quiet, -600.0)] {
+        let task = runtime.appendingPathComponent("task_outputs/t-1", isDirectory: true)
+        try FileManager.default.createDirectory(at: task, withIntermediateDirectories: true)
+        try "log".write(
+            to: task.appendingPathComponent("output.log"), atomically: true, encoding: .utf8
+        )
+        try FileManager.default.setAttributes(
+            [.modificationDate: Date().addingTimeInterval(age)],
+            ofItemAtPath: task.appendingPathComponent("output.log").path
+        )
+    }
+
+    let source = DoubaoSource(
+        snapshotRoot: URL(fileURLWithPath: "/nonexistent/agentbrew/snapshot"),
+        taskRuntimeRoots: [fresh, quiet]
+    )
+    let sessions = try #require(source.sample())
+    #expect(sessions.count == 1)
+    #expect(sessions[0].key == "runtime-lr_fresh")
 }
 
 // MARK: - PollingSessionSynchronizer

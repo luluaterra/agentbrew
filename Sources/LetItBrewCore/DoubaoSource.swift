@@ -16,24 +16,30 @@ import Foundation
 /// - `output.log` files under `agent_infra` are never read; the source uses
 ///   only the snapshot JSONs.
 ///
-/// An execution without an end timestamp is Working; with one, terminal —
-/// the client never reports a wait state on disk, so nothing here claims
-/// Waiting (Unknown is not dressed up).
+/// Two signals feed the lifecycle, because snapshots are written when an
+/// execution ENDS: the newest snapshot JSON gates a finished execution, and
+/// a `task_outputs/<task>/output.log` heartbeat (its modification time)
+/// gates a running one. A quiet heartbeat reads as ended via the freshness
+/// gate. Only file metadata is stat'd — log contents are never opened.
 public struct DoubaoSource: PollingAgentSource {
     public let agent: AgentID
     public let snapshotRoot: URL
     /// Same freshness gate as WorkBuddySource: an execution without an end
     /// timestamp whose newest snapshot went quiet is treated as ended.
     public let workingFreshness: TimeInterval
+    /// Injected for tests; nil auto-detects the real runtime roots.
+    let taskRuntimeRootsOverride: [URL]?
 
     public init(
         snapshotRoot: URL = DoubaoSource.defaultSnapshotRoot,
         home: URL = FileManager.default.homeDirectoryForCurrentUser,
-        workingFreshness: TimeInterval = 300
+        workingFreshness: TimeInterval = 300,
+        taskRuntimeRoots: [URL]? = nil
     ) {
         self.agent = .doubao
         self.snapshotRoot = snapshotRoot
         self.workingFreshness = workingFreshness
+        self.taskRuntimeRootsOverride = taskRuntimeRoots
     }
 
     public static var defaultSnapshotRoot: URL {
@@ -56,7 +62,77 @@ public struct DoubaoSource: PollingAgentSource {
         let execution: Execution
     }
 
+    /// The runtime roots holding per-task output heartbeats and per-task
+    /// working directories (`to/lr_<hash>/`).
+    static func defaultTaskRuntimeRoots(
+        home: URL = FileManager.default.homeDirectoryForCurrentUser
+    ) -> [URL] {
+        let base = FileManager.default
+            .urls(for: .applicationSupportDirectory, in: .userDomainMask).first
+            ?? FileManager.default.temporaryDirectory
+        let runtimeRoot = base
+            .appendingPathComponent("Doubao/Default/agent_infra/to", isDirectory: true)
+        let children = (try? FileManager.default.contentsOfDirectory(
+            at: runtimeRoot, includingPropertiesForKeys: [.isDirectoryKey]
+        )) ?? []
+        return children.filter { $0.lastPathComponent.hasPrefix("lr_") }
+    }
+
+    /// One heartbeat-fresh runtime instance is ONE Working session. The
+    /// client spawns a `lr_<hash>/` runtime per agent session and records
+    /// every sub-task's output under it, so per-task rows would flood the
+    /// board with one session's internals; the runtime instance is the
+    /// session grain the process tree shows (one `file_utils_host` per
+    /// session). The most recently active sub-task's working directory
+    /// (`non_interactive_cwd_<task>.txt` — a file whose whole purpose is to
+    /// hold that path, so reading it is metadata) names the session's cwd.
+    func sampleTaskHeartbeats(now: Date) -> [PolledSession] {
+        var sessions: [PolledSession] = []
+        for runtime in taskRuntimeRootsOverride ?? Self.defaultTaskRuntimeRoots() {
+            let outputs = runtime.appendingPathComponent("task_outputs", isDirectory: true)
+            guard let tasks = try? FileManager.default.contentsOfDirectory(
+                at: outputs, includingPropertiesForKeys: nil
+            ) else { continue }
+
+            var freshest: (task: String, modified: Date)?
+            for task in tasks {
+                let log = task.appendingPathComponent("output.log")
+                let attributes = try? FileManager.default.attributesOfItem(
+                    atPath: log.path
+                )
+                guard let modified = attributes?[.modificationDate] as? Date else { continue }
+                if freshest?.modified ?? .distantPast < modified {
+                    freshest = (task.lastPathComponent, modified)
+                }
+            }
+            guard let freshest, now.timeIntervalSince(freshest.modified) <= workingFreshness
+            else { continue }
+
+            let cwdURL = runtime.appendingPathComponent(
+                "non_interactive_cwd_\(freshest.task).txt"
+            )
+            let cwd = (try? String(contentsOf: cwdURL, encoding: .utf8))?
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            sessions.append(PolledSession(
+                key: "runtime-\(runtime.lastPathComponent)",
+                state: .working,
+                detail: nil,
+                cwd: (cwd?.isEmpty == false) ? cwd : nil,
+                startedAt: nil,
+                lastActivity: freshest.modified,
+                isTerminal: false
+            ))
+        }
+        return sessions
+    }
+
     public func sample() -> [PolledSession]? {
+        var merged = sampleSnapshots() ?? []
+        merged.append(contentsOf: sampleTaskHeartbeats(now: Date()))
+        return merged
+    }
+
+    private func sampleSnapshots() -> [PolledSession]? {
         let enumerator = FileManager.default.enumerator(
             at: snapshotRoot,
             includingPropertiesForKeys: [.isDirectoryKey],
