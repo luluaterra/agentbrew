@@ -46,7 +46,18 @@ enum L10n {
         // 设置提醒行（MenuSetupAttentionPolicy）
         "Finish closed-lid setup": "完成闭盖设置",
         "Complete the remaining step in Settings": "到设置中完成剩余步骤",
+        // 设置页 tab（SettingsPane.title）
+        "General": "通用",
+        "Agents": "Agent",
+        "Power": "电源",
+        "Closed Lid": "闭盖",
+        "About": "关于",
         // 更新状态（SettingsView.updateStatus）
+        "Check for Updates…": "检查更新…",
+        "Checks for updates daily. Nothing installs until you choose.": "每天自动检查更新。未经你确认不会安装。",
+        "Update ready. Restarting AgentBrew…": "更新就绪。正在重启 AgentBrew…",
+        "The last update check didn\u{2019}t finish.": "上次更新检查未完成。",
+        "AgentBrew will download and verify the signed update, briefly quit, safely transition its background service if present, and relaunch. Your settings and session records stay in place.": "AgentBrew 将下载并校验签名更新，短暂退出并安全切换后台服务后重启。你的设置与会话记录保持不变。",
         "Checking for updates…": "正在检查更新…",
         "Checking…": "检查中…",
         "AgentBrew is up to date.": "已是最新版本。",
@@ -142,6 +153,7 @@ enum L10n {
             (regex("^The AgentBrew-owned (.+) hook may remain.$"), "AgentBrew 的 $1 钩子可能残留。"),
             (regex("^Turn off the (.+) watched-agent switch.$"), "关闭 $1 的监控开关。"),
             (regex("^Watch (.+)$"), "监控 $1"),
+            (regex("^Version (.+) is available.$"), "新版本 $1 可用。"),
         ]
     }()
 
