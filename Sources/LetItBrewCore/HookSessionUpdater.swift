@@ -343,7 +343,12 @@ public enum HookSessionUpdater {
                     familyEdgeAt: previous?.familyEdgeAt,
                     copilotHome: agent == .copilot
                         ? CopilotHooks.hooksURL().deletingLastPathComponent()
-                            .deletingLastPathComponent().path : nil
+                            .deletingLastPathComponent().path : nil,
+                    // The app enriches hook-written records with the task
+                    // title from the agent's own store (ZCode's session
+                    // table); a hook update must carry it forward instead of
+                    // wiping it until the next enrichment tick.
+                    title: previous?.title
                 ))
             }
         }
