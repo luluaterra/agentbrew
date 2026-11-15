@@ -76,3 +76,23 @@
 "Display idle sleep is held only while an agent keeps the Mac awake." = "仅在有 Agent 保持 Mac 唤醒时，显示器空闲睡眠才会被保持。";
 "Displays may sleep while the system sleep hold remains active." = "系统保持唤醒期间，显示器仍可能睡眠。";
 "Watch %@" = "监控 %@";
+
+/* 第二轮补齐（键名从源码字节复制，含弯引号） */
+"Checking for updates…" = "正在检查更新…";
+"Checks for updates daily. Nothing installs until you choose." = "每天自动检查更新。未经你确认不会安装。";
+"Downloading and verifying update…" = "正在下载并校验更新…";
+"The last update check didn’t finish." = "上次更新检查未完成。";
+"Update ready. Restarting AgentBrew…" = "更新就绪。正在重启 AgentBrew…";
+"Lets the Mac sleep when you turn on Low Power Mode. AgentBrew’s own closed-lid switch doesn’t count." = "开启低电量模式时允许 Mac 睡眠。AgentBrew 为闭盖自己切换的低电量模式不算在内。";
+"Uninstall AgentBrew?" = "卸载 AgentBrew？";
+"Release Notes" = "发行说明";
+"Open the AgentBrew repository" = "打开 AgentBrew 代码仓库";
+"Retry failed cleanup and check watched agent connections again" = "重试清理并再次检查被监控的 Agent 连接";
+"Turning off displays…" = "正在关闭显示器…";
+"The app bundle and privileged background service are removed. This window remains open only to show you how to finish cleanup." = "App 包与特权后台服务已移除。本窗口保持打开，仅用于指导你完成剩余清理。";
+"The privileged background service is stopped. This window remains open only to show you how to finish cleanup." = "特权后台服务已停止。本窗口保持打开，仅用于指导你完成剩余清理。";
+"Install AgentBrew %@?" = "安装 AgentBrew %@？";
+"Version %@ is available." = "新版本 %@ 可用。";
+"Version %@" = "版本 %@";
+"Watch %@ sessions" = "监控 %@ 的会话";
+"Stop watching %@ sessions" = "停止监控 %@ 的会话";
