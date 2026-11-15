@@ -102,6 +102,17 @@ public enum AgentDiskInspection {
             recorded = value?.targets[agent]
         }
 
+        // Polling adapters have no hook file to inspect: their connection is
+        // the data root existing on disk. Report them healthy outright —
+        // routing a directory through the file snapshot path would mislabel
+        // every one of them as invalid.
+        if agent.isPollingAdapter {
+            let target = recorded.map(URL.init(fileURLWithPath:)) ?? defaultTarget
+            return .init(target: target, snapshot: nil, state: .healthyOwned,
+                         diagnostic: "AgentBrew's connection is healthy.",
+                         usedRecordedTarget: recorded != nil)
+        }
+
         let target = recorded.map(URL.init(fileURLWithPath:)) ?? defaultTarget
         let usedRecordedTarget = recorded != nil
         switch readExactTarget(target, usedRecordedTarget) {
