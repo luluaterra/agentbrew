@@ -38,7 +38,7 @@ AgentBrew：基于上游 Let It Brew（ruban-24/letitbrew）的独立增强版�
   `SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk swift test --no-parallel`
   （需 swiftly 工具链 `~/.swiftly/bin`；`--no-parallel` 必须：Pi 扩展运行时测试在并行负载下会超其内部 spawn 超时，属上游测试负载敏感，非代码缺陷）。
 - App/daemon/CLI：**仅 Xcode**（先 `xcodegen generate` 再 `xcodebuild`；日常重装用 `scripts/reinstall-dev.sh`，daemon cdhash 未变化时零密码）。
-- 签名私钥已授予 codesign「始终允许」（2026-11-14），构建静默签名；不要再建议 set-key-partition-list。
+- 签名私钥已由用户本人于 2026-11-15 运行 set-key-partition-list 完成永久授权（密码经用户终端输入，agent 未接触）；构建与签名全静默，不会再弹任何授权框。
 - 上游脚本：`scripts/` 下有构建/验证脚本，随上游保留。
 - Git：开发在 `agentbrew/main` 分支；同步上游 `git fetch upstream && git merge upstream/main`。不 push 未经用户要求。
 
