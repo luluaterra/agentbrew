@@ -1,210 +1,61 @@
-<div align="center">
+# AgentBrew
 
-<img src="Sources/LetItBrewApp/Assets.xcassets/AppIcon.appiconset/letitbrew-256x256.png" width="112" height="112" alt="Let It Brew app icon">
+基于开源项目 [Let It Brew](https://github.com/ruban-24/letitbrew)（上游 README 见 [docs/UPSTREAM-README.md](docs/UPSTREAM-README.md)）的独立增强版。
 
-# Let It Brew
+**两个核心能力**：
 
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
-[![macOS 14+](https://img.shields.io/badge/macOS-14%2B-black?logo=apple)](https://www.apple.com/macos/)
-[![CI](https://github.com/ruban-24/letitbrew/actions/workflows/ci.yml/badge.svg)](https://github.com/ruban-24/letitbrew/actions/workflows/ci.yml)
+1. **Mac 防睡眠**：本地 AI Agent 工作时自动保持 Mac 唤醒，结束自动恢复；支持合盖运行（通过特权 daemon 写 `pmset disablesleep`，恢复时使用记录的真实系统状态，绝不猜测）。
+2. **多 Agent 统一监控**：菜单栏面板实时显示每个 Agent 的会话、任务标题、运行时长与状态（工作中/等待/空闲），多会话按项目分组。
 
-**Your Mac sleeps. Your agent dies. Let It Brew fixes that.**
+## 支持的 Agent
 
-A macOS menu-bar app that keeps your Mac awake while supported local coding
-agents work. It lets your Mac sleep as soon as the work stops.
+| 接入方式 | Agent |
+|---|---|
+| 生命周期 Hook（完整监控） | Claude Code、Codex、OpenCode、GitHub Copilot CLI、Pi、Cursor、Gemini CLI、Qwen Code、Kimi Code、**ZCode** |
+| 自有数据轮询（部分监控） | **WorkBuddy（国内版）**、**WorkBuddy AI（国际版）**、**豆包 Z** |
 
-<a href="https://github.com/ruban-24/letitbrew/releases/latest/download/LetItBrew.dmg">
-  <img src=".github/assets/macos-download-badge.svg" alt="Download Let It Brew for macOS" width="194">
-</a>
+轮询型适配器只读各应用自己的会话存储（SQLite/JSON 快照），带 5 分钟新鲜度门——应用退出留下的陈旧行不会被误判为工作。
 
-<br>
+## 隐私边界
 
-Version 1.0.0 (build 45) &middot;
-[Release notes and SHA-256](https://github.com/ruban-24/letitbrew/releases/latest) &middot;
-[letitbrew.app](https://letitbrew.app)
+- 只读生命周期元数据（会话 ID、状态、工作目录、时间戳、任务标题）
+- 不读对话内容、模型输出、工具输出、文件内容（豆包的 `fileContents` 快照字段零接触）
+- 不上传任何数据；后台助手仅在本地运行
 
-<img src=".github/assets/hero-macbook.png" width="760" alt="Let It Brew's current menu showing an enabled awake hold, battery controls, and working Codex and Claude Code sessions">
+## 构建与运行
 
-</div>
+要求：Xcode 15+（本机实测 Xcode 27.2）、Apple 开发证书（免费 Personal Team 即可）。
 
-## What it does
+```bash
+# 1. 生成工程并构建（Debug，本机签名自动静默）
+xcodegen generate
+xcodebuild -scheme LetItBrew -configuration Debug build
 
-You give an agent a task and walk away. The agent works without touching your
-keyboard or trackpad, so macOS can treat you as idle and put the Mac to sleep.
-Let It Brew follows signals from the agent about its work.
-An awake hold prevents the Mac from sleeping while that work continues.
+# 2. 安装到 /Applications 并保持 daemon 一致（零密码，daemon 变化时才需一次授权）
+scripts/reinstall-dev.sh            # 日常改动
+scripts/reinstall-dev.sh --clean    # plist/资源结构变化后
 
-- **Follows real work.** The hold starts and stops with supported
-  local agent activity.
-- **Releases when work stops.** Supported questions and approval waits,
-  completion, pause, battery limits, and heat limits let the Mac sleep.
-  Codex and Cursor approval waits keep the Mac awake.
-- **Works with the lid closed.** Active work can continue after you shut the
-  MacBook.
-- **Saves power with the lid shut.** Closed-lid work runs in Low Power Mode.
-  Your exact energy mode returns when the lid opens or work stops.
-- **Shows when an agent needs you.** Sessions waiting for an answer or approval
-  are marked in the menu. Click any session to bring its terminal, editor, or
-  agent app forward.
-- **Follows your power rules.** Choose connected-power-only operation, set a
-  battery floor, use Low Power Mode, and decide whether displays can sleep.
-- **Stays out of the way.** It has no Dock icon, main window, or notifications.
-- **Keeps session data local.** There is no account, cloud service, or telemetry.
+# 3. 首次使用：菜单栏烧瓶图标 → 设置 → Agents 页打开要监控的 Agent；
+#    Closed Lid 页的 Repair Helper 注册特权 daemon（会弹一次管理员授权）
+```
 
-## Let It Brew vs Caffeine vs Amphetamine
+库代码测试：`SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk swift test --no-parallel`
 
-| Feature | **Let It Brew** | Caffeine | Amphetamine |
-|---|---|---|---|
-| **Best for** | Work from any of the nine supported local agents | A simple manual keep-awake switch | Timers, schedules, and triggers |
-| **Understands active agent work** | ✅ Yes, for all nine supported agents | ❌ No | ❌ No |
-| **Releases when agent work stops** | ✅ Yes — automatically | ❌ No — manual switch or timer | ❌ No — ends with its session or trigger |
-| **Closed lid — with charger** | ✅ Yes | ❌ No | ✅ Yes |
-| **Closed lid — without charger** | ✅ Yes | ❌ No | ❌ No |
-| **Agent-specific integration** | ✅ Claude Code, Codex, OpenCode, GitHub Copilot CLI, Pi, Cursor, Gemini CLI, Qwen Code, and Kimi Code | ❌ None | ❌ None |
+## 安装与卸载
 
-See the [full comparison and guidance](https://letitbrew.app/compare/let-it-brew-vs-caffeine-vs-amphetamine).
-If you want a general-purpose keep-awake utility, Caffeine and Amphetamine are
-good at that. Let It Brew follows coding-agent sessions.
+- **安装**：把构建产物拖入 `/Applications`，首次启动后在设置里连接 Agent；闭盖功能需要注册后台助手（应用内一键）
+- **卸载**：设置 → 关于 → Uninstall——会先释放保持唤醒、注销后台服务、清理数据目录，之后才移除 App（顺序有硬闸保证，不会让 Mac 卡在无法睡眠的状态）
 
-## Supported agents
+## 与上游的关系
 
-| Agent | Local surfaces | Connection |
-|---|---|---|
-| Claude Code | CLI and local desktop code sessions | Lifecycle hooks after workspace trust |
-| Codex | CLI and local app sessions | Lifecycle hooks plus Codex trust approval |
-| OpenCode | Stable 1.x local CLI/app runtime | Global OpenCode plugin |
-| GitHub Copilot CLI | Local CLI | Copilot user hooks |
-| Pi 0.87.1+ | Local CLI | Global Pi extension |
-| Cursor | Editor agent and CLI | Cursor user hooks |
-| Gemini CLI | Local CLI | Gemini user settings hooks |
-| Qwen Code | Local CLI | Qwen user settings hooks |
-| Kimi Code | Local CLI | Hooks in Kimi's configuration file |
+- 上游电源管理代码（决策引擎、IOKit assertion、daemon、睡眠看门狗）**原样复用**，未重写
+- 隔离方式：独立 Bundle ID（`com.agentbrew(.dev)`）、hook marker（`__agentbrew_*`）、独立数据目录；与官网版 Let It Brew 可并存——daemon 层内置互斥检查（`ForeignSleepHoldDetection.swift`），两个版本不会争夺系统睡眠状态
+- 上游更新：`git fetch upstream && git merge upstream/main`
 
-Version 1.0.0 adds Cursor, Gemini CLI, Qwen Code, and Kimi Code.
-To connect an agent, turn on its switch in Settings → Agents.
-If you connect Pi, restart Pi or use `/reload` to load the extension.
+## 文档
 
-Hooks are signals that an agent sends about its work.
-Let It Brew uses these signals to follow local sessions.
-Codex and Cursor do not distinguish manual approval waits from automatic approvals,
-so their approval waits keep the Mac awake.
-See the [release notes](RELEASE-NOTES.md) for other limits.
-
-Let It Brew follows local sessions only.
-Remote, cloud, and SSH sessions are not tracked.
-Signals outside the supported hook types are ignored.
-
-Connections are optional. Let It Brew changes no agent configuration until you
-turn on an agent's watched switch. Turning it off removes only the entry or
-plugin or extension that Let It Brew owns. See the
-[agent hook contracts](docs/AGENT-HOOK-CONTRACTS.md) for the exact integration
-boundaries.
-
-## Install
-
-A DMG is a disk image that contains the app.
-Its SHA-256 is a fingerprint of the downloaded file.
-
-1. [Download the latest signed and notarized DMG](https://github.com/ruban-24/letitbrew/releases/latest/download/LetItBrew.dmg).
-2. Make sure that its SHA-256 matches the value on the [latest release](https://github.com/ruban-24/letitbrew/releases/latest).
-3. Drag Let It Brew.app into `/Applications`.
-4. Launch the app.
-5. In Settings → Agents, turn on each agent that you want Let It Brew to follow.
-
-Requires macOS 14 or later. The universal app supports Apple silicon and Intel.
-The signed DMG is the only install channel; Let It Brew is not distributed
-through Homebrew or the App Store.
-
-Fresh installs begin with every agent disconnected. Launch at Login is off until
-you enable it, and Let It Brew observes sessions only while it is running.
-
-Let It Brew must run directly from `/Applications/Let It Brew.app`. A copy in a
-subfolder, on the mounted DMG, or in Downloads cannot manage the privileged
-closed-lid service.
-
-Codex requires one manual trust step.
-Run `/hooks` in Codex.
-Trust the Let It Brew entries.
-Return to Settings → Agents. The connection refreshes automatically.
-If it does not refresh, choose Refresh Connections.
-If a session was open when its hooks changed, restart it.
-
-## Safety and privacy
-
-Let It Brew releases its holds when no tracked session is Working.
-Supported questions, approval waits, pause, battery limits, and serious or
-critical heat also release the hold.
-Codex and Cursor approval waits keep the Mac awake.
-Approving a Claude, Copilot, Gemini, or Qwen command sends no
-signal of its own. After the prompt appears, Let It Brew treats input in that session's app as a possible approval.
-It then keeps the Mac awake until the agent reports again.
-Typing in other apps does not count, except for sessions under tmux or screen.
-
-Closed-lid support uses a background service with system permissions.
-It changes the sleep setting and energy mode, then restores each original value.
-Recovery also runs after a crash or restart.
-If you decline approval for this service, open-lid operation still works.
-See the [architecture document](docs/ARCHITECTURE.md) for the service and its safety rules.
-
-Session content never leaves the Mac. Let It Brew does not record prompts,
-responses, reasoning, tool inputs, tool outputs, or final assistant text. See
-[Privacy and local data](docs/PRIVACY.md) for the structural metadata and local
-paths it uses.
-
-## Updating and uninstalling
-
-Let It Brew checks GitHub for a newer release about 30 seconds after launch, no
-more than once per day. It never downloads an update without confirmation. You
-can also open **Settings → General → Check for Updates…** at any time. Settings,
-agent connections, and session records stay in place.
-
-If you use v0.7.0 or earlier, quit the app and replace it with the new DMG.
-Do not uninstall first. See [Support](SUPPORT.md) for the steps.
-
-To remove the app, open **Settings → About → Uninstall Let It Brew…**. Let It
-Brew releases its holds, disconnects its agent integrations, unregisters its
-background service, removes its local data, and moves itself to the Trash. If
-the app will not launch, follow the [manual uninstall procedure](docs/UNINSTALL.md)
-in the documented order.
-
-## Documentation
-
-- [Support and troubleshooting](SUPPORT.md)
-- [Privacy and local data](docs/PRIVACY.md)
-- [Architecture and safety model](docs/ARCHITECTURE.md)
-- [Agent hook contracts](docs/AGENT-HOOK-CONTRACTS.md)
-- [Release notes](RELEASE-NOTES.md)
-- [Contributing](CONTRIBUTING.md)
-- [Signing and release process](SIGNING.md)
-- [Maintainer UAT](docs/ATTENDED-UAT.md)
-
-## Support the project
-
-Let It Brew is free and open source. If it has been useful, you can support
-maintenance, signed releases, new integrations, and more open-source apps
-through [GitHub Sponsors](https://github.com/sponsors/ruban-24) or
-[Buy Me a Coffee](https://buymeacoffee.com/rubanbhatia).
-
-## Support and contributing
-
-Report reproducible bugs through [GitHub Issues](https://github.com/ruban-24/letitbrew/issues).
-Include the Let It Brew version and build, macOS version, Mac model, and clear
-reproduction steps. Do not include private project contents, prompts, agent
-responses, credentials, or unrelated agent configuration.
-
-Bug fixes and documentation improvements are welcome. Open an issue before
-starting feature or release-process work so the scope can be agreed first. See
-[CONTRIBUTING.md](CONTRIBUTING.md) for build and test instructions.
-
-## License
-
-Let It Brew v0.6.0 and later is licensed under the
-[Apache License 2.0](LICENSE) (`Apache-2.0`). Apache 2.0 permits commercial use and redistribution of the code.
-It does not grant rights to present a fork or modified build as the official
-Let It Brew project. See
-[TRADEMARKS.md](TRADEMARKS.md).
-
-Let It Brew is an independent project. It is not affiliated with or endorsed by
-the owners of the supported agents or Apple. Claude, Claude Code, Codex,
-OpenCode, GitHub Copilot CLI, Cursor, Gemini CLI, Qwen Code, Kimi Code, and macOS
-are trademarks of their respective owners.
+- [`docs/BASELINE_AUDIT.md`](docs/BASELINE_AUDIT.md) — 上游架构审计、必须保留功能清单、隔离改造点
+- [`docs/POWER_MANAGEMENT_TEST.md`](docs/POWER_MANAGEMENT_TEST.md) — 防睡眠功能实测记录（全部通过）
+- [`docs/AGENT-INTEGRATION-RESEARCH.md`](docs/AGENT-INTEGRATION-RESEARCH.md) — 四个新增目标的接入调研
+- [`docs/AGENT-HOOK-CONTRACTS.md`](docs/AGENT-HOOK-CONTRACTS.md) — 各 Agent hook 事件契约（上游文档）
+- [`docs/UPSTREAM-README.md`](docs/UPSTREAM-README.md) — 上游原 README
