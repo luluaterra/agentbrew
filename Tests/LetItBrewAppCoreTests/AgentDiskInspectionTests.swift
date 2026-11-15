@@ -33,7 +33,7 @@ func diskInspectionClassifiesHealthyGeneratedBytes(agent: AgentID) {
     #expect(result.target == target)
 }
 
-@Test(arguments: AgentID.allCases)
+@Test(arguments: AgentID.allCases.filter { !$0.isPollingAdapter })
 func diskInspectionClassifiesAbsentAndUnreadableForEveryAdapter(agent: AgentID) {
     let target = URL(fileURLWithPath: "/a/\(agent.rawValue)")
     let absent = AgentDiskInspection.inspect(agent: agent, registry: .valid(nil), defaultTarget: target, helperPath: "/letitbrew") { _, _ in

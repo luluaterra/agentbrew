@@ -55,7 +55,7 @@ OLD_CDHASH=$(cat "$HASH_FILE" 2>/dev/null || echo "")
 if [ "$NEW_CDHASH" = "$OLD_CDHASH" ] && [ -n "$OLD_CDHASH" ]; then
     echo "==> daemon 二进制未变化（cdhash 一致），跳过重新注册——零密码"
 else
-    echo "==> daemon 已变化（$OLD_CDHASH → $NEW_CDHASH），重新注册（会弹一次管理员授权）"
+    echo "==> daemon 已变化，重新注册（会弹一次管理员授权）"
     "$APP/Contents/MacOS/AgentBrew" --register-daemon
     echo "$NEW_CDHASH" > "$HASH_FILE"
 fi
